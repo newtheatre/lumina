@@ -1,0 +1,5 @@
+.chalice/deployments/
+.chalice/venv/
+.cache/
+tmp/
+chalicelib/secrets.py
