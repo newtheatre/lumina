@@ -29,8 +29,8 @@ You need AWS creds set up on your local user account
 
 ## Endpoints
 
-- <https://lumina.newtheatre.org.uk/dev/>
-- <https://lumina.newtheatre.org.uk/v1/>
+- <https://lumina.newtheatre.org.uk/staging/>
+- <https://lumina.newtheatre.org.uk/prod/>
 
 ## Methods
 
