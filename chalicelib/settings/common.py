@@ -1,0 +1,2 @@
+DYNAMO_DB_REGION = "eu-west-1"
+DYNAMO_DB_HOST = None

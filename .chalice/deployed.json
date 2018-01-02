@@ -8,5 +8,15 @@
     "rest_api_id": "hnqh12r4th",
     "api_gateway_stage": "api",
     "region": "eu-west-1"
+  },
+  "staging": {
+    "api_handler_name": "lumina-staging",
+    "api_handler_arn": "arn:aws:lambda:eu-west-1:068338840499:function:lumina-staging",
+    "lambda_functions": {},
+    "backend": "api",
+    "chalice_version": "1.1.0",
+    "rest_api_id": "it98bm0u3g",
+    "api_gateway_stage": "staging",
+    "region": "eu-west-1"
   }
 }
