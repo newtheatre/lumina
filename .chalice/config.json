@@ -4,12 +4,14 @@
   "stages": {
     "dev": {
       "api_gateway_stage": "dev",
+      "autogen_policy": false,
       "environment_variables": {
         "STAGE": "dev"
       }
     },
     "staging": {
       "api_gateway_stage": "staging",
+      "autogen_policy": false,
       "environment_variables": {
         "STAGE": "staging"
       }

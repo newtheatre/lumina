@@ -24,8 +24,8 @@ To run tests
 ## Deploy
 You need AWS creds set up on your local user account
 
-- `chalice deploy --stage staging --no-autogen-policy`
-- `chalice deploy --stage prod --no-autogen-policy`
+- `chalice deploy --stage staging`
+- `chalice deploy --stage prod`
 
 ## Endpoints
 
