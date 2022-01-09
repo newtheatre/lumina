@@ -5,12 +5,12 @@ from pydantic import BaseSettings
 
 class Settings(BaseSettings):
     environment: str = "dev"
-    stage_name: str = "abc"
+    stage_name: str = ""
     vcs_rev: str = "unknown"
 
     @property
     def root_path(self) -> Optional[str]:
-        if self.stage_name in {"dev", "Environment"}:
+        if self.stage_name in {"", "dev", "Environment"}:
             return None
         if self.stage_name == "prod":
             return "/api/lumina"
