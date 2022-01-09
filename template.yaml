@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: lumina
+
+Globals:
+  Function:
+    Timeout: 60
+    MemorySize: 128
+    Environment:
+      Variables:
+        ENVIRONMENT: !Ref Environment
+        STAGE_NAME: !Ref Environment
+        VCS_REV: !Ref VcsRev
+
+# Here we specify the different environment that we have
+Parameters:
+  Environment:
+    Type: String
+  VcsRev:
+    Type: String
+
+Resources:
+  BasicAWSApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Join ["", ["lumina-endpoint-", !Ref Environment]]
+      StageName: !Ref Environment
+  #      Cors:
+  #        # API gateway has poor CORS support, if we want to limit by origin we'd need to write a function to handle that
+  #        # See https://stackoverflow.com/questions/39628640/aws-api-gateway-cors-access-control-allow-origin-multiple-entries
+  #        AllowHeaders: "'Content-Type, Authorization'"
+  #        AllowMethods: "'GET, POST'"
+  #        AllowOrigin: "'*'"
+  #        EndpointConfiguration: REGIONAL
+  #        BasePath:
+  #          - /
+
+  PythonDependencyLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: !Join ["", ["lumina-dependencies-", !Ref Environment]]
+      Description: Dependencies for Lumina
+      ContentUri: dependencies/
+      CompatibleRuntimes:
+        - python3.8
+      RetentionPolicy: Delete
+    Metadata:
+      BuildMethod: python3.8
+
+  LuminaService:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Join ["", ["lumina-", !Ref Environment]]
+      CodeUri: app/
+      Handler: handler.handler
+      Runtime: python3.8
+      Layers:
+        - !Ref PythonDependencyLayer
+      Events:
+        LuminaEndpoint:
+          Type: Api
+          Properties:
+            Path: /{path+}
+            Method: get
+            RestApiId: !Ref BasicAWSApiGateway
+
+Transform:
+  - AWS::Serverless-2016-10-31

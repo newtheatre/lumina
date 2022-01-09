@@ -1,0 +1,14 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "LuminaWjdp"
+s3_bucket = "nthp-lambdas"
+s3_prefix = "lumina-wjdp"
+region = "eu-west-2"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = [
+  "Environment=wjdp",
+  "VcsRev=v0.0.0"
+]
