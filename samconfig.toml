@@ -2,7 +2,7 @@ version = 0.1
 [default]
 [default.deploy]
 [default.deploy.parameters]
-stack_name = "Lumina"
+stack_name = "LuminaProd"
 s3_bucket = "nthp-lambdas"
 s3_prefix = "lumina"
 region = "eu-west-2"
