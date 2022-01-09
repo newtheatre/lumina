@@ -50,7 +50,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Join ["", ["lumina-", !Ref Environment]]
-      CodeUri: app/
+      CodeUri: src/
       Handler: handler.handler
       Runtime: python3.8
       Layers:

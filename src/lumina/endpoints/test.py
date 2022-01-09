@@ -6,10 +6,10 @@ router = APIRouter()
 
 
 @router.get("/hello")
-def read_root():
+def read_hello():
     return {"Hello": "World"}
 
 
 @router.get("/config")
-def read_root():
+def read_config():
     return {"config": settings}

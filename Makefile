@@ -1,7 +1,7 @@
 vcs_rev=$(shell git describe)
 
 test:
-	PYTHONPATH=app/. pytest tests/unit
+	PYTHONPATH=src/. pytest tests/unit
 
 build:
 	mkdir -p dependencies

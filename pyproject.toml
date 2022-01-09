@@ -14,7 +14,14 @@ pydantic = "^1.9.0"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
 uvicorn = "^0.16.0"
+mypy = "^0.931"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+python_version = "3.9"
+files = "src"
+pretty = true
+ignore_missing_imports = true
