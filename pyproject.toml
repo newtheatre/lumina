@@ -9,7 +9,8 @@ license = "MIT"
 python = "^3.8"
 fastapi = "^0.71.0"
 mangum = "^0.12.3"
-pydantic = "^1.9.0"
+pydantic = {extras = ["email"], version = "^1.9.0"}
+pyhumps = "^3.5.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
