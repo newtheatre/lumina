@@ -1,48 +1,79 @@
+from datetime import datetime, timedelta, timezone
+from http import HTTPStatus
 from typing import Optional
 
+import jwt
 from fastapi import Depends, HTTPException, Request
 from fastapi.security import HTTPBearer
 from pydantic import BaseModel
+
+JWT_ALGORITHM = "RS256"
+JWT_EXPIRATION_DELTA = timedelta(days=90)
+
+
+class AuthenticatedUser(BaseModel):
+    id: str
+    expires_at: datetime
+
+
+def get_jwt_public_key() -> str:
+    """Get public key for JWT verification."""
+    return "public_key"
+
+
+def get_jwt_private_key() -> str:
+    """Get private key for JWT signing."""
+    return "private_key"
+
+
+def encode_jwt(sub: str) -> str:
+    return jwt.encode(
+        {
+            "sub": sub,
+            "exp": datetime.now(tz=timezone.utc) + JWT_EXPIRATION_DELTA,
+        },
+        get_jwt_private_key(),
+        algorithm=JWT_ALGORITHM,
+    )
+
+
+def decode_jwt(token: str) -> AuthenticatedUser:
+    payload = jwt.decode(token, get_jwt_public_key(), algorithms=[JWT_ALGORITHM])
+    return AuthenticatedUser(id=payload["sub"], expires_at=payload["exp"])
 
 
 class JWTBearer(HTTPBearer):
     def __init__(self, optional: bool = False):
         self.optional = optional
-        super(JWTBearer, self).__init__(auto_error=not optional)
+        super(JWTBearer, self).__init__(auto_error=False)
 
     async def __call__(self, request: Request):
         credentials = await super(JWTBearer, self).__call__(request)
         if credentials:
-            if not credentials.scheme == "Bearer":
+            try:
+                return decode_jwt(credentials.credentials)
+            except jwt.InvalidTokenError:
                 raise HTTPException(
-                    status_code=403, detail="Invalid authentication scheme."
+                    status_code=HTTPStatus.UNAUTHORIZED,
+                    detail="Invalid or expired token",
                 )
-            if not self.verify_jwt(credentials.credentials):
-                raise HTTPException(
-                    status_code=403, detail="Invalid token or expired token."
-                )
-            return credentials.credentials
-        elif not self.optional:
-            raise HTTPException(status_code=403, detail="Invalid authorization code.")
-
-    def verify_jwt(self, token: str) -> bool:
-        # TODO: Implement JWT verification
-        return True
+        elif self.optional:
+            return None
+        else:
+            raise HTTPException(
+                status_code=HTTPStatus.UNAUTHORIZED, detail="Authorization required"
+            )
 
 
-class AuthenticatedUser(BaseModel):
-    id: str
-
-
-def require_authenticated_user(token=Depends(JWTBearer())) -> AuthenticatedUser:
+def require_authenticated_user(
+    authenticated_user=Depends(JWTBearer()),
+) -> AuthenticatedUser:
     """Get user if token is provided, otherwise raise exception."""
-    return AuthenticatedUser(id=token)
+    return authenticated_user
 
 
 def optional_authenticated_user(
-    token=Depends(JWTBearer(optional=True)),
+    authenticated_user=Depends(JWTBearer(optional=True)),
 ) -> Optional[AuthenticatedUser]:
     """Get user if token is provided, otherwise return None."""
-    if token:
-        return AuthenticatedUser(id=token)
-    return None
+    return authenticated_user

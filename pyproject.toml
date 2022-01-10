@@ -11,11 +11,15 @@ fastapi = "^0.71.0"
 mangum = "^0.12.3"
 pydantic = {extras = ["email"], version = "^1.9.0"}
 pyhumps = "^3.5.0"
+PyJWT = "^2.3.0"
+cryptography = "^36.0.1"
+requests = "^2.27.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
 uvicorn = "^0.16.0"
 mypy = "^0.931"
+freezegun = "^1.1.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
