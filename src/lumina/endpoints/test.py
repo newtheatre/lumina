@@ -32,3 +32,11 @@ def check_auth_optional(
     ),
 ):
     return {"id": auth_user.id if auth_user else None}
+
+
+@router.get("/auth")
+def make_token(
+    user_id: str,
+):
+    # TODO: Remove once we have auth via email
+    return auth.encode_jwt(user_id)
