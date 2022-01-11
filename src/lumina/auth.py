@@ -7,6 +7,8 @@ from fastapi import Depends, HTTPException, Request
 from fastapi.security import HTTPBearer
 from pydantic import BaseModel
 
+from lumina import ssm
+
 JWT_ALGORITHM = "RS256"
 JWT_EXPIRATION_DELTA = timedelta(days=90)
 
@@ -18,12 +20,12 @@ class AuthenticatedUser(BaseModel):
 
 def get_jwt_public_key() -> str:
     """Get public key for JWT verification."""
-    return "public_key"
+    return ssm.get_parameter("/lumina/jwt/public")
 
 
 def get_jwt_private_key() -> str:
     """Get private key for JWT signing."""
-    return "private_key"
+    return ssm.get_parameter("/lumina/jwt/private")
 
 
 def encode_jwt(sub: str) -> str:
