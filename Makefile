@@ -15,6 +15,6 @@ env:
 	@echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
 
 deploy: env build
-	sam deploy --parameter-overrides "ParameterKey=Environment,ParameterValue=prod ParameterKey=VcsRev,ParameterValue=$(vcs_rev)" --no-confirm-changeset
+	sam deploy --parameter-overrides "ParameterKey=Environment,ParameterValue=prod ParameterKey=VcsRev,ParameterValue=$(vcs_rev)"
 
 .PHONY: test build deploy-sandbox deploy-prod
