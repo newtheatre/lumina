@@ -10,7 +10,7 @@ from mypy_boto3_ses.type_defs import BodyTypeDef, ContentTypeDef, MessageTypeDef
 
 log = logging.getLogger(__name__)
 
-FROM_ADDRESS = "nthp@wjdp.uk"
+FROM_ADDRESS = email.utils.formataddr(("New Theatre Alumni Network", "nthp@wjdp.uk"))
 CHARSET = "UTF-8"
 
 
