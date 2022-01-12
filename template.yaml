@@ -63,11 +63,35 @@ Resources:
         - SESCrudPolicy:
             IdentityName: nthp@wjdp.uk
       Events:
-        LuminaEndpoint:
+        LuminaEndpointGet:
           Type: Api
           Properties:
             Path: /{path+}
             Method: get
+            RestApiId: !Ref BasicAWSApiGateway
+        LuminaEndpointPut:
+          Type: Api
+          Properties:
+            Path: /{path+}
+            Method: put
+            RestApiId: !Ref BasicAWSApiGateway
+        LuminaEndpointPatch:
+          Type: Api
+          Properties:
+            Path: /{path+}
+            Method: patch
+            RestApiId: !Ref BasicAWSApiGateway
+        LuminaEndpointPost:
+          Type: Api
+          Properties:
+            Path: /{path+}
+            Method: post
+            RestApiId: !Ref BasicAWSApiGateway
+        LuminaEndpointDelete:
+          Type: Api
+          Properties:
+            Path: /{path+}
+            Method: delete
             RestApiId: !Ref BasicAWSApiGateway
 
 Transform:
