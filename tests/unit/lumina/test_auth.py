@@ -4,8 +4,8 @@ from unittest import mock
 import freezegun
 import jwt
 import pytest
+from fastapi.testclient import TestClient
 from fixtures import keys
-from starlette.testclient import TestClient
 
 from lumina import auth
 from lumina.app import app
