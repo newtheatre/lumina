@@ -1,22 +1,15 @@
 import email.utils
-import functools
 import logging
 from typing import List, NamedTuple, Optional, Tuple
 
 import boto3
 from botocore.exceptions import ClientError
-from mypy_boto3_ses import SESClient
 from mypy_boto3_ses.type_defs import BodyTypeDef, ContentTypeDef, MessageTypeDef
 
 log = logging.getLogger(__name__)
 
 FROM_ADDRESS = email.utils.formataddr(("New Theatre Alumni Network", "nthp@wjdp.uk"))
 CHARSET = "UTF-8"
-
-
-@functools.lru_cache
-def get_ses_client() -> SESClient:
-    return boto3.client("ses")
 
 
 class EmailError(Exception):
@@ -46,11 +39,12 @@ def send_email(
     :param html: The HTML body of the email, optional.
     :return: The message ID of the email.
     """
+    ses_client = boto3.client("ses")
 
     # Try to send the email.
     try:
         # Provide the contents of the email.
-        response = get_ses_client().send_email(
+        response = ses_client.send_email(
             Destination={
                 "ToAddresses": list(map(email.utils.formataddr, to_addresses)),
             },
