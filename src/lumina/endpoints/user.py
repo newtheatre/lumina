@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 
+import lumina.emails.render
+import lumina.emails.send
 from lumina import auth
 from lumina.schema.user import (
     RegisterUserRequest,
@@ -23,11 +25,18 @@ def check_user(id: str):
     ...
 
 
-@router.post(
-    "/",
-)
-def register_user(new_user: RegisterUserRequest):
-    ...
+@router.post("/{id}")
+def register_user(id: str, new_user: RegisterUserRequest):
+    lumina.emails.send.send_email(
+        to_addresses=[(new_user.full_name, new_user.email)],
+        subject="Finish your registration",
+        body=lumina.emails.render.render_email(
+            "register_user.html",
+            name=new_user.full_name,
+            auth_url=auth.get_auth_url(id),
+        ),
+    ),
+    return "OK"
 
 
 @router.put("/{id}", responses={403: {"description": "Forbidden"}})

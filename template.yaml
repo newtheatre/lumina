@@ -60,6 +60,8 @@ Resources:
             KeyId: f45fa5dd-e730-4e79-93f0-e24d2079e4c6
         - SSMParameterReadPolicy:
             ParameterName: "lumina/*"
+        - SESCrudPolicy:
+            IdentityName: nthp@wjdp.uk
       Events:
         LuminaEndpoint:
           Type: Api

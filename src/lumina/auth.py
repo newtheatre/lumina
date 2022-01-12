@@ -11,6 +11,7 @@ from lumina import ssm
 
 JWT_ALGORITHM = "RS256"
 JWT_EXPIRATION_DELTA = timedelta(days=90)
+AUTH_URL = "https://nthp-web.netlify.app/auth"
 
 
 class AuthenticatedUser(BaseModel):
@@ -79,3 +80,7 @@ def optional_authenticated_user(
 ) -> Optional[AuthenticatedUser]:
     """Get user if token is provided, otherwise return None."""
     return authenticated_user
+
+
+def get_auth_url(sub: str) -> str:
+    return f"{AUTH_URL}?token={encode_jwt(sub)}"
