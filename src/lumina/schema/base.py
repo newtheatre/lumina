@@ -9,3 +9,4 @@ def to_camel(string):
 class LuminaModel(BaseModel):
     class Config:
         alias_generator = to_camel
+        allow_population_by_field_name = True

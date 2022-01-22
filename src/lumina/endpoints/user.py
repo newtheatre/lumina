@@ -2,6 +2,7 @@ from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, HTTPException
 
+import lumina.database.operations
 import lumina.emails.render
 import lumina.emails.send
 from lumina import auth
@@ -10,6 +11,7 @@ from lumina.schema.user import (
     UserPrivateResponse,
     UserPublicResponse,
 )
+from lumina.util.email import mask_email
 
 router = APIRouter()
 
@@ -31,8 +33,12 @@ def read_user(
     response_model=UserPublicResponse,
     responses={int(HTTPStatus.NOT_FOUND): {"description": "User not found"}},
 )
-def check_user(id: str):
-    raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="User not found")
+def check_member(id: str):
+    try:
+        member = lumina.database.operations.get_member(id)
+        return UserPublicResponse(id=member.pk, masked_email=mask_email(member.email))
+    except lumina.database.operations.ResultNotFound:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="User not found")
 
 
 @router.post("/{id}")

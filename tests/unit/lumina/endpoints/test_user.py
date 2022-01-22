@@ -1,10 +1,36 @@
+from http import HTTPStatus
 from unittest import mock
 
 from fastapi.testclient import TestClient
 
 from lumina.app import app
+from lumina.database.models import MemberModel
+from lumina.database.operations import ResultNotFound
 
 client = TestClient(app)
+
+
+class TestCheckUser:
+    @mock.patch(
+        "lumina.database.operations.get_member",
+        return_value=MemberModel(
+            pk="fred_bloggs",
+            name="Fred Bloggs",
+            email="fred@bloggs.test",
+        ),
+    )
+    def test_check_member_found(self, mock_get_member):
+        response = client.get("/user/fred_bloggs/check")
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == {
+            "id": "fred_bloggs",
+            "maskedEmail": "fr***@bl***.test",
+        }
+
+    @mock.patch("lumina.database.operations.get_member", side_effect=ResultNotFound())
+    def test_check_member_not_found(self, mock_get_member):
+        response = client.get("/user/fred_bloggs/check")
+        assert response.status_code == HTTPStatus.NOT_FOUND
 
 
 class TestRegisterUser:
@@ -20,7 +46,7 @@ class TestRegisterUser:
                 "fullName": "Test User",
             },
         )
-        assert response.status_code == 200
+        assert response.status_code == HTTPStatus.OK
         assert send_email.called
 
     def test_invalid_email(self):
@@ -31,7 +57,7 @@ class TestRegisterUser:
                 "fullName": "Test User",
             },
         )
-        assert response.status_code == 422
+        assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
         assert response.json() == {
             "detail": [
                 {
