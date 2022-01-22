@@ -12,14 +12,16 @@ from lumina.auth import (
 
 @pytest.fixture()
 def auth_fred_bloggs():
-    def i_am_fred_bloggs():
-        return AuthenticatedMember(
-            id="fred_bloggs",
-            expires_at=datetime.datetime.utcnow() + datetime.timedelta(days=1),
-        )
+    fred_bloggs = AuthenticatedMember(
+        id="fred_bloggs",
+        expires_at=datetime.datetime.utcnow() + datetime.timedelta(days=1),
+    )
+    i_am_fred_bloggs = lambda: fred_bloggs
 
     app.dependency_overrides[require_authenticated_member] = i_am_fred_bloggs
     app.dependency_overrides[optional_authenticated_member] = i_am_fred_bloggs
+
     yield i_am_fred_bloggs()
+
     del app.dependency_overrides[require_authenticated_member]
     del app.dependency_overrides[optional_authenticated_member]
