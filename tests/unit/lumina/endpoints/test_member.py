@@ -9,15 +9,17 @@ from lumina.database.operations import ResultNotFound
 
 client = TestClient(app)
 
+MEMBER_MODEL_FRED_BLOGGS = MemberModel(
+    pk="fred_bloggs",
+    name="Fred Bloggs",
+    email="fred@bloggs.test",
+)
+
 
 class TestCheckMember:
     @mock.patch(
         "lumina.database.operations.get_member",
-        return_value=MemberModel(
-            pk="fred_bloggs",
-            name="Fred Bloggs",
-            email="fred@bloggs.test",
-        ),
+        return_value=MEMBER_MODEL_FRED_BLOGGS,
     )
     def test_check_member_found(self, mock_get_member):
         response = client.get("/member/fred_bloggs/check")
@@ -34,20 +36,43 @@ class TestCheckMember:
 
 
 class TestRegisterMember:
-    @mock.patch("lumina.emails.send.send_email", return_value="abc123")
+    @mock.patch("lumina.database.operations.create_member", return_value=None)
+    @mock.patch("lumina.database.operations.get_member", side_effect=ResultNotFound())
     @mock.patch(
         "lumina.auth.get_auth_url", return_value="https://nthp.test/auth?token=123"
     )
-    def test_success(self, send_email, get_auth_url):
+    @mock.patch("lumina.emails.send.send_email", return_value="abc123")
+    def test_success(self, send_email, get_auth_url, get_member, create_member):
+        response = client.post(
+            "/member/fred_bloggs",
+            json={
+                "email": "test@example.com",
+                "fullName": "Fred Bloggs",
+            },
+        )
+        assert response.status_code == HTTPStatus.OK
+        assert get_member.called
+        assert send_email.called
+
+    @mock.patch(
+        "lumina.database.operations.get_member",
+        return_value=MEMBER_MODEL_FRED_BLOGGS,
+    )
+    @mock.patch(
+        "lumina.auth.get_auth_url", return_value="https://nthp.test/auth?token=123"
+    )
+    @mock.patch("lumina.emails.send.send_email", return_value="abc123")
+    def test_conflict_member_already_exists(self, send_email, get_auth_url, get_member):
         response = client.post(
             "/member/test_id",
             json={
                 "email": "test@example.com",
-                "fullName": "Test Member",
+                "fullName": "Fred Bloggs",
             },
         )
-        assert response.status_code == HTTPStatus.OK
-        assert send_email.called
+        assert response.status_code == HTTPStatus.CONFLICT
+        assert get_member.called
+        assert not send_email.called
 
     def test_invalid_email(self):
         response = client.post(

@@ -41,8 +41,23 @@ def check_member(id: str):
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Member not found")
 
 
-@router.post("/{id}")
+@router.post(
+    "/{id}",
+    responses={int(HTTPStatus.CONFLICT): {"description": "Member already exists"}},
+)
 def register_member(id: str, new_member: RegisterMemberRequest):
+    try:
+        lumina.database.operations.get_member(id)
+        raise HTTPException(
+            status_code=HTTPStatus.CONFLICT, detail="Member already exists"
+        )
+    except lumina.database.operations.ResultNotFound:
+        pass
+
+    lumina.database.operations.create_member(
+        id=id, name=new_member.full_name, email=new_member.email
+    )
+
     lumina.emails.send.send_email(
         to_addresses=[(new_member.full_name, new_member.email)],
         subject="Finish your registration",
@@ -51,7 +66,8 @@ def register_member(id: str, new_member: RegisterMemberRequest):
             name=new_member.full_name,
             auth_url=auth.get_auth_url(id),
         ),
-    ),
+    )
+
     return "OK"
 
 
