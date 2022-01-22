@@ -33,7 +33,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-poetry-2-
       - run: poetry install --no-root
-      - run: PYTHONPATH=src poetry run pytest
+      - run: PYTHONPATH=src/.:tests/. poetry run pytest
 
   mypy:
     runs-on: ubuntu-latest
