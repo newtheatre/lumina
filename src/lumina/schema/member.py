@@ -3,16 +3,16 @@ from pydantic import EmailStr
 from lumina.schema.base import LuminaModel
 
 
-class UserPublicResponse(LuminaModel):
+class MemberPublicResponse(LuminaModel):
     id: str
     masked_email: str
 
 
-class UserPrivateResponse(LuminaModel):
+class MemberPrivateResponse(LuminaModel):
     id: str
     email: EmailStr
 
 
-class RegisterUserRequest(LuminaModel):
+class RegisterMemberRequest(LuminaModel):
     full_name: str
     email: EmailStr

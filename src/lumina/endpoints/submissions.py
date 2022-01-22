@@ -13,23 +13,23 @@ from lumina.schema.submissions import (
 router = APIRouter()
 
 
-@router.get("/user/{id}")
-def get_user_submissions(
+@router.get("/member/{id}")
+def get_member_submissions(
     id: str,
-    auth_user: auth.AuthenticatedUser = Depends(auth.require_authenticated_user),
+    member: auth.AuthenticatedMember = Depends(auth.require_authenticated_member),
 ):
-    return auth_user.id
+    return member.id
 
 
 @router.post("/message")
 def create_generic_submission(
     submission: GenericSubmissionRequest,
-    auth_user: Optional[auth.AuthenticatedUser] = Depends(
-        auth.optional_authenticated_user
+    member: Optional[auth.AuthenticatedMember] = Depends(
+        auth.optional_authenticated_member
     ),
 ):
-    if auth_user:
-        return auth_user.id
+    if member:
+        return member.id
     else:
         return "not authenticated, but it's fine"
 
@@ -37,12 +37,12 @@ def create_generic_submission(
 @router.post("/show")
 def create_show_submission(
     submission: ShowSubmissionRequest,
-    auth_user: Optional[auth.AuthenticatedUser] = Depends(
-        auth.optional_authenticated_user
+    member: Optional[auth.AuthenticatedMember] = Depends(
+        auth.optional_authenticated_member
     ),
 ):
-    if auth_user:
-        return auth_user.id
+    if member:
+        return member.id
     else:
         return "not authenticated, but it's fine"
 
@@ -50,11 +50,11 @@ def create_show_submission(
 @router.post("/bio")
 def create_bio_submission(
     submission: BioSubmissionRequest,
-    auth_user: Optional[auth.AuthenticatedUser] = Depends(
-        auth.optional_authenticated_user
+    member: Optional[auth.AuthenticatedMember] = Depends(
+        auth.optional_authenticated_member
     ),
 ):
-    if auth_user:
-        return auth_user.id
+    if member:
+        return member.id
     else:
         return "not authenticated, but it's fine"

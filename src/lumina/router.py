@@ -2,13 +2,13 @@ import humps
 from fastapi import APIRouter, FastAPI
 from fastapi.routing import APIRoute
 
-from lumina.endpoints import auth, submissions, test, user
+from lumina.endpoints import auth, member, submissions, test
 
 router = APIRouter()
 router.include_router(test.router, tags=["test"], prefix="/test")
 router.include_router(auth.router, tags=["auth"], prefix="/auth")
-router.include_router(user.router, tags=["user"], prefix="/user")
-router.include_router(submissions.router, tags=["submissions"], prefix="/sub")
+router.include_router(member.router, tags=["member"], prefix="/member")
+router.include_router(submissions.router, tags=["submissions"], prefix="/submissions")
 
 
 def use_route_names_as_operation_ids(app: FastAPI) -> None:

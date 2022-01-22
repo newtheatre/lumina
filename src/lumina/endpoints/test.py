@@ -20,23 +20,23 @@ def get_config():
 
 @router.get("/auth-required")
 def check_auth_required(
-    auth_user: auth.AuthenticatedUser = Depends(auth.require_authenticated_user),
+    member: auth.AuthenticatedMember = Depends(auth.require_authenticated_member),
 ):
-    return {"id": auth_user.id}
+    return {"id": member.id}
 
 
 @router.get("/auth-optional")
 def check_auth_optional(
-    auth_user: Optional[auth.AuthenticatedUser] = Depends(
-        auth.optional_authenticated_user
+    member: Optional[auth.AuthenticatedMember] = Depends(
+        auth.optional_authenticated_member
     ),
 ):
-    return {"id": auth_user.id if auth_user else None}
+    return {"id": member.id if member else None}
 
 
 @router.get("/auth")
 def make_token(
-    user_id: str,
+    id: str,
 ):
     # TODO: Remove once we have auth via email
-    return auth.encode_jwt(user_id)
+    return auth.encode_jwt(id)

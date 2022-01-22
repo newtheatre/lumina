@@ -1,10 +1,10 @@
 from lumina.emails.render import render_email
 
 
-class TestRegisterUserEmail:
+class TestRegisterMemberEmail:
     def test_basic(self):
         email = render_email(
-            "register_user.html",
+            "register_member.html",
             name="John Doe",
             auth_url="https://example.com/auth?token=12345",
         )

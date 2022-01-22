@@ -4,9 +4,9 @@ from lumina.schema.base import LuminaModel
 
 
 class SubmitterRequest(LuminaModel):
-    user_id: Optional[str]
-    user_name: str
-    user_graduated: Optional[str]
+    member_id: Optional[str]
+    member_name: str
+    member_graduated: Optional[str]
 
 
 class GenericSubmissionRequest(LuminaModel):

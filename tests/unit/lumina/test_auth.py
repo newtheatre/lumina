@@ -24,8 +24,8 @@ def mock_keys():
 @mock_keys()
 def test_encode_and_decode_token():
     token = auth.encode_jwt("fred_bloggs")
-    user = auth.decode_jwt(token)
-    assert user.id == "fred_bloggs"
+    member = auth.decode_jwt(token)
+    assert member.id == "fred_bloggs"
 
 
 @mock_keys()
@@ -50,9 +50,9 @@ def test_expired_token():
 client = TestClient(app)
 
 
-class TestRequireAuthenticatedUser:
+class TestRequireAuthenticatedMember:
     @mock_keys()
-    def test_returns_user(self):
+    def test_returns_member(self):
         token = auth.encode_jwt("fred_bloggs")
         response = client.get(
             "/test/auth-required", headers={"Authorization": f"Bearer {token}"}
@@ -96,9 +96,9 @@ class TestRequireAuthenticatedUser:
         assert response.json() == {"detail": "Invalid or expired token"}
 
 
-class TestOptionalAuthenticatedUser:
+class TestOptionalAuthenticatedMember:
     @mock_keys()
-    def test_returns_user(self):
+    def test_returns_member(self):
         token = auth.encode_jwt("fred_bloggs")
         response = client.get(
             "/test/auth-optional", headers={"Authorization": f"Bearer {token}"}

@@ -14,7 +14,7 @@ JWT_EXPIRATION_DELTA = timedelta(days=90)
 AUTH_URL = "https://nthp-web.netlify.app/auth"
 
 
-class AuthenticatedUser(BaseModel):
+class AuthenticatedMember(BaseModel):
     id: str
     expires_at: datetime
 
@@ -40,9 +40,9 @@ def encode_jwt(sub: str) -> str:
     )
 
 
-def decode_jwt(token: str) -> AuthenticatedUser:
+def decode_jwt(token: str) -> AuthenticatedMember:
     payload = jwt.decode(token, get_jwt_public_key(), algorithms=[JWT_ALGORITHM])
-    return AuthenticatedUser(id=payload["sub"], expires_at=payload["exp"])
+    return AuthenticatedMember(id=payload["sub"], expires_at=payload["exp"])
 
 
 class JWTBearer(HTTPBearer):
@@ -68,18 +68,18 @@ class JWTBearer(HTTPBearer):
             )
 
 
-def require_authenticated_user(
-    authenticated_user=Depends(JWTBearer()),
-) -> AuthenticatedUser:
-    """Get user if token is provided, otherwise raise exception."""
-    return authenticated_user
+def require_authenticated_member(
+    authenticated_member=Depends(JWTBearer()),
+) -> AuthenticatedMember:
+    """Get member if token is provided, otherwise raise exception."""
+    return authenticated_member
 
 
-def optional_authenticated_user(
-    authenticated_user=Depends(JWTBearer(optional=True)),
-) -> Optional[AuthenticatedUser]:
-    """Get user if token is provided, otherwise return None."""
-    return authenticated_user
+def optional_authenticated_member(
+    authenticated_member=Depends(JWTBearer(optional=True)),
+) -> Optional[AuthenticatedMember]:
+    """Get member if token is provided, otherwise return None."""
+    return authenticated_member
 
 
 def get_auth_url(sub: str) -> str:

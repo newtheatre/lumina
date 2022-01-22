@@ -8,6 +8,6 @@ router = APIRouter()
 
 @router.get("/check", response_model=AuthCheckResponse)
 def check_auth(
-    auth_user: auth.AuthenticatedUser = Depends(auth.require_authenticated_user),
+    member: auth.AuthenticatedMember = Depends(auth.require_authenticated_member),
 ):
-    return AuthCheckResponse(id=auth_user.id, expires_at=auth_user.expires_at)
+    return AuthCheckResponse(id=member.id, expires_at=member.expires_at)
