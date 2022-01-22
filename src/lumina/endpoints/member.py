@@ -6,6 +6,7 @@ import lumina.database.operations
 import lumina.emails.render
 import lumina.emails.send
 from lumina import auth
+from lumina.database.models import MemberModel
 from lumina.schema.member import (
     MemberPrivateResponse,
     MemberPublicResponse,
@@ -105,6 +106,23 @@ def verify_email(token: str):
     ...
 
 
-@router.post("/{id}/login")
+@router.post(
+    "/{id}/login",
+    responses={int(HTTPStatus.NOT_FOUND): {"description": "Member not found"}},
+)
 def send_token_link_for_member(id: str):
-    ...
+    try:
+        member = lumina.database.operations.get_member(id)
+        lumina.emails.send.send_email(
+            to_addresses=[(member.name, member.email)],
+            subject="Link to login to Alumni Network",
+            body=lumina.emails.render.render_email(
+                "login.html",
+                name=member.name,
+                auth_url=auth.get_auth_url(id),
+            ),
+        )
+    except lumina.database.operations.ResultNotFound:
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Member not found")
+
+    return "OK"

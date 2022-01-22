@@ -14,6 +14,7 @@ MEMBER_MODEL_FRED_BLOGGS = MemberModel(
     name="Fred Bloggs",
     email="fred@bloggs.test",
 )
+FAKE_TOKEN_URL = "https://nthp.test/auth?token=123"
 
 
 class TestCheckMember:
@@ -38,9 +39,7 @@ class TestCheckMember:
 class TestRegisterMember:
     @mock.patch("lumina.database.operations.create_member", return_value=None)
     @mock.patch("lumina.database.operations.get_member", side_effect=ResultNotFound())
-    @mock.patch(
-        "lumina.auth.get_auth_url", return_value="https://nthp.test/auth?token=123"
-    )
+    @mock.patch("lumina.auth.get_auth_url", return_value=FAKE_TOKEN_URL)
     @mock.patch("lumina.emails.send.send_email", return_value="abc123")
     def test_success(self, send_email, get_auth_url, get_member, create_member):
         response = client.post(
@@ -109,3 +108,23 @@ class TestDeleteMember:
         response = client.delete("/member/fred_bloggs")
         assert response.status_code == HTTPStatus.OK
         assert mock_delete_member.called
+
+
+class TestSendTokenLinkForMember:
+    @mock.patch("lumina.database.operations.get_member", side_effect=ResultNotFound())
+    def test_no_member(self, get_member):
+        response = client.post("/member/fred_bloggs/login")
+        assert get_member.called
+        assert response.status_code == HTTPStatus.NOT_FOUND
+
+    @mock.patch("lumina.auth.get_auth_url", return_value=FAKE_TOKEN_URL)
+    @mock.patch("lumina.emails.send.send_email", return_value="abc123")
+    @mock.patch(
+        "lumina.database.operations.get_member", return_value=MEMBER_MODEL_FRED_BLOGGS
+    )
+    def test_success(self, get_member, send_email, get_auth_url):
+        response = client.post("/member/fred_bloggs/login")
+        assert get_member.called
+        assert send_email.called
+        assert get_auth_url.called
+        assert response.status_code == HTTPStatus.OK
