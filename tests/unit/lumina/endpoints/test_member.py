@@ -67,3 +67,20 @@ class TestRegisterMember:
                 }
             ]
         }
+
+
+class TestDeleteMember:
+    def test_no_auth(self):
+        response = client.delete("/member/fred_bloggs")
+        assert response.status_code == HTTPStatus.UNAUTHORIZED
+
+    def test_cannot_delete_others(self, auth_fred_bloggs):
+        response = client.delete("/member/alice_bloggs")
+        assert response.status_code == HTTPStatus.FORBIDDEN
+        assert response.json() == {"detail": "You cannot delete another member"}
+
+    @mock.patch("lumina.database.operations.delete_member", return_value=None)
+    def test_success(self, mock_delete_member, auth_fred_bloggs):
+        response = client.delete("/member/fred_bloggs")
+        assert response.status_code == HTTPStatus.OK
+        assert mock_delete_member.called

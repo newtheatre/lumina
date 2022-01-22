@@ -77,8 +77,11 @@ def delete_member(
     member: auth.AuthenticatedMember = Depends(auth.require_authenticated_member),
 ):
     if id != member.id:
-        raise HTTPException(status_code=403, detail="You cannot delete another member")
-    ...
+        raise HTTPException(
+            status_code=HTTPStatus.FORBIDDEN, detail="You cannot delete another member"
+        )
+    lumina.database.operations.delete_member(id)
+    return "OK"
 
 
 @router.post("/{id}/verify")
