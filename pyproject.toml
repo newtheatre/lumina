@@ -15,7 +15,7 @@ PyJWT = "^2.3.0"
 cryptography = "^36.0.1"
 requests = "^2.27.1"
 boto3 = {extras = ["ses"], version = "^1.20.33"}
-boto3-stubs = {extras = ["ses"], version = "^1.20.33"}
+boto3-stubs = {extras = ["ses", "dynamodb"], version = "^1.20.41"}
 Jinja2 = "^3.0.3"
 html2text = "^2020.1.16"
 
