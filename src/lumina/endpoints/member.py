@@ -20,7 +20,10 @@ router = APIRouter()
 @router.get(
     "/{id}",
     response_model=MemberPrivateResponse,
-    responses={int(HTTPStatus.FORBIDDEN): {"description": "Forbidden"}},
+    responses={
+        int(HTTPStatus.UNAUTHORIZED): {"description": "Unauthorized"},
+        int(HTTPStatus.FORBIDDEN): {"description": "Forbidden"},
+    },
 )
 def read_member(
     id: str,
@@ -73,7 +76,11 @@ def register_member(id: str, new_member: RegisterMemberRequest):
 
 
 @router.put(
-    "/{id}", responses={int(HTTPStatus.FORBIDDEN): {"description": "Forbidden"}}
+    "/{id}",
+    responses={
+        int(HTTPStatus.UNAUTHORIZED): {"description": "Unauthorized"},
+        int(HTTPStatus.FORBIDDEN): {"description": "Forbidden"},
+    },
 )
 def update_member(
     id: str,
@@ -87,7 +94,11 @@ def update_member(
 
 
 @router.delete(
-    "/{id}", responses={int(HTTPStatus.FORBIDDEN): {"description": "Forbidden"}}
+    "/{id}",
+    responses={
+        int(HTTPStatus.UNAUTHORIZED): {"description": "Unauthorized"},
+        int(HTTPStatus.FORBIDDEN): {"description": "Forbidden"},
+    },
 )
 def delete_member(
     id: str,
