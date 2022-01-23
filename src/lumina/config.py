@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     environment: str = "dev"
     stage_name: str = ""
     vcs_rev: str = "unknown"
+    aws_region: str = "eu-west-2"
 
     @property
     def root_path(self) -> Optional[str]:

@@ -6,6 +6,8 @@ import boto3
 from botocore.exceptions import ClientError
 from mypy_boto3_ses.type_defs import BodyTypeDef, ContentTypeDef, MessageTypeDef
 
+from lumina.config import settings
+
 log = logging.getLogger(__name__)
 
 FROM_ADDRESS = email.utils.formataddr(("New Theatre Alumni Network", "nthp@wjdp.uk"))
@@ -39,7 +41,7 @@ def send_email(
     :param html: The HTML body of the email, optional.
     :return: The message ID of the email.
     """
-    ses_client = boto3.client("ses")
+    ses_client = boto3.client("ses", region_name=settings.aws_region)
 
     # Try to send the email.
     try:

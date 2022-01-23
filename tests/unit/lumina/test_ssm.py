@@ -3,12 +3,13 @@ import pytest
 from moto import mock_ssm
 
 from lumina import ssm
+from lumina.config import settings
 
 
 class TestGetSsmParameter:
     @mock_ssm()
     def test_get_param(self):
-        boto3.client("ssm").put_parameter(
+        boto3.client("ssm", region_name=settings.aws_region).put_parameter(
             Name="/test/exists", Value="test", Type="String"
         )
         assert ssm.get_parameter("/test/exists") == "test"
