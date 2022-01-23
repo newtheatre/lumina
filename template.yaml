@@ -24,15 +24,6 @@ Resources:
     Properties:
       Name: !Join ["", ["lumina-endpoint-", !Ref Environment]]
       StageName: !Ref Environment
-  #      Cors:
-  #        # API gateway has poor CORS support, if we want to limit by origin we'd need to write a function to handle that
-  #        # See https://stackoverflow.com/questions/39628640/aws-api-gateway-cors-access-control-allow-origin-multiple-entries
-  #        AllowHeaders: "'Content-Type, Authorization'"
-  #        AllowMethods: "'GET, POST'"
-  #        AllowOrigin: "'*'"
-  #        EndpointConfiguration: REGIONAL
-  #        BasePath:
-  #          - /
 
   PythonDependencyLayer:
     Type: AWS::Serverless::LayerVersion
@@ -131,6 +122,12 @@ Resources:
           Properties:
             Path: /{path+}
             Method: delete
+            RestApiId: !Ref BasicAWSApiGateway
+        LuminaEndpointOptions:
+          Type: Api
+          Properties:
+            Path: /{path+}
+            Method: options
             RestApiId: !Ref BasicAWSApiGateway
 
 Transform:
