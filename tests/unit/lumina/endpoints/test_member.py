@@ -17,6 +17,27 @@ MEMBER_MODEL_FRED_BLOGGS = MemberModel(
 FAKE_TOKEN_URL = "https://nthp.test/auth?token=123"
 
 
+class TestReadMember:
+    def test_unauthorised(self):
+        response = client.get("/member/fred_bloggs")
+        assert response.status_code == HTTPStatus.UNAUTHORIZED
+
+    def test_cannot_read_another_member(self, auth_fred_bloggs):
+        response = client.get("/member/alice_bloggs")
+        assert response.status_code == HTTPStatus.FORBIDDEN
+        assert response.json() == {"detail": "You cannot read another member"}
+
+    @mock.patch(
+        "lumina.database.operations.get_member",
+        return_value=MEMBER_MODEL_FRED_BLOGGS,
+    )
+    def test_success_self(self, mock_get_member, auth_fred_bloggs):
+        response = client.get("/member/fred_bloggs")
+        assert mock_get_member.called
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == {"id": "fred_bloggs", "email": "fred@bloggs.test"}
+
+
 class TestCheckMember:
     @mock.patch(
         "lumina.database.operations.get_member",

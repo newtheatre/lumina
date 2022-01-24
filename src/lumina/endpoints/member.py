@@ -6,7 +6,6 @@ import lumina.database.operations
 import lumina.emails.render
 import lumina.emails.send
 from lumina import auth
-from lumina.database.models import MemberModel
 from lumina.schema.member import (
     MemberPrivateResponse,
     MemberPublicResponse,
@@ -27,9 +26,14 @@ router = APIRouter()
 )
 def read_member(
     id: str,
-    member: auth.AuthenticatedMember = Depends(auth.require_authenticated_member),
+    auth_member: auth.AuthenticatedMember = Depends(auth.require_authenticated_member),
 ):
-    return MemberPrivateResponse(id=id, email=member.id)
+    if id != auth_member.id:
+        raise HTTPException(
+            status_code=HTTPStatus.FORBIDDEN, detail="You cannot read another member"
+        )
+    member = lumina.database.operations.get_member(auth_member.id)
+    return MemberPrivateResponse(id=id, email=member.email)
 
 
 @router.get(
