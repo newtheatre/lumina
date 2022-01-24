@@ -27,10 +27,19 @@ class MemberModel(BaseDynamoModel):
     created_at: Optional[datetime.datetime]
     consent: Optional[MemberConsent]
 
+    def to_submitter(self) -> "SubmitterModel":
+        return SubmitterModel(
+            id=self.pk,
+            name=self.name,
+            email=self.email,
+            year_of_graduation=self.year_of_graduation,
+        )
 
-class SubmissionSubmitter(BaseModel):
+
+class SubmitterModel(BaseModel):
+    id: Optional[str]
     name: str
-    graduation_year: Optional[int]
+    year_of_graduation: Optional[int]
     email: Optional[EmailStr]
 
 
@@ -39,5 +48,11 @@ class SubmissionModel(BaseDynamoModel):
     target_id: str
     target_type: str
     target_name: str
-    message: str
-    submitter: Optional[SubmissionSubmitter]
+    message: Optional[str]
+    submitter: SubmitterModel
+
+    @property
+    def get_issue_id(self) -> int:
+        # TODO: Use this when we have Python 3.9
+        # return int(self.target_id.removeprefix(f"{table.SK_SUBMISSION}/"))
+        return int(self.sk.split("/")[-1])

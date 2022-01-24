@@ -2,7 +2,7 @@ import moto
 import pytest
 
 from lumina.database import operations, table
-from lumina.database.models import SubmissionModel, SubmissionSubmitter
+from lumina.database.models import SubmissionModel, SubmitterModel
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -69,6 +69,9 @@ def _make_submission(id: int, **kwargs) -> SubmissionModel:
                 target_name="Romeo and Juliet",
                 target_type="show",
                 message="The part of Romeo was played by a hamster.",
+                submitter=dict(
+                    name="Fred Bloggs",
+                ),
             ),
             **kwargs,
         }
@@ -86,7 +89,7 @@ def test_put_anonymous_submission():
         _make_submission(
             101,
             pk=table.PK_ANONYMOUS,
-            submitter=SubmissionSubmitter(
+            submitter=SubmitterModel(
                 name="Charlie Bloggs",
                 email="charlie@bloggs.test",
             ),

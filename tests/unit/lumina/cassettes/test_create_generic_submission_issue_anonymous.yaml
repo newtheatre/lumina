@@ -1,0 +1,92 @@
+interactions:
+  - request:
+      body:
+        '{"title": "Test submission", "body": "\n| Name            | Value                                             |\n|-----------------|---------------------------------------------------|\n|
+        URL             | [/a/b/c](https://history.newtheatre.org.uk/a/b/c) |\n| Source          |
+        [_shows/11_12/faust_is_dead.md](https://github.com/newtheatre/history-project/blob/master/_shows/11_12/faust_is_dead.md)
+        |\n| Submitter State | Unverified |\n| Submitter       | Fred Bloggs |\n\n---\n\nThis
+        is a test submission."}'
+      headers:
+        Accept:
+          - "*/*"
+        Accept-Encoding:
+          - gzip, deflate
+        Connection:
+          - keep-alive
+        Content-Length:
+          - "509"
+        Content-Type:
+          - application/json
+        User-Agent:
+          - PyGithub/Python
+      method: POST
+      uri: https://api.github.com/repos/newtheatre/lumina-test/issues
+    response:
+      body:
+        string:
+          '{"url":"https://api.github.com/repos/newtheatre/lumina-test/issues/1","repository_url":"https://api.github.com/repos/newtheatre/lumina-test","labels_url":"https://api.github.com/repos/newtheatre/lumina-test/issues/1/labels{/name}","comments_url":"https://api.github.com/repos/newtheatre/lumina-test/issues/1/comments","events_url":"https://api.github.com/repos/newtheatre/lumina-test/issues/1/events","html_url":"https://github.com/newtheatre/lumina-test/issues/1","id":1113334567,"node_id":"I_kwDOGuxcos5CXCMn","number":1,"title":"Test
+          submission","user":{"login":"ntbot","id":12116913,"node_id":"MDQ6VXNlcjEyMTE2OTEz","avatar_url":"https://avatars.githubusercontent.com/u/12116913?v=4","gravatar_id":"","url":"https://api.github.com/users/ntbot","html_url":"https://github.com/ntbot","followers_url":"https://api.github.com/users/ntbot/followers","following_url":"https://api.github.com/users/ntbot/following{/other_user}","gists_url":"https://api.github.com/users/ntbot/gists{/gist_id}","starred_url":"https://api.github.com/users/ntbot/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/ntbot/subscriptions","organizations_url":"https://api.github.com/users/ntbot/orgs","repos_url":"https://api.github.com/users/ntbot/repos","events_url":"https://api.github.com/users/ntbot/events{/privacy}","received_events_url":"https://api.github.com/users/ntbot/received_events","type":"User","site_admin":false},"labels":[],"state":"open","locked":false,"assignee":null,"assignees":[],"milestone":null,"comments":0,"created_at":"2022-01-25T01:58:10Z","updated_at":"2022-01-25T01:58:10Z","closed_at":null,"author_association":"NONE","active_lock_reason":null,"body":"\n|
+          Name            | Value                                             |\n|-----------------|---------------------------------------------------|\n|
+          URL             | [/a/b/c](https://history.newtheatre.org.uk/a/b/c) |\n| Source          |
+          [_shows/11_12/faust_is_dead.md](https://github.com/newtheatre/history-project/blob/master/_shows/11_12/faust_is_dead.md)
+          |\n| Submitter State | Unverified |\n| Submitter       | Fred Bloggs |\n\n---\n\nThis
+          is a test submission.","closed_by":null,"reactions":{"url":"https://api.github.com/repos/newtheatre/lumina-test/issues/1/reactions","total_count":0,"+1":0,"-1":0,"laugh":0,"hooray":0,"confused":0,"heart":0,"rocket":0,"eyes":0},"timeline_url":"https://api.github.com/repos/newtheatre/lumina-test/issues/1/timeline","performed_via_github_app":null}'
+      headers:
+        Access-Control-Allow-Origin:
+          - "*"
+        Access-Control-Expose-Headers:
+          - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+            X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes,
+            X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO,
+            X-GitHub-Request-Id, Deprecation, Sunset
+        Cache-Control:
+          - private, max-age=60, s-maxage=60
+        Content-Length:
+          - "2476"
+        Content-Security-Policy:
+          - default-src 'none'
+        Content-Type:
+          - application/json; charset=utf-8
+        Date:
+          - Tue, 25 Jan 2022 01:58:10 GMT
+        ETag:
+          - '"3f7000ea06673bd22beda6d18a080682c19c16311583ba830f62d063913d12b3"'
+        Location:
+          - https://api.github.com/repos/newtheatre/lumina-test/issues/1
+        Referrer-Policy:
+          - origin-when-cross-origin, strict-origin-when-cross-origin
+        Server:
+          - GitHub.com
+        Strict-Transport-Security:
+          - max-age=31536000; includeSubdomains; preload
+        Vary:
+          - Accept, Authorization, Cookie, X-GitHub-OTP
+          - Accept-Encoding, Accept, X-Requested-With
+        X-Accepted-OAuth-Scopes:
+          - ""
+        X-Content-Type-Options:
+          - nosniff
+        X-Frame-Options:
+          - deny
+        X-GitHub-Media-Type:
+          - github.v3; format=json
+        X-GitHub-Request-Id:
+          - EC12:12371:74BCC6:7752D2:61EF5932
+        X-OAuth-Scopes:
+          - repo
+        X-RateLimit-Limit:
+          - "5000"
+        X-RateLimit-Remaining:
+          - "4996"
+        X-RateLimit-Reset:
+          - "1643079195"
+        X-RateLimit-Resource:
+          - core
+        X-RateLimit-Used:
+          - "4"
+        X-XSS-Protection:
+          - "0"
+      status:
+        code: 201
+        message: Created
+version: 1

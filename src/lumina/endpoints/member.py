@@ -6,7 +6,6 @@ import lumina.database.operations
 import lumina.emails.render
 import lumina.emails.send
 from lumina import auth
-from lumina.database.models import MemberModel
 from lumina.schema.member import (
     MemberPrivateResponse,
     MemberPublicResponse,

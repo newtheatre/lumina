@@ -2,18 +2,13 @@ from http import HTTPStatus
 from unittest import mock
 
 from fastapi.testclient import TestClient
+from fixtures.models import MEMBER_MODEL_FRED_BLOGGS
 
 from lumina.app import app
-from lumina.database.models import MemberModel
 from lumina.database.operations import ResultNotFound
 
 client = TestClient(app)
 
-MEMBER_MODEL_FRED_BLOGGS = MemberModel(
-    pk="fred_bloggs",
-    name="Fred Bloggs",
-    email="fred@bloggs.test",
-)
 FAKE_TOKEN_URL = "https://nthp.test/auth?token=123"
 
 
