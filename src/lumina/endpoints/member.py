@@ -120,11 +120,6 @@ def delete_member(
     return "OK"
 
 
-@router.post("/{id}/verify")
-def verify_email(token: str):
-    ...
-
-
 @router.post(
     "/{id}/login",
     responses={int(HTTPStatus.NOT_FOUND): {"description": "Member not found"}},
