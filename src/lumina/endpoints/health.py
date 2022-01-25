@@ -20,6 +20,5 @@ router = APIRouter()
     description="Check the health of the service",
 )
 def health_check(response: Response):
-    status_code, body = health.get_health_check_response()
-    response.status_code = HTTPStatus.INTERNAL_SERVER_ERROR
+    response.status_code, body = health.get_health_check_response()
     return body
