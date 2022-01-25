@@ -33,7 +33,7 @@ def read_member(
             status_code=HTTPStatus.FORBIDDEN, detail="You cannot read another member"
         )
     member = lumina.database.operations.get_member(auth_member.id)
-    return MemberPrivateResponse(id=id, email=member.email)
+    return MemberPrivateResponse.from_model(member)
 
 
 @router.get(

@@ -30,7 +30,11 @@ class TestReadMember:
         response = client.get("/member/fred_bloggs")
         assert mock_get_member.called
         assert response.status_code == HTTPStatus.OK
-        assert response.json() == {"id": "fred_bloggs", "email": "fred@bloggs.test"}
+        assert response.json() == {
+            "email": "fred@bloggs.test",
+            "emailVerified": False,
+            "id": "fred_bloggs",
+        }
 
 
 class TestCheckMember:
