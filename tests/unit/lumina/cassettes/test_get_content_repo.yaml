@@ -1,0 +1,102 @@
+interactions:
+  - request:
+      body: null
+      headers:
+        Accept:
+          - "*/*"
+        Accept-Encoding:
+          - gzip, deflate
+        Connection:
+          - keep-alive
+        User-Agent:
+          - PyGithub/Python
+      method: GET
+      uri: https://api.github.com/repos/newtheatre/lumina-test
+    response:
+      body:
+        string: !!binary |
+          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
+          mWJB1RZ5t5Obu+2gy/1nj/8DeEMGa64YAAA=
+      headers:
+        Access-Control-Allow-Origin:
+          - "*"
+        Access-Control-Expose-Headers:
+          - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+            X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes,
+            X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO,
+            X-GitHub-Request-Id, Deprecation, Sunset
+        Cache-Control:
+          - private, max-age=60, s-maxage=60
+        Content-Encoding:
+          - gzip
+        Content-Security-Policy:
+          - default-src 'none'
+        Content-Type:
+          - application/json; charset=utf-8
+        Date:
+          - Tue, 25 Jan 2022 01:53:54 GMT
+        ETag:
+          - W/"5266e4a6bee964274f97f81872f564acaaf82e5dbafe25625a79807af881fa87"
+        Last-Modified:
+          - Tue, 25 Jan 2022 01:46:06 GMT
+        Referrer-Policy:
+          - origin-when-cross-origin, strict-origin-when-cross-origin
+        Server:
+          - GitHub.com
+        Strict-Transport-Security:
+          - max-age=31536000; includeSubdomains; preload
+        Transfer-Encoding:
+          - chunked
+        Vary:
+          - Accept, Authorization, Cookie, X-GitHub-OTP
+          - Accept-Encoding, Accept, X-Requested-With
+        X-Accepted-OAuth-Scopes:
+          - repo
+        X-Content-Type-Options:
+          - nosniff
+        X-Frame-Options:
+          - deny
+        X-GitHub-Media-Type:
+          - github.v3; format=json
+        X-GitHub-Request-Id:
+          - EBBC:B8E2:5666D1:57E7C4:61EF5832
+        X-OAuth-Scopes:
+          - repo
+        X-RateLimit-Limit:
+          - "5000"
+        X-RateLimit-Remaining:
+          - "4997"
+        X-RateLimit-Reset:
+          - "1643079195"
+        X-RateLimit-Resource:
+          - core
+        X-RateLimit-Used:
+          - "3"
+        X-XSS-Protection:
+          - "0"
+      status:
+        code: 200
+        message: OK
+version: 1

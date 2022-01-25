@@ -1,5 +1,4 @@
 import datetime
-from enum import Enum
 from typing import Optional
 
 from pydantic import Field
@@ -16,5 +15,6 @@ class HealthCheckCondition(LuminaModel):
 class HealthCheckResponse(LuminaModel):
     version: str = Field(description="Version of app", example="1.0.0")
     check_ssm: HealthCheckCondition
+    check_github: HealthCheckCondition
     # check_dynamodb: HealthCheckCondition # TODO: implement dynamodb health check
     # check_ses: HealthCheckCondition # TODO: implement ses health check
