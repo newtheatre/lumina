@@ -46,6 +46,8 @@ def test_create_generic_submission_issue_anonymous():
     )
     assert issue.title == "Test submission"
     assert issue.number == 1
+    assert issue.state == "open"
+    assert issue.html_url == "https://github.com/newtheatre/lumina-test/issues/1"
 
 
 @pytest.mark.vcr
@@ -70,6 +72,7 @@ def test_create_generic_submission_issue_anonymous_no_subject():
     assert issue.title == "show/11_12/faust_is_dead"
     assert issue.number == 2
     assert issue.state == "open"
+    assert issue.html_url == "https://github.com/newtheatre/lumina-test/issues/2"
 
 
 @pytest.mark.vcr
@@ -94,3 +97,4 @@ def test_create_generic_submission_issue_member():
     assert issue.title == "Test submission"
     assert issue.number == 3
     assert issue.state == "open"
+    assert issue.html_url == "https://github.com/newtheatre/lumina-test/issues/3"

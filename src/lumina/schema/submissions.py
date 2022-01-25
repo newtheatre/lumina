@@ -147,7 +147,7 @@ class SubmissionResponse(LuminaModel):
             message=submission.message,
             github_issue=GitHubIssueResponse(
                 number=issue.number,
-                url=issue.url,
+                url=issue.html_url,
                 state=issue.state,
             ),
         )
