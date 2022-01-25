@@ -30,6 +30,7 @@ class MemberModel(BaseDynamoModel):
     def to_submitter(self) -> "SubmitterModel":
         return SubmitterModel(
             id=self.pk,
+            verified=True,
             name=self.name,
             email=self.email,
             year_of_graduation=self.year_of_graduation,
@@ -37,7 +38,8 @@ class MemberModel(BaseDynamoModel):
 
 
 class SubmitterModel(BaseModel):
-    id: Optional[str]
+    id: str
+    verified: bool
     name: str
     year_of_graduation: Optional[int]
     email: Optional[EmailStr]

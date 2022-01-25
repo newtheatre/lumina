@@ -21,7 +21,11 @@ class SubmitterRequest(LuminaModel):
 
     def to_model(self) -> SubmitterModel:
         return SubmitterModel(
-            name=self.name, year_of_graduation=self.year_of_graduation, email=self.email
+            id=self.id,
+            verified=False,
+            name=self.name,
+            year_of_graduation=self.year_of_graduation,
+            email=self.email,
         )
 
 

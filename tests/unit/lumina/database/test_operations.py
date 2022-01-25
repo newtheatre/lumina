@@ -70,7 +70,9 @@ def _make_submission(id: int, **kwargs) -> SubmissionModel:
                 target_type="show",
                 message="The part of Romeo was played by a hamster.",
                 submitter=dict(
+                    id="fred_bloggs",
                     name="Fred Bloggs",
+                    verified=True,
                 ),
             ),
             **kwargs,
@@ -90,6 +92,8 @@ def test_put_anonymous_submission():
             101,
             pk=table.PK_ANONYMOUS,
             submitter=SubmitterModel(
+                id="c0286cf1-15cc-4e43-93de-aaca592e447b",
+                verified=False,
                 name="Charlie Bloggs",
                 email="charlie@bloggs.test",
             ),
