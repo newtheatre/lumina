@@ -1,10 +1,11 @@
-from typing import Optional
+from typing import Optional, Union
+from uuid import UUID
 
 from github import Issue
 from pydantic import EmailStr, Field
 
 from lumina.database.models import MemberModel, SubmissionModel, SubmitterModel
-from lumina.database.table import PK_ANONYMOUS, get_submission_sk
+from lumina.database.table import get_submission_sk
 from lumina.schema.base import LuminaModel
 
 FIELD_SUBMITTER_ID = Field(description="The ID of the submitter", example="fred_bloggs")
@@ -14,14 +15,14 @@ FIELD_SUBMITTER_NAME = Field(
 
 
 class SubmitterRequest(LuminaModel):
-    id: str = FIELD_SUBMITTER_ID
+    id: UUID = FIELD_SUBMITTER_ID
     name: str = FIELD_SUBMITTER_NAME
     year_of_graduation: Optional[int] = Field(example=1999)
     email: Optional[EmailStr] = Field(example="fred@bloggs.com")
 
     def to_model(self) -> SubmitterModel:
         return SubmitterModel(
-            id=self.id,
+            id=str(self.id),
             verified=False,
             name=self.name,
             year_of_graduation=self.year_of_graduation,
@@ -80,11 +81,11 @@ class GenericSubmissionRequest(BaseSubmissionRequest):
         self,
         *,
         submission_id: int,
-        submitter_id: str,
+        submitter_id: Union[str, UUID],
         member: Optional[MemberModel],
     ) -> SubmissionModel:
         return SubmissionModel(
-            pk=submitter_id,
+            pk=str(submitter_id),
             sk=get_submission_sk(submission_id),
             url=self.target_url,
             target_id=self.target_id,

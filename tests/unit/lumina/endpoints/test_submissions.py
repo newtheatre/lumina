@@ -1,6 +1,5 @@
 from http import HTTPStatus
 from unittest import mock
-from unittest.mock import MagicMock
 
 from fastapi.testclient import TestClient
 from fixtures.models import GITHUB_ISSUE, MEMBER_MODEL_FRED_BLOGGS
@@ -26,6 +25,34 @@ class TestCreateGenericSubmission:
         assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
         assert response.json() == {
             "detail": "You must either provide a submitter or authenticate as a member"
+        }
+
+    def test_require_uuid_submitter_id_if_not_authed(self):
+        response = client.post(
+            "/submissions/message",
+            json=dict(
+                target_type="test",
+                target_id="test-page",
+                target_name="Test Page",
+                target_url="https://example.com/test-page",
+                message="Hello World",
+                submitter=dict(
+                    id="fred_bloggs",
+                    name="Fred Bloggs",
+                    year_of_graduation=2020,
+                    email="fred@bloggs.test",
+                ),
+            ),
+        )
+        assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+        assert response.json() == {
+            "detail": [
+                {
+                    "loc": ["body", "submitter", "id"],
+                    "msg": "value is not a valid uuid",
+                    "type": "type_error.uuid",
+                }
+            ]
         }
 
     def test_disallow_submitter_if_authed(self, auth_fred_bloggs):
@@ -77,7 +104,15 @@ class TestCreateGenericSubmission:
             )
             response = client.post(
                 "/submissions/message",
-                json=submission_request.dict(),
+                # This mess needed as pydantic doesn't serialise UUID by default
+                # See https://github.com/samuelcolvin/pydantic/issues/1157
+                json={
+                    **submission_request.dict(),
+                    "submitter": {
+                        **submission_request.submitter.dict(),
+                        "id": str(submission_request.submitter.id),
+                    },
+                },
             )
         assert response.status_code == HTTPStatus.OK
 
