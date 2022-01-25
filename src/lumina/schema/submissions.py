@@ -32,6 +32,9 @@ class SubmitterRequest(LuminaModel):
 
 class SubmitterResponse(LuminaModel):
     id: str = FIELD_SUBMITTER_ID
+    verified: bool = Field(
+        description="Was this submission made by a verified member", example=True
+    )
     name: str = FIELD_SUBMITTER_NAME
 
 
@@ -134,6 +137,7 @@ class SubmissionResponse(LuminaModel):
             id=submission.get_issue_id,
             submitter=SubmitterResponse(
                 id=submission.pk,
+                verified=submission.submitter.verified,
                 name=submission.submitter.name,
             ),
             target_type=submission.target_type,

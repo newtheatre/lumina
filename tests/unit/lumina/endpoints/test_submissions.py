@@ -125,6 +125,7 @@ class TestCreateGenericSubmission:
             "message": "Hello World",
             "submitter": {
                 "id": "c0286cf1-15cc-4e43-93de-aaca592e447b",
+                "verified": False,
                 "name": "Fred Bloggs",
             },
             "targetId": "test-page",
@@ -168,7 +169,7 @@ class TestCreateGenericSubmission:
             },
             "id": 123,
             "message": "Hello World",
-            "submitter": {"id": "fred_bloggs", "name": "Fred Bloggs"},
+            "submitter": {"id": "fred_bloggs", "verified": True, "name": "Fred Bloggs"},
             "targetId": "test-page",
             "targetName": "Test Page",
             "targetType": "test",
