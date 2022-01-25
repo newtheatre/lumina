@@ -1,3 +1,6 @@
+import datetime
+
+import freezegun
 import moto
 import pytest
 
@@ -46,6 +49,21 @@ def test_put_member():
     operations.put_member(create_member)
     get_member = operations.get_member(id="fred_bloggs")
     assert get_member.email == "fred.bloggs@gmail.test"
+
+
+def test_set_member_email_verified():
+    create_member = operations.create_member(
+        id="fred_bloggs", name="Fred Bloggs", email="fred@bloggs.test"
+    )
+    assert create_member.email_verified is False
+    with freezegun.freeze_time("2020-01-01 12:34:56"):
+        operations.set_member_email_verified(create_member.pk)
+    get_member = operations.get_member(create_member.pk)
+    print(get_member.dict())
+    assert get_member.email_verified is True
+    assert get_member.email_verified_at == datetime.datetime(
+        2020, 1, 1, 12, 34, 56, tzinfo=datetime.timezone.utc
+    )
 
 
 def test_delete_member_exists():

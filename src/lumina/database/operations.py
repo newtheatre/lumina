@@ -1,3 +1,4 @@
+import datetime
 from typing import List
 
 from boto3.dynamodb.conditions import Key
@@ -52,6 +53,16 @@ def put_member(model: MemberModel) -> MemberModel:
         Item=model.dict(),
     )
     return model
+
+
+def set_member_email_verified(id: str) -> None:
+    get_dynamo_db().Table(get_table_name()).update_item(
+        Key={MEMBER_PARTITION_KEY: id, MEMBER_SORT_KEY: SK_PROFILE},
+        UpdateExpression="set email_verified_at = :v",
+        ExpressionAttributeValues={
+            ":v": datetime.datetime.now(datetime.timezone.utc).isoformat()
+        },
+    )
 
 
 def delete_member(id: str) -> None:

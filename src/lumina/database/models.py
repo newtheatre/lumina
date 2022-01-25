@@ -25,7 +25,12 @@ class MemberModel(BaseDynamoModel):
     phone: Optional[str]
     year_of_graduation: Optional[int]
     created_at: Optional[datetime.datetime]
+    email_verified_at: Optional[datetime.datetime]
     consent: Optional[MemberConsent]
+
+    @property
+    def email_verified(self) -> bool:
+        return self.email_verified_at is not None
 
     def to_submitter(self) -> "SubmitterModel":
         return SubmitterModel(
