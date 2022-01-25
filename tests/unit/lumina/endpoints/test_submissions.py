@@ -115,6 +115,23 @@ class TestCreateGenericSubmission:
                 },
             )
         assert response.status_code == HTTPStatus.OK
+        assert response.json() == {
+            "githubIssue": {
+                "number": 1,
+                "state": "open",
+                "url": "https://github.com/newtheatre/lumina-test/issues/123",
+            },
+            "id": 123,
+            "message": "Hello World",
+            "submitter": {
+                "id": "c0286cf1-15cc-4e43-93de-aaca592e447b",
+                "name": "Fred Bloggs",
+            },
+            "targetId": "test-page",
+            "targetName": "Test Page",
+            "targetType": "test",
+            "targetUrl": "https://example.com/test-page",
+        }
 
     def test_success_authed(self, auth_fred_bloggs):
         with mock.patch(
@@ -143,3 +160,17 @@ class TestCreateGenericSubmission:
                 json=submission_request.dict(),
             )
         assert response.status_code == HTTPStatus.OK
+        assert response.json() == {
+            "githubIssue": {
+                "number": 1,
+                "state": "open",
+                "url": "https://github.com/newtheatre/lumina-test/issues/123",
+            },
+            "id": 123,
+            "message": "Hello World",
+            "submitter": {"id": "fred_bloggs", "name": "Fred Bloggs"},
+            "targetId": "test-page",
+            "targetName": "Test Page",
+            "targetType": "test",
+            "targetUrl": "https://example.com/test-page",
+        }
