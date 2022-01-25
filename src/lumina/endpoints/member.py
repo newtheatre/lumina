@@ -33,6 +33,10 @@ def read_member(
             status_code=HTTPStatus.FORBIDDEN, detail="You cannot read another member"
         )
     member = lumina.database.operations.get_member(auth_member.id)
+    if not member.email_verified:
+        lumina.database.operations.set_member_email_verified(auth_member.id)
+        # Fetch again, so we get the updated email_verified_at field
+        member = lumina.database.operations.get_member(auth_member.id)
     return MemberPrivateResponse.from_model(member)
 
 
