@@ -1,3 +1,4 @@
+import datetime
 from typing import Optional, Union
 from uuid import UUID
 
@@ -6,7 +7,12 @@ from pydantic import EmailStr, Field
 
 import lumina.github.submissions
 import lumina.github.util
-from lumina.database.models import MemberModel, SubmissionModel, SubmitterModel
+from lumina.database.models import (
+    GitHubIssueState,
+    MemberModel,
+    SubmissionModel,
+    SubmitterModel,
+)
 from lumina.database.table import get_submission_sk
 from lumina.schema.base import LuminaModel
 from lumina.util import dates
@@ -118,7 +124,12 @@ class BioSubmissionRequest(BaseSubmissionRequest):
 class GitHubIssueResponse(LuminaModel):
     number: int
     url: str
-    state: str
+    state: GitHubIssueState
+    title: str
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
+    closed_at: Optional[datetime.datetime]
+    comments: int
 
 
 class SubmissionResponse(LuminaModel):
@@ -153,9 +164,14 @@ class SubmissionResponse(LuminaModel):
             target_url=submission.url,
             message=submission.message,
             github_issue=GitHubIssueResponse(
-                number=submission.issue_id,
+                number=submission.github_issue.number,
                 url=lumina.github.util.get_content_repo_issue_url(submission.issue_id),
-                state="unknown",  # TODO: get state from db
+                state=submission.github_issue.state,
+                title=submission.github_issue.title,
+                created_at=submission.github_issue.created_at,
+                updated_at=submission.github_issue.updated_at,
+                closed_at=submission.github_issue.closed_at,
+                comments=submission.github_issue.comments,
             ),
         )
 

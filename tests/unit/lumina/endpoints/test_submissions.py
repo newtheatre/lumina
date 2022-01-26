@@ -62,19 +62,24 @@ class TestListMemberSubmissions:
             {
                 "id": 1,
                 "message": "This is a message",
+                "submitter": {
+                    "id": "fred_bloggs",
+                    "name": "Fred Bloggs",
+                    "verified": True,
+                },
                 "targetId": "00_01/a_show",
                 "targetName": "A Show",
                 "targetType": "show",
                 "targetUrl": "https://github.com/newtheatre/history-project/issues/1",
                 "githubIssue": {
+                    "closedAt": None,
+                    "comments": 1,
+                    "createdAt": "2020-01-01T00:00:00+00:00",
                     "number": 1,
-                    "state": "unknown",
+                    "state": "open",
+                    "title": "A title",
+                    "updatedAt": "2020-01-01T00:00:00+00:00",
                     "url": "https://github.com/newtheatre/lumina-test/issues/1",
-                },
-                "submitter": {
-                    "id": "fred_bloggs",
-                    "name": "Fred Bloggs",
-                    "verified": True,
                 },
             }
         ]
@@ -207,11 +212,6 @@ class TestCreateGenericSubmission:
             )
         assert response.status_code == HTTPStatus.OK
         assert response.json() == {
-            "githubIssue": {
-                "number": 123,
-                "state": "unknown",
-                "url": "https://github.com/newtheatre/lumina-test/issues/123",
-            },
             "id": 123,
             "message": "Hello World",
             "submitter": {
@@ -223,6 +223,16 @@ class TestCreateGenericSubmission:
             "targetName": "Test Page",
             "targetType": "test",
             "targetUrl": "https://example.com/test-page",
+            "githubIssue": {
+                "closedAt": None,
+                "comments": 0,
+                "createdAt": "2020-01-01T00:00:00+00:00",
+                "number": 123,
+                "state": "open",
+                "title": "Test issue",
+                "updatedAt": "2020-01-01T00:00:00+00:00",
+                "url": "https://github.com/newtheatre/lumina-test/issues/123",
+            },
         }
 
     def test_success_authed(self, auth_fred_bloggs):
@@ -254,11 +264,6 @@ class TestCreateGenericSubmission:
             )
         assert response.status_code == HTTPStatus.OK
         assert response.json() == {
-            "githubIssue": {
-                "number": 123,
-                "state": "unknown",
-                "url": "https://github.com/newtheatre/lumina-test/issues/123",
-            },
             "id": 123,
             "message": "Hello World",
             "submitter": {"id": "fred_bloggs", "verified": True, "name": "Fred Bloggs"},
@@ -266,4 +271,14 @@ class TestCreateGenericSubmission:
             "targetName": "Test Page",
             "targetType": "test",
             "targetUrl": "https://example.com/test-page",
+            "githubIssue": {
+                "closedAt": None,
+                "comments": 0,
+                "createdAt": "2020-01-01T00:00:00+00:00",
+                "number": 123,
+                "state": "open",
+                "title": "Test issue",
+                "updatedAt": "2020-01-01T00:00:00+00:00",
+                "url": "https://github.com/newtheatre/lumina-test/issues/123",
+            },
         }
