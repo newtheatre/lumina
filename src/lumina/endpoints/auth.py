@@ -4,6 +4,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends
 
 from lumina import auth
+from lumina.database.models import MemberModel
 from lumina.schema.auth import AuthCheckOptionalResponse, AuthCheckRequiredResponse
 
 router = APIRouter()
@@ -15,18 +16,24 @@ router = APIRouter()
     responses={int(HTTPStatus.UNAUTHORIZED): {"description": "Unauthorized"}},
 )
 def check_auth(
-    member: auth.AuthenticatedMember = Depends(auth.require_authenticated_member),
+    token: auth.AuthenticatedToken = Depends(auth.JWTBearer(optional=False)),
+    member: MemberModel = Depends(auth.require_member),
 ):
-    return AuthCheckRequiredResponse(id=member.id, expires_at=member.expires_at)
+    return AuthCheckRequiredResponse(id=member.id, expires_at=token.expires_at)
 
 
-@router.get("/check/optional", response_model=AuthCheckOptionalResponse)
+@router.get(
+    "/check/optional",
+    response_model=AuthCheckOptionalResponse,
+    responses={
+        int(HTTPStatus.UNAUTHORIZED): {"description": "Member no longer exists"}
+    },
+)
 def check_auth_optional(
-    member: Optional[auth.AuthenticatedMember] = Depends(
-        auth.optional_authenticated_member
-    ),
+    token: auth.AuthenticatedToken = Depends(auth.JWTBearer(optional=True)),
+    member: Optional[MemberModel] = Depends(auth.optional_member),
 ):
     if member:
-        return AuthCheckOptionalResponse(id=member.id, expires_at=member.expires_at)
+        return AuthCheckOptionalResponse(id=member.id, expires_at=token.expires_at)
     else:
         return AuthCheckOptionalResponse()

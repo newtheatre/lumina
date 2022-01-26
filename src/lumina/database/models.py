@@ -29,6 +29,10 @@ class MemberModel(BaseDynamoModel):
     consent: Optional[MemberConsent]
 
     @property
+    def id(self) -> str:
+        return self.pk
+
+    @property
     def email_verified(self) -> bool:
         return self.email_verified_at is not None
 

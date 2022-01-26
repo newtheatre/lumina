@@ -1,3 +1,4 @@
+import datetime
 from http import HTTPStatus
 from unittest import mock
 
@@ -27,20 +28,19 @@ class TestReadMember:
         "lumina.database.operations.set_member_email_verified",
         return_value=None,
     )
-    @mock.patch(
-        "lumina.database.operations.get_member",
-        return_value=MEMBER_MODEL_FRED_BLOGGS,
-    )
+    @mock.patch("lumina.database.operations.get_member")
     def test_success_self_first_call(
         self, mock_get_member, mock_set_member_email_verified, auth_fred_bloggs
     ):
+        mock_get_member.return_value = MemberModel(**auth_fred_bloggs.dict())
+        mock_get_member.return_value.email_verified_at = "2021-01-01T00:00:00"
         response = client.get("/member/fred_bloggs")
-        assert mock_get_member.called
         assert mock_set_member_email_verified.called
+        assert mock_get_member.called
         assert response.status_code == HTTPStatus.OK
         assert response.json() == {
             "email": "fred@bloggs.test",
-            "emailVerified": False,  # Is false as we mock this and don't mock the updated response
+            "emailVerified": True,
             "id": "fred_bloggs",
         }
 
@@ -48,20 +48,11 @@ class TestReadMember:
         "lumina.database.operations.set_member_email_verified",
         return_value=None,
     )
-    @mock.patch(
-        "lumina.database.operations.get_member",
-        return_value=MemberModel(
-            **{
-                **MEMBER_MODEL_FRED_BLOGGS.dict(),
-                "email_verified_at": "2022-01-01T00:00:00Z",
-            }
-        ),
-    )
-    def test_success_self_first_call(
-        self, mock_get_member, mock_set_member_email_verified, auth_fred_bloggs
+    def test_do_not_verify_if_already_verified(
+        self, mock_set_member_email_verified, auth_fred_bloggs
     ):
+        auth_fred_bloggs.email_verified_at = datetime.datetime.now()
         response = client.get("/member/fred_bloggs")
-        assert mock_get_member.called
         # We don't call set_member_email_verified as email is already verified
         assert not mock_set_member_email_verified.called
         assert response.status_code == HTTPStatus.OK

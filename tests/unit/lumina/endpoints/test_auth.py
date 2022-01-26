@@ -1,10 +1,13 @@
-from http import HTTPStatus
+from unittest import mock
 
 import freezegun
+import pytest
 from fastapi.testclient import TestClient
+from unit.lumina.endpoints.conftest import MEMBER_FRED_BLOGGS
 
 from lumina import auth
 from lumina.app import app
+from lumina.database.operations import ResultNotFound
 
 client = TestClient(app)
 
@@ -12,16 +15,12 @@ AUTH_CHECK_REQUIRED_URL = "/auth/check/required"
 AUTH_CHECK_OPTIONAL_URL = "/auth/check/optional"
 
 
-class TestCheckAuth:
-    def test_no_auth(self):
-        response = client.get(AUTH_CHECK_REQUIRED_URL)
-        assert response.status_code == HTTPStatus.UNAUTHORIZED
-
-    def test_with_auth(self, auth_fred_bloggs):
-        response = client.get(AUTH_CHECK_REQUIRED_URL)
-        assert response.status_code == HTTPStatus.OK
-        assert response.json()["id"] == auth_fred_bloggs.id
-        assert response.json()["expiresAt"] == auth_fred_bloggs.expires_at.isoformat()
+@pytest.fixture(autouse=True)
+def mock_get_member():
+    with mock.patch(
+        "lumina.database.operations.get_member", return_value=MEMBER_FRED_BLOGGS
+    ):
+        yield
 
 
 class TestRequireAuthenticatedMember:
@@ -63,6 +62,15 @@ class TestRequireAuthenticatedMember:
             )
         assert response.status_code == 401
         assert response.json() == {"detail": "Invalid or expired token"}
+
+    @mock.patch("lumina.database.operations.get_member", side_effect=ResultNotFound())
+    def test_401_on_member_no_longer_exists(self, get_member, mock_keys):
+        token = auth.encode_jwt("fred_bloggs")
+        response = client.get(
+            AUTH_CHECK_REQUIRED_URL, headers={"Authorization": f"Bearer {token}"}
+        )
+        assert response.status_code == 401
+        assert response.json() == {"detail": "Member no longer exists"}
 
 
 class TestOptionalAuthenticatedMember:

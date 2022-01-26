@@ -6,6 +6,7 @@ import lumina.database.operations
 import lumina.emails.render
 import lumina.emails.send
 from lumina import auth
+from lumina.database.models import MemberModel
 from lumina.schema.member import (
     MemberPrivateResponse,
     MemberPublicResponse,
@@ -26,17 +27,18 @@ router = APIRouter()
 )
 def read_member(
     id: str,
-    auth_member: auth.AuthenticatedMember = Depends(auth.require_authenticated_member),
+    member: MemberModel = Depends(auth.require_member),
 ):
-    if id != auth_member.id:
+    if id != member.id:
         raise HTTPException(
             status_code=HTTPStatus.FORBIDDEN, detail="You cannot read another member"
         )
-    member = lumina.database.operations.get_member(auth_member.id)
     if not member.email_verified:
-        lumina.database.operations.set_member_email_verified(auth_member.id)
+        lumina.database.operations.set_member_email_verified(member.id)
         # Fetch again, so we get the updated email_verified_at field
-        member = lumina.database.operations.get_member(auth_member.id)
+        return MemberPrivateResponse.from_model(
+            lumina.database.operations.get_member(member.id)
+        )
     return MemberPrivateResponse.from_model(member)
 
 
@@ -92,7 +94,7 @@ def register_member(id: str, new_member: RegisterMemberRequest):
 )
 def update_member(
     id: str,
-    member: auth.AuthenticatedMember = Depends(auth.require_authenticated_member),
+    member: MemberModel = Depends(auth.require_member),
 ):
     if id != member.id:
         raise HTTPException(
@@ -110,7 +112,7 @@ def update_member(
 )
 def delete_member(
     id: str,
-    member: auth.AuthenticatedMember = Depends(auth.require_authenticated_member),
+    member: MemberModel = Depends(auth.require_member),
 ):
     if id != member.id:
         raise HTTPException(

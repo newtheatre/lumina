@@ -7,14 +7,16 @@ from fastapi import Depends, HTTPException, Request
 from fastapi.security import HTTPBearer
 from pydantic import BaseModel
 
+import lumina.database.operations
 from lumina import ssm
+from lumina.database.models import MemberModel
 
 JWT_ALGORITHM = "RS256"
 JWT_EXPIRATION_DELTA = timedelta(days=90)
 AUTH_URL = "https://nthp-web.netlify.app/auth"
 
 
-class AuthenticatedMember(BaseModel):
+class AuthenticatedToken(BaseModel):
     id: str
     expires_at: datetime
 
@@ -40,9 +42,9 @@ def encode_jwt(sub: str) -> str:
     )
 
 
-def decode_jwt(token: str) -> AuthenticatedMember:
+def decode_jwt(token: str) -> AuthenticatedToken:
     payload = jwt.decode(token, get_jwt_public_key(), algorithms=[JWT_ALGORITHM])
-    return AuthenticatedMember(id=payload["sub"], expires_at=payload["exp"])
+    return AuthenticatedToken(id=payload["sub"], expires_at=payload["exp"])
 
 
 class JWTBearer(HTTPBearer):
@@ -50,7 +52,7 @@ class JWTBearer(HTTPBearer):
         self.optional = optional
         super(JWTBearer, self).__init__(auto_error=False)
 
-    async def __call__(self, request: Request):
+    async def __call__(self, request: Request) -> Optional[AuthenticatedToken]:
         credentials = await super(JWTBearer, self).__call__(request)
         if credentials:
             try:
@@ -68,18 +70,26 @@ class JWTBearer(HTTPBearer):
             )
 
 
-def require_authenticated_member(
+def require_member(
     authenticated_member=Depends(JWTBearer()),
-) -> AuthenticatedMember:
+) -> MemberModel:
     """Get member if token is provided, otherwise raise exception."""
-    return authenticated_member
+    try:
+        return lumina.database.operations.get_member(authenticated_member.id)
+    except lumina.database.operations.ResultNotFound:
+        raise HTTPException(
+            status_code=HTTPStatus.UNAUTHORIZED,
+            detail="Member no longer exists",
+        )
 
 
-def optional_authenticated_member(
+def optional_member(
     authenticated_member=Depends(JWTBearer(optional=True)),
-) -> Optional[AuthenticatedMember]:
+) -> Optional[MemberModel]:
     """Get member if token is provided, otherwise return None."""
-    return authenticated_member
+    if not authenticated_member:
+        return None
+    return require_member(authenticated_member)
 
 
 def get_auth_url(sub: str) -> str:
