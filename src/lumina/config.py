@@ -12,6 +12,8 @@ class Settings(BaseSettings):
     github_owner: str = "newtheatre"
     github_repo: str = "lumina-test"
 
+    sentry_dsn: Optional[str] = None
+
     @property
     def root_path(self) -> Optional[str]:
         if self.stage_name in {"", "dev", "Environment"}:

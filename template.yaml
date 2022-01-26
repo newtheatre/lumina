@@ -10,6 +10,7 @@ Globals:
         ENVIRONMENT: !Ref Environment
         STAGE_NAME: !Ref Environment
         VCS_REV: !Ref VcsRev
+        SENTRY_DSN: "https://78c57aec87454dd79c9b03accb569f38@o35127.ingest.sentry.io/6169889"
 
 # Here we specify the different environment that we have
 Parameters:
