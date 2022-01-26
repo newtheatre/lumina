@@ -13,17 +13,28 @@ from lumina.schema.submissions import (
     GenericSubmissionRequest,
     ShowSubmissionRequest,
     SubmissionResponse,
+    SubmissionStatsResponse,
 )
 
 router = APIRouter()
 
 
 @router.get("/member/{id}")
-def get_member_submissions(
+def list_member_submissions(
     id: str,
     member: MemberModel = Depends(auth.require_member),
 ):
     return member.id
+
+
+@router.get("/member/{id}/stats", response_model=SubmissionStatsResponse)
+def read_member_submission_stats(
+    id: str,
+):
+    member_submissions = lumina.database.operations.get_submissions_for_member(id)
+    return SubmissionStatsResponse(
+        count=len(member_submissions),
+    )
 
 
 def require_submitter_or_member(

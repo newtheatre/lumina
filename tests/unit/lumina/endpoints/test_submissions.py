@@ -5,9 +5,45 @@ from fastapi.testclient import TestClient
 from fixtures.models import GITHUB_ISSUE, MEMBER_MODEL_FRED_BLOGGS
 
 from lumina.app import app
+from lumina.database.models import SubmissionModel, SubmitterModel
 from lumina.schema.submissions import GenericSubmissionRequest
 
 client = TestClient(app)
+
+DUMMY_SUBMISSION = SubmissionModel(
+    pk="fred_bloggs",
+    sk="submission/1",
+    url="https://github.com/newtheatre/history-project/issues/1",
+    target_id="00_01/a_show",
+    target_type="show",
+    target_name="A Show",
+    message="This is a message",
+    submitter=SubmitterModel(
+        id="fred_bloggs",
+        verified=True,
+        name="Fred Bloggs",
+    ),
+)
+
+
+class TestReadMemberSubmissionStats:
+    def test_no_submissions(self):
+        with mock.patch(
+            "lumina.database.operations.get_submissions_for_member"
+        ) as mock_get_submissions:
+            mock_get_submissions.return_value = []
+            response = client.get("/submissions/member/fred-bloggs/stats")
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == {"count": 0}
+
+    def test_with_submissions(self):
+        with mock.patch(
+            "lumina.database.operations.get_submissions_for_member"
+        ) as mock_get_submissions:
+            mock_get_submissions.return_value = [DUMMY_SUBMISSION]
+            response = client.get("/submissions/member/fred-bloggs/stats")
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == {"count": 1}
 
 
 class TestCreateGenericSubmission:

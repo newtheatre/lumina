@@ -136,6 +136,11 @@ def test_get_submissions_for_member():
     assert sub_2 in submissions
 
 
+def test_get_submissions_for_member_no_submissions():
+    submissions = operations.get_submissions_for_member("fred_bloggs")
+    assert len(submissions) == 0
+
+
 def test_get_submissions_for_target():
     show_submission_1 = operations.put_submission(
         _make_submission(99, target_type="show", target_id="00_01/romeo_and_juliet")

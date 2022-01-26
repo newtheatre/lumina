@@ -151,3 +151,7 @@ class SubmissionResponse(LuminaModel):
                 state=issue.state,
             ),
         )
+
+
+class SubmissionStatsResponse(LuminaModel):
+    count: int = Field(description="The number of submissions")
