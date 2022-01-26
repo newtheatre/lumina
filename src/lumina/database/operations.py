@@ -66,7 +66,7 @@ def delete_member(id: str) -> None:
 def get_submission(id: int) -> SubmissionModel:
     response = get_member_table().query(
         IndexName=GSI_SK,
-        KeyConditionExpression=Key(GSI_SK).eq(get_submission_sk(id)),
+        KeyConditionExpression=Key(MEMBER_SORT_KEY).eq(get_submission_sk(id)),
     )
     if response["Count"] == 0:
         raise ResultNotFound(f"Submission with id {id} not found")
