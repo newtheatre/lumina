@@ -4,7 +4,8 @@ from typing import Optional
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, EmailStr
-from unit.lumina.util.types import BaseModelProtocol
+
+from lumina.util.types import BaseModelProtocol
 
 from . import table
 
