@@ -1,10 +1,17 @@
 import hmac
 
+import lumina.database.operations
 from lumina import ssm
+from lumina.database.models import GitHubIssueModel
+from lumina.database.operations import ResultNotFound
 from lumina.schema.github import GitHubWebhook
 
 HEADER_SIGNATURE = "X-Hub-Signature-256"
 HEADER_PREFIX = "sha256="
+
+import logging
+
+log = logging.getLogger(__name__)
 
 
 def get_webhook_secret() -> str:
@@ -35,5 +42,17 @@ def verify_webhook(signature: str, body: bytes) -> bool:
     )
 
 
+def update_issue_from_webhook(webhook: GitHubWebhook) -> None:
+    if not webhook.issue:
+        raise ValueError("Webhook does not contain an issue")
+    try:
+        lumina.database.operations.update_submission_github_issue(
+            webhook.issue.number, GitHubIssueModel(**webhook.issue.dict())
+        )
+    except ResultNotFound:
+        log.exception("Could not update issue as not found in db")
+
+
 def handle_webhook(webhook: GitHubWebhook) -> None:
-    print(webhook.dict())
+    if webhook.issue:
+        update_issue_from_webhook(webhook)

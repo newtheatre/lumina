@@ -10,6 +10,7 @@ import lumina.github.connection
 from lumina import github, ssm
 from lumina.config import settings
 from lumina.schema.health import HealthCheckCondition, HealthCheckResponse
+from lumina.util import dates
 
 log = logging.getLogger(__name__)
 
@@ -20,26 +21,26 @@ def check_ssm() -> HealthCheckCondition:
         ssm.get_parameter("/lumina/jwt/public")
         return HealthCheckCondition(
             ok=True,
-            timestamp=datetime.datetime.now(),
+            timestamp=dates.now(),
         )
     except ValueError:
         return HealthCheckCondition(
             ok=False,
-            timestamp=datetime.datetime.now(),
+            timestamp=dates.now(),
             message="Parameter not found",
         )
     except botocore.exceptions.ClientError as e:
         log.error(e)
         return HealthCheckCondition(
             ok=False,
-            timestamp=datetime.datetime.now(),
+            timestamp=dates.now(),
             message="ClientError",
         )
     except Exception as e:
         log.error(e)
         return HealthCheckCondition(
             ok=False,
-            timestamp=datetime.datetime.now(),
+            timestamp=dates.now(),
             message="Unknown error",
         )
 
@@ -50,26 +51,26 @@ def check_github() -> HealthCheckCondition:
         lumina.github.connection.get_content_repo()
         return HealthCheckCondition(
             ok=True,
-            timestamp=datetime.datetime.now(),
+            timestamp=dates.now(),
         )
     except BadCredentialsException:
         return HealthCheckCondition(
             ok=False,
-            timestamp=datetime.datetime.now(),
+            timestamp=dates.now(),
             message="Bad credentials",
         )
     except botocore.exceptions.ClientError as e:
         log.error(e)
         return HealthCheckCondition(
             ok=False,
-            timestamp=datetime.datetime.now(),
+            timestamp=dates.now(),
             message="Cannot get credentials",
         )
     except Exception as e:
         log.error(e)
         return HealthCheckCondition(
             ok=False,
-            timestamp=datetime.datetime.now(),
+            timestamp=dates.now(),
             message="Unknown error",
         )
 

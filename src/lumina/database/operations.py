@@ -1,9 +1,9 @@
-import datetime
 from typing import List
 
 from boto3.dynamodb.conditions import Key
 
-from lumina.database.models import MemberModel
+from lumina.database.models import GitHubIssueModel, MemberModel
+from lumina.util import dates
 
 from .connection import get_dynamo_db
 from .models import SubmissionModel
@@ -31,7 +31,7 @@ class ResultNotFound(DbError):
 def create_member(id: str, name: str, email: str) -> MemberModel:
     member_model = MemberModel(pk=id, name=name, email=email)
     get_dynamo_db().Table(get_table_name()).put_item(
-        Item=member_model.dict(),
+        Item=member_model.ddict(),
     )
 
     return member_model
@@ -50,7 +50,7 @@ def get_member(id: str) -> MemberModel:
 
 def put_member(model: MemberModel) -> MemberModel:
     get_dynamo_db().Table(get_table_name()).put_item(
-        Item=model.dict(),
+        Item=model.ddict(),
     )
     return model
 
@@ -59,9 +59,7 @@ def set_member_email_verified(id: str) -> None:
     get_dynamo_db().Table(get_table_name()).update_item(
         Key={MEMBER_PARTITION_KEY: id, MEMBER_SORT_KEY: SK_PROFILE},
         UpdateExpression="set email_verified_at = :v",
-        ExpressionAttributeValues={
-            ":v": datetime.datetime.now(datetime.timezone.utc).isoformat()
-        },
+        ExpressionAttributeValues={":v": dates.now().isoformat()},
     )
 
 
@@ -115,6 +113,19 @@ def get_submissions_for_target(
 
 def put_submission(model: SubmissionModel) -> SubmissionModel:
     get_dynamo_db().Table(get_table_name()).put_item(
-        Item=model.dict(),
+        Item=model.ddict(),
     )
     return model
+
+
+def update_submission_github_issue(id: int, issue: GitHubIssueModel) -> SubmissionModel:
+    submission = get_submission(id)
+    get_dynamo_db().Table(get_table_name()).update_item(
+        Key={
+            MEMBER_PARTITION_KEY: submission.pk,
+            MEMBER_SORT_KEY: get_submission_sk(id),
+        },
+        UpdateExpression="set github_issue = :v",
+        ExpressionAttributeValues={":v": issue.ddict()},
+    )
+    return get_submission(id)

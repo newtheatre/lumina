@@ -1,22 +1,19 @@
 import datetime
-from enum import Enum
 from typing import Optional
 
 from pydantic import BaseModel
 
-
-class GithubIssueState(Enum):
-    OPEN = "open"
-    CLOSED = "closed"
+from lumina.database.models import GitHubIssueState
 
 
 class GitHubIssue(BaseModel):
     number: int
+    state: GitHubIssueState
     title: str
-    state: GithubIssueState
     created_at: datetime.datetime
     updated_at: datetime.datetime
     closed_at: Optional[datetime.datetime]
+    comments: int
 
 
 class GitHubRepositoryOwner(BaseModel):

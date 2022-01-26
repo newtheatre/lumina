@@ -4,11 +4,12 @@ from uuid import UUID
 from github import Issue
 from pydantic import EmailStr, Field
 
+import lumina.github.submissions
 import lumina.github.util
-from lumina import github
 from lumina.database.models import MemberModel, SubmissionModel, SubmitterModel
 from lumina.database.table import get_submission_sk
 from lumina.schema.base import LuminaModel
+from lumina.util import dates
 
 FIELD_SUBMITTER_ID = Field(description="The ID of the submitter", example="fred_bloggs")
 FIELD_SUBMITTER_NAME = Field(
@@ -88,6 +89,7 @@ class GenericSubmissionRequest(BaseSubmissionRequest):
         submission_id: int,
         submitter_id: Union[str, UUID],
         member: Optional[MemberModel],
+        github_issue: Issue,
     ) -> SubmissionModel:
         return SubmissionModel(
             pk=str(submitter_id),
@@ -96,8 +98,10 @@ class GenericSubmissionRequest(BaseSubmissionRequest):
             target_id=self.target_id,
             target_type=self.target_type,
             target_name=self.target_name,
+            created_at=dates.now(),
             message=self.message,
             submitter=member.to_submitter() if member else self.submitter.to_model(),
+            github_issue=lumina.github.submissions.make_issue_model(github_issue),
         )
 
 

@@ -5,7 +5,13 @@ import moto
 import pytest
 
 from lumina.database import operations, table
-from lumina.database.models import SubmissionModel, SubmitterModel
+from lumina.database.models import (
+    GitHubIssueModel,
+    GitHubIssueState,
+    SubmissionModel,
+    SubmitterModel,
+)
+from lumina.util import dates
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -78,24 +84,29 @@ def test_delete_member_exists():
 def _make_submission(id: int, **kwargs) -> SubmissionModel:
     """Make a SubmissionModel with default values overridable by kwargs."""
     return SubmissionModel(
-        **{
-            **dict(
-                pk="fred_bloggs",
-                sk=table.get_submission_sk(id),
-                url=f"https://github.com/newtheatre/history-project/issues/{id}",
-                target_id="00_01/romeo_and_juliet",
-                target_name="Romeo and Juliet",
-                target_type="show",
-                message="The part of Romeo was played by a hamster.",
-                submitter=dict(
-                    id="fred_bloggs",
-                    name="Fred Bloggs",
-                    verified=True,
-                ),
-            ),
-            **kwargs,
-        }
-    )
+        pk="fred_bloggs",
+        sk=table.get_submission_sk(id),
+        url=f"https://github.com/newtheatre/history-project/issues/{id}",
+        target_id="00_01/romeo_and_juliet",
+        target_name="Romeo and Juliet",
+        target_type="show",
+        message="The part of Romeo was played by a hamster.",
+        created_at=dates.now(),
+        submitter=SubmitterModel(
+            id="fred_bloggs",
+            name="Fred Bloggs",
+            verified=True,
+        ),
+        github_issue=GitHubIssueModel(
+            number=id,
+            state="open",
+            title="Romeo and Juliet",
+            created_at=dates.now(),
+            updated_at=dates.now(),
+            closed_at=None,
+            comments=0,
+        ),
+    ).copy(update=kwargs)
 
 
 def test_put_member_submission():
@@ -165,3 +176,23 @@ def test_get_submissions_for_target():
 def test_get_submission_not_found():
     with pytest.raises(operations.ResultNotFound):
         operations.get_submission(101)
+
+
+def test_update_submission_github_issue():
+    new_submission = operations.put_submission(_make_submission(101))
+    assert new_submission.github_issue.state == GitHubIssueState.OPEN
+    assert new_submission.github_issue.closed_at is None
+    assert new_submission.github_issue.comments == 0
+    to_close_at = dates.now()
+    operations.update_submission_github_issue(
+        101,
+        new_submission.github_issue.copy(
+            update=dict(
+                state=GitHubIssueState.CLOSED, comments=5, closed_at=to_close_at
+            )
+        ),
+    )
+    updated_submission = operations.get_submission(101)
+    assert updated_submission.github_issue.state == GitHubIssueState.CLOSED
+    assert updated_submission.github_issue.closed_at == to_close_at
+    assert updated_submission.github_issue.comments == 5

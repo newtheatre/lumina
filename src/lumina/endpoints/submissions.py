@@ -71,7 +71,10 @@ def create_generic_submission(
     )
     submission_instance = lumina.database.operations.put_submission(
         submission.to_model(
-            submission_id=issue.number, submitter_id=submitter_id, member=member
+            submission_id=issue.number,
+            submitter_id=submitter_id,
+            member=member,
+            github_issue=issue,
         )
     )
     return SubmissionResponse.from_model(submission_instance)

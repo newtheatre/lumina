@@ -5,7 +5,12 @@ from fastapi.testclient import TestClient
 from fixtures.models import GITHUB_ISSUE, MEMBER_MODEL_FRED_BLOGGS
 
 from lumina.app import app
-from lumina.database.models import SubmissionModel, SubmitterModel
+from lumina.database.models import (
+    GitHubIssueModel,
+    GitHubIssueState,
+    SubmissionModel,
+    SubmitterModel,
+)
 from lumina.schema.submissions import GenericSubmissionRequest
 
 client = TestClient(app)
@@ -17,11 +22,21 @@ DUMMY_SUBMISSION = SubmissionModel(
     target_id="00_01/a_show",
     target_type="show",
     target_name="A Show",
+    created_at="2020-01-01T00:00:00Z",
     message="This is a message",
     submitter=SubmitterModel(
         id="fred_bloggs",
         verified=True,
         name="Fred Bloggs",
+    ),
+    github_issue=GitHubIssueModel(
+        number=1,
+        state=GitHubIssueState.OPEN,
+        title="A title",
+        created_at="2020-01-01T00:00:00Z",
+        updated_at="2020-01-01T00:00:00Z",
+        closed_at=None,
+        comments=1,
     ),
 )
 
@@ -176,6 +191,7 @@ class TestCreateGenericSubmission:
                 submission_id=123,
                 submitter_id=submission_request.submitter.id,
                 member=None,
+                github_issue=GITHUB_ISSUE,
             )
             response = client.post(
                 "/submissions/message",
@@ -230,6 +246,7 @@ class TestCreateGenericSubmission:
                 submission_id=123,
                 submitter_id=auth_fred_bloggs.id,
                 member=mock_get_member(),
+                github_issue=GITHUB_ISSUE,
             )
             response = client.post(
                 "/submissions/message",

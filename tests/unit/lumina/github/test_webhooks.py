@@ -3,7 +3,15 @@ from unittest import mock
 import fixtures.github
 import pytest
 
+from lumina.database.models import GitHubIssueModel, GitHubIssueState
+from lumina.database.operations import ResultNotFound
 from lumina.github import webhooks
+from lumina.schema.github import (
+    GitHubIssue,
+    GitHubRepository,
+    GitHubRepositoryOwner,
+    GitHubWebhook,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -33,3 +41,41 @@ class TestVerifyWebhook:
             )
             is False
         )
+
+
+ISSUE_CLOSED_HOOK = GitHubWebhook(
+    action="closed",
+    issue=GitHubIssue(
+        number=1,
+        state=GitHubIssueState.CLOSED,
+        title="Issue 1",
+        created_at="2020-01-01T00:00:00Z",
+        updated_at="2020-01-01T00:00:00Z",
+        closed_at="2020-01-02T00:00:00Z",
+        comments=2,
+    ),
+    repository=GitHubRepository(
+        name="lumina-test",
+        owner=GitHubRepositoryOwner(login="newtheatre"),
+    ),
+)
+
+
+class TestHandleWebhook:
+    def test_update_issue(self):
+        with mock.patch(
+            "lumina.database.operations.update_submission_github_issue",
+            return_value=None,
+        ) as mock_update_issue:
+            webhooks.handle_webhook(ISSUE_CLOSED_HOOK)
+        assert mock_update_issue.call_count == 1
+        assert mock_update_issue.call_args[0][1] == GitHubIssueModel(
+            **ISSUE_CLOSED_HOOK.issue.dict()
+        )
+
+    def test_issue_doesnt_exist(self):
+        with mock.patch(
+            "lumina.database.operations.update_submission_github_issue",
+            side_effect=ResultNotFound,
+        ):
+            webhooks.handle_webhook(ISSUE_CLOSED_HOOK)

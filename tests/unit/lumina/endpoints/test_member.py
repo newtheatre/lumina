@@ -8,6 +8,7 @@ from fixtures.models import MEMBER_MODEL_FRED_BLOGGS
 from lumina.app import app
 from lumina.database.models import MemberModel
 from lumina.database.operations import ResultNotFound
+from lumina.util import dates
 
 client = TestClient(app)
 
@@ -51,7 +52,7 @@ class TestReadMember:
     def test_do_not_verify_if_already_verified(
         self, mock_set_member_email_verified, auth_fred_bloggs
     ):
-        auth_fred_bloggs.email_verified_at = datetime.datetime.now()
+        auth_fred_bloggs.email_verified_at = dates.now()
         response = client.get("/member/fred_bloggs")
         # We don't call set_member_email_verified as email is already verified
         assert not mock_set_member_email_verified.called

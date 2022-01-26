@@ -9,7 +9,12 @@ MEMBER_MODEL_FRED_BLOGGS = MemberModel(
 )
 
 GITHUB_ISSUE = MagicMock(
-    id=123,
+    number=123,
     html_url="https://github.com/newtheatre/lumina-test/issues/123",
     state="open",
+    title="Test issue",
+    created_at="2020-01-01T00:00:00Z",
+    updated_at="2020-01-01T00:00:00Z",
+    closed_at=None,
+    comments=0,
 )

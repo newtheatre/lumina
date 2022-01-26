@@ -1,0 +1,192 @@
+interactions:
+  - request:
+      body: null
+      headers:
+        Accept:
+          - "*/*"
+        Accept-Encoding:
+          - gzip, deflate
+        Connection:
+          - keep-alive
+        User-Agent:
+          - PyGithub/Python
+      method: GET
+      uri: https://api.github.com/repos/newtheatre/lumina-test
+    response:
+      body:
+        string: !!binary |
+          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
+      headers:
+        Access-Control-Allow-Origin:
+          - "*"
+        Access-Control-Expose-Headers:
+          - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+            X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes,
+            X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO,
+            X-GitHub-Request-Id, Deprecation, Sunset
+        Cache-Control:
+          - private, max-age=60, s-maxage=60
+        Content-Encoding:
+          - gzip
+        Content-Security-Policy:
+          - default-src 'none'
+        Content-Type:
+          - application/json; charset=utf-8
+        Date:
+          - Wed, 26 Jan 2022 20:45:07 GMT
+        ETag:
+          - W/"5266e4a6bee964274f97f81872f564acaaf82e5dbafe25625a79807af881fa87"
+        Last-Modified:
+          - Tue, 25 Jan 2022 01:46:06 GMT
+        Referrer-Policy:
+          - origin-when-cross-origin, strict-origin-when-cross-origin
+        Server:
+          - GitHub.com
+        Strict-Transport-Security:
+          - max-age=31536000; includeSubdomains; preload
+        Transfer-Encoding:
+          - chunked
+        Vary:
+          - Accept, Authorization, Cookie, X-GitHub-OTP
+          - Accept-Encoding, Accept, X-Requested-With
+        X-Accepted-OAuth-Scopes:
+          - repo
+        X-Content-Type-Options:
+          - nosniff
+        X-Frame-Options:
+          - deny
+        X-GitHub-Media-Type:
+          - github.v3; format=json
+        X-GitHub-Request-Id:
+          - 82BE:5769:F3694B:FAACBE:61F1B2D3
+        X-OAuth-Scopes:
+          - repo
+        X-RateLimit-Limit:
+          - "5000"
+        X-RateLimit-Remaining:
+          - "4999"
+        X-RateLimit-Reset:
+          - "1643233507"
+        X-RateLimit-Resource:
+          - core
+        X-RateLimit-Used:
+          - "1"
+        X-XSS-Protection:
+          - "0"
+      status:
+        code: 200
+        message: OK
+  - request:
+      body:
+        '{"title": "Test submission", "body": "\n| Name            | Value                                             |\n|-----------------|---------------------------------------------------|\n|
+        URL             | [/a/b/c](https://history.newtheatre.org.uk/a/b/c) |\n| Source          |
+        [_shows/11_12/faust_is_dead.md](https://github.com/newtheatre/lumina-test/blob/master/_shows/11_12/faust_is_dead.md)
+        |\n| Submitter State | Member |\n| Submitter       | [Fred Bloggs](https://history.newtheatre.org.uk/people/fred_bloggs)
+        |\n\n---\n\nThis is a test submission."}'
+      headers:
+        Accept:
+          - "*/*"
+        Accept-Encoding:
+          - gzip, deflate
+        Connection:
+          - keep-alive
+        Content-Length:
+          - "557"
+        Content-Type:
+          - application/json
+        User-Agent:
+          - PyGithub/Python
+      method: POST
+      uri: https://api.github.com/repos/newtheatre/lumina-test/issues
+    response:
+      body:
+        string:
+          '{"url":"https://api.github.com/repos/newtheatre/lumina-test/issues/8","repository_url":"https://api.github.com/repos/newtheatre/lumina-test","labels_url":"https://api.github.com/repos/newtheatre/lumina-test/issues/8/labels{/name}","comments_url":"https://api.github.com/repos/newtheatre/lumina-test/issues/8/comments","events_url":"https://api.github.com/repos/newtheatre/lumina-test/issues/8/events","html_url":"https://github.com/newtheatre/lumina-test/issues/8","id":1115484142,"node_id":"I_kwDOGuxcos5CfO_u","number":8,"title":"Test
+          submission","user":{"login":"ntbot","id":12116913,"node_id":"MDQ6VXNlcjEyMTE2OTEz","avatar_url":"https://avatars.githubusercontent.com/u/12116913?v=4","gravatar_id":"","url":"https://api.github.com/users/ntbot","html_url":"https://github.com/ntbot","followers_url":"https://api.github.com/users/ntbot/followers","following_url":"https://api.github.com/users/ntbot/following{/other_user}","gists_url":"https://api.github.com/users/ntbot/gists{/gist_id}","starred_url":"https://api.github.com/users/ntbot/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/ntbot/subscriptions","organizations_url":"https://api.github.com/users/ntbot/orgs","repos_url":"https://api.github.com/users/ntbot/repos","events_url":"https://api.github.com/users/ntbot/events{/privacy}","received_events_url":"https://api.github.com/users/ntbot/received_events","type":"User","site_admin":false},"labels":[],"state":"open","locked":false,"assignee":null,"assignees":[],"milestone":null,"comments":0,"created_at":"2022-01-26T20:45:07Z","updated_at":"2022-01-26T20:45:07Z","closed_at":null,"author_association":"NONE","active_lock_reason":null,"body":"\n|
+          Name            | Value                                             |\n|-----------------|---------------------------------------------------|\n|
+          URL             | [/a/b/c](https://history.newtheatre.org.uk/a/b/c) |\n| Source          |
+          [_shows/11_12/faust_is_dead.md](https://github.com/newtheatre/lumina-test/blob/master/_shows/11_12/faust_is_dead.md)
+          |\n| Submitter State | Member |\n| Submitter       | [Fred Bloggs](https://history.newtheatre.org.uk/people/fred_bloggs)
+          |\n\n---\n\nThis is a test submission.","closed_by":null,"reactions":{"url":"https://api.github.com/repos/newtheatre/lumina-test/issues/8/reactions","total_count":0,"+1":0,"-1":0,"laugh":0,"hooray":0,"confused":0,"heart":0,"rocket":0,"eyes":0},"timeline_url":"https://api.github.com/repos/newtheatre/lumina-test/issues/8/timeline","performed_via_github_app":null}'
+      headers:
+        Access-Control-Allow-Origin:
+          - "*"
+        Access-Control-Expose-Headers:
+          - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+            X-RateLimit-Used, X-RateLimit-Resource, X-RateLimit-Reset, X-OAuth-Scopes,
+            X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, X-GitHub-SSO,
+            X-GitHub-Request-Id, Deprecation, Sunset
+        Cache-Control:
+          - private, max-age=60, s-maxage=60
+        Content-Length:
+          - "2524"
+        Content-Security-Policy:
+          - default-src 'none'
+        Content-Type:
+          - application/json; charset=utf-8
+        Date:
+          - Wed, 26 Jan 2022 20:45:07 GMT
+        ETag:
+          - '"d88b28d39af76b109565563b536d4c2bb3bd2621a67806be8ade7c8efe6460ae"'
+        Location:
+          - https://api.github.com/repos/newtheatre/lumina-test/issues/8
+        Referrer-Policy:
+          - origin-when-cross-origin, strict-origin-when-cross-origin
+        Server:
+          - GitHub.com
+        Strict-Transport-Security:
+          - max-age=31536000; includeSubdomains; preload
+        Vary:
+          - Accept, Authorization, Cookie, X-GitHub-OTP
+          - Accept-Encoding, Accept, X-Requested-With
+        X-Accepted-OAuth-Scopes:
+          - ""
+        X-Content-Type-Options:
+          - nosniff
+        X-Frame-Options:
+          - deny
+        X-GitHub-Media-Type:
+          - github.v3; format=json
+        X-GitHub-Request-Id:
+          - 82BE:5769:F3698B:FAAD04:61F1B2D3
+        X-OAuth-Scopes:
+          - repo
+        X-RateLimit-Limit:
+          - "5000"
+        X-RateLimit-Remaining:
+          - "4998"
+        X-RateLimit-Reset:
+          - "1643233507"
+        X-RateLimit-Resource:
+          - core
+        X-RateLimit-Used:
+          - "2"
+        X-XSS-Protection:
+          - "0"
+      status:
+        code: 201
+        message: Created
+version: 1

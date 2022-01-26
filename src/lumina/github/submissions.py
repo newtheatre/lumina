@@ -2,7 +2,7 @@ from typing import Optional
 
 from github import Issue
 
-from lumina.database.models import MemberModel
+from lumina.database.models import GitHubIssueModel, GitHubIssueState, MemberModel
 from lumina.github.connection import get_content_repo
 from lumina.github.util import get_content_repo_file_url, get_content_repo_path
 from lumina.schema.submissions import GenericSubmissionRequest, SubmitterRequest
@@ -56,4 +56,16 @@ def create_generic_submission_issue(
             submitter=submission_request.submitter,
             member=member,
         ),
+    )
+
+
+def make_issue_model(issue: Issue) -> GitHubIssueModel:
+    return GitHubIssueModel(
+        number=issue.number,
+        state=GitHubIssueState(issue.state),
+        title=issue.title,
+        created_at=issue.created_at,
+        updated_at=issue.updated_at,
+        closed_at=issue.closed_at,
+        comments=issue.comments,
     )

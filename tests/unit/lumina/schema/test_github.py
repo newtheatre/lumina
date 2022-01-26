@@ -2,7 +2,8 @@ import datetime
 
 import fixtures.github
 
-from lumina.schema.github import GithubIssueState, GitHubWebhook
+from lumina.database.models import GitHubIssueState
+from lumina.schema.github import GitHubWebhook
 
 
 def test_issue_created():
@@ -12,7 +13,7 @@ def test_issue_created():
     assert event.action == "opened"
     assert event.issue.number == 7
     assert event.issue.title == "New Issue"
-    assert event.issue.state is GithubIssueState.OPEN
+    assert event.issue.state is GitHubIssueState.OPEN
     assert event.issue.created_at == datetime.datetime(
         2022, 1, 26, 4, 29, 16, tzinfo=datetime.timezone.utc
     )
@@ -29,7 +30,7 @@ def test_issue_comment_created():
     assert event.action == "created"
     assert event.issue.number == 1
     assert event.issue.title == "Test submission"
-    assert event.issue.state is GithubIssueState.OPEN
+    assert event.issue.state is GitHubIssueState.OPEN
     assert event.issue.created_at == datetime.datetime(
         2022, 1, 25, 1, 58, 10, tzinfo=datetime.timezone.utc
     )
@@ -46,7 +47,7 @@ def test_issue_closed():
     assert event.action == "closed"
     assert event.issue.number == 1
     assert event.issue.title == "Test submission"
-    assert event.issue.state is GithubIssueState.CLOSED
+    assert event.issue.state is GitHubIssueState.CLOSED
     assert event.issue.created_at == datetime.datetime(
         2022, 1, 25, 1, 58, 10, tzinfo=datetime.timezone.utc
     )
@@ -65,7 +66,7 @@ def test_issue_reopened():
     assert event.action == "reopened"
     assert event.issue.number == 1
     assert event.issue.title == "Test submission"
-    assert event.issue.state is GithubIssueState.OPEN
+    assert event.issue.state is GitHubIssueState.OPEN
     assert event.issue.created_at == datetime.datetime(
         2022, 1, 25, 1, 58, 10, tzinfo=datetime.timezone.utc
     )
