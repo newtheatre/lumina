@@ -71,7 +71,7 @@ def create_generic_submission(
             submission_id=issue.number, submitter_id=submitter_id, member=member
         )
     )
-    return SubmissionResponse.from_model(submission_instance, issue)
+    return SubmissionResponse.from_model(submission_instance)
 
 
 @router.post("/show")

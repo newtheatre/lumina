@@ -63,7 +63,7 @@ class SubmissionModel(BaseDynamoModel):
     submitter: SubmitterModel
 
     @property
-    def get_issue_id(self) -> int:
+    def issue_id(self) -> int:
         # TODO: Use this when we have Python 3.9
         # return int(self.target_id.removeprefix(f"{table.SK_SUBMISSION}/"))
         return int(self.sk.split("/")[-1])

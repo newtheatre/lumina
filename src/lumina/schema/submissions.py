@@ -4,6 +4,7 @@ from uuid import UUID
 from github import Issue
 from pydantic import EmailStr, Field
 
+from lumina import github
 from lumina.database.models import MemberModel, SubmissionModel, SubmitterModel
 from lumina.database.table import get_submission_sk
 from lumina.schema.base import LuminaModel
@@ -131,10 +132,11 @@ class SubmissionResponse(LuminaModel):
 
     @classmethod
     def from_model(
-        cls, submission: SubmissionModel, issue: Issue
+        cls,
+        submission: SubmissionModel,
     ) -> "SubmissionResponse":
         return cls(
-            id=submission.get_issue_id,
+            id=submission.issue_id,
             submitter=SubmitterResponse(
                 id=submission.pk,
                 verified=submission.submitter.verified,
@@ -146,9 +148,9 @@ class SubmissionResponse(LuminaModel):
             target_url=submission.url,
             message=submission.message,
             github_issue=GitHubIssueResponse(
-                number=issue.number,
-                url=issue.html_url,
-                state=issue.state,
+                number=submission.issue_id,
+                url=github.get_content_repo_issue_url(submission.issue_id),
+                state="unknown",  # TODO: get state from db
             ),
         )
 

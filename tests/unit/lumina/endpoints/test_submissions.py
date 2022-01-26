@@ -153,8 +153,8 @@ class TestCreateGenericSubmission:
         assert response.status_code == HTTPStatus.OK
         assert response.json() == {
             "githubIssue": {
-                "number": 1,
-                "state": "open",
+                "number": 123,
+                "state": "unknown",
                 "url": "https://github.com/newtheatre/lumina-test/issues/123",
             },
             "id": 123,
@@ -199,8 +199,8 @@ class TestCreateGenericSubmission:
         assert response.status_code == HTTPStatus.OK
         assert response.json() == {
             "githubIssue": {
-                "number": 1,
-                "state": "open",
+                "number": 123,
+                "state": "unknown",
                 "url": "https://github.com/newtheatre/lumina-test/issues/123",
             },
             "id": 123,

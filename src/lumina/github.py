@@ -25,7 +25,13 @@ def get_content_repo_path(target_type: str, target_id: str) -> str:
 
 
 def get_content_repo_file_url(path: str, branch: str = "master") -> str:
-    return f"https://github.com/newtheatre/history-project/blob/master/{path}"
+    return f"https://github.com/{settings.github_owner}/{settings.github_repo}/blob/master/{path}"
+
+
+def get_content_repo_issue_url(id: int) -> str:
+    return (
+        f"https://github.com/{settings.github_owner}/{settings.github_repo}/issues/{id}"
+    )
 
 
 def get_submitter_public_link(id: str) -> str:
