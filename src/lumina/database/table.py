@@ -1,7 +1,10 @@
+import functools
+
 from lumina.config import settings
 from lumina.database.connection import get_dynamo_db
 
 MEMBER_TABLE_NAME_PREFIX = "LuminaMember"
+from mypy_boto3_dynamodb.service_resource import Table
 
 
 def get_table_name() -> str:
@@ -10,6 +13,11 @@ def get_table_name() -> str:
     On AWS, this is done by the SAM template where the **definitions are duplicated**.
     """
     return f"{MEMBER_TABLE_NAME_PREFIX}-{settings.environment}"
+
+
+@functools.lru_cache()
+def get_member_table() -> Table:
+    return get_dynamo_db().Table(get_table_name())
 
 
 MEMBER_PARTITION_KEY = "pk"

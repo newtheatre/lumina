@@ -132,9 +132,17 @@ def test_put_anonymous_submission():
 
 
 def test_get_submission():
+    operations.create_member(
+        id="fred_bloggs", name="Fred Bloggs", email="fred@bloggs.test"
+    )
     create_submission = operations.put_submission(_make_submission(101))
     get_submission = operations.get_submission(101)
     assert create_submission == get_submission
+
+
+def test_get_submission_not_found():
+    with pytest.raises(operations.ResultNotFound):
+        operations.get_submission(101)
 
 
 def test_get_submissions_for_member():
@@ -174,11 +182,6 @@ def test_get_submissions_for_target():
     assert len(submissions) == 2
     assert show_submission_1 in submissions
     assert show_submission_2 in submissions
-
-
-def test_get_submission_not_found():
-    with pytest.raises(operations.ResultNotFound):
-        operations.get_submission(101)
 
 
 def test_update_submission_github_issue():
