@@ -4,6 +4,7 @@ from uuid import UUID
 from github import Issue
 from pydantic import EmailStr, Field
 
+import lumina.github.util
 from lumina import github
 from lumina.database.models import MemberModel, SubmissionModel, SubmitterModel
 from lumina.database.table import get_submission_sk
@@ -149,7 +150,7 @@ class SubmissionResponse(LuminaModel):
             message=submission.message,
             github_issue=GitHubIssueResponse(
                 number=submission.issue_id,
-                url=github.get_content_repo_issue_url(submission.issue_id),
+                url=lumina.github.util.get_content_repo_issue_url(submission.issue_id),
                 state="unknown",  # TODO: get state from db
             ),
         )

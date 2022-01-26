@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 
 import lumina.database.operations
 import lumina.github
+import lumina.github.submissions
 from lumina import auth
 from lumina.database.models import MemberModel
 from lumina.schema.submissions import (
@@ -65,7 +66,7 @@ def create_generic_submission(
 ):
     require_submitter_or_member(submission, member)
     submitter_id = member.pk if member else submission.submitter.id
-    issue = lumina.github.create_generic_submission_issue(
+    issue = lumina.github.submissions.create_generic_submission_issue(
         submission_request=submission, member=member
     )
     submission_instance = lumina.database.operations.put_submission(

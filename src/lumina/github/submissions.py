@@ -1,37 +1,11 @@
-import functools
 from typing import Optional
 
-from github import Github, Issue, Repository
+from github import Issue
 
-from lumina import ssm
-from lumina.config import settings
 from lumina.database.models import MemberModel
+from lumina.github.connection import get_content_repo
+from lumina.github.util import get_content_repo_file_url, get_content_repo_path
 from lumina.schema.submissions import GenericSubmissionRequest, SubmitterRequest
-
-
-def get_access_token() -> str:
-    return ssm.get_parameter("/lumina/github/access-token")
-
-
-@functools.lru_cache(maxsize=1)
-def get_content_repo() -> Repository:
-    client = Github(get_access_token())
-    return client.get_repo(f"{settings.github_owner}/{settings.github_repo}")
-
-
-def get_content_repo_path(target_type: str, target_id: str) -> str:
-    if target_type == "show":
-        return f"_shows/{target_id}.md"
-
-
-def get_content_repo_file_url(path: str, branch: str = "master") -> str:
-    return f"https://github.com/{settings.github_owner}/{settings.github_repo}/blob/master/{path}"
-
-
-def get_content_repo_issue_url(id: int) -> str:
-    return (
-        f"https://github.com/{settings.github_owner}/{settings.github_repo}/issues/{id}"
-    )
 
 
 def get_submitter_public_link(id: str) -> str:

@@ -6,6 +6,7 @@ from typing import Dict, Tuple
 import botocore.exceptions
 from github import BadCredentialsException
 
+import lumina.github.connection
 from lumina import github, ssm
 from lumina.config import settings
 from lumina.schema.health import HealthCheckCondition, HealthCheckResponse
@@ -46,7 +47,7 @@ def check_ssm() -> HealthCheckCondition:
 def check_github() -> HealthCheckCondition:
     try:
         # Check if GitHub is available by grabbing the content repo
-        github.get_content_repo()
+        lumina.github.connection.get_content_repo()
         return HealthCheckCondition(
             ok=True,
             timestamp=datetime.datetime.now(),

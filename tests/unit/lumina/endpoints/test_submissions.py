@@ -154,7 +154,7 @@ class TestCreateGenericSubmission:
 
     def test_success_not_authed(self):
         with mock.patch(
-            "lumina.github.create_generic_submission_issue"
+            "lumina.github.submissions.create_generic_submission_issue"
         ) as mock_create_generic_submission_issue, mock.patch(
             "lumina.database.operations.put_submission"
         ) as mock_put_submission:
@@ -213,7 +213,7 @@ class TestCreateGenericSubmission:
         with mock.patch(
             "lumina.database.operations.get_member"
         ) as mock_get_member, mock.patch(
-            "lumina.github.create_generic_submission_issue"
+            "lumina.github.submissions.create_generic_submission_issue"
         ) as mock_create_generic_submission_issue, mock.patch(
             "lumina.database.operations.put_submission"
         ) as mock_put_submission:
