@@ -26,6 +26,45 @@ DUMMY_SUBMISSION = SubmissionModel(
 )
 
 
+class TestListMemberSubmissions:
+    def test_no_submissions(self):
+        with mock.patch(
+            "lumina.database.operations.get_submissions_for_member"
+        ) as mock_get_submissions:
+            mock_get_submissions.return_value = []
+            response = client.get("/submissions/member/fred-bloggs")
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == []
+
+    def test_with_submissions(self):
+        with mock.patch(
+            "lumina.database.operations.get_submissions_for_member"
+        ) as mock_get_submissions:
+            mock_get_submissions.return_value = [DUMMY_SUBMISSION]
+            response = client.get("/submissions/member/fred-bloggs")
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == [
+            {
+                "id": 1,
+                "message": "This is a message",
+                "targetId": "00_01/a_show",
+                "targetName": "A Show",
+                "targetType": "show",
+                "targetUrl": "https://github.com/newtheatre/history-project/issues/1",
+                "githubIssue": {
+                    "number": 1,
+                    "state": "unknown",
+                    "url": "https://github.com/newtheatre/lumina-test/issues/1",
+                },
+                "submitter": {
+                    "id": "fred_bloggs",
+                    "name": "Fred Bloggs",
+                    "verified": True,
+                },
+            }
+        ]
+
+
 class TestReadMemberSubmissionStats:
     def test_no_submissions(self):
         with mock.patch(

@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import Optional
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -19,12 +19,14 @@ from lumina.schema.submissions import (
 router = APIRouter()
 
 
-@router.get("/member/{id}")
+@router.get("/member/{id}", response_model=List[SubmissionResponse])
 def list_member_submissions(
     id: str,
-    member: MemberModel = Depends(auth.require_member),
 ):
-    return member.id
+    return [
+        SubmissionResponse.from_model(submission)
+        for submission in lumina.database.operations.get_submissions_for_member(id)
+    ]
 
 
 @router.get("/member/{id}/stats", response_model=SubmissionStatsResponse)
