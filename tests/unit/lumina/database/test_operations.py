@@ -138,6 +138,9 @@ def test_get_submission():
 
 
 def test_get_submissions_for_member():
+    operations.create_member(
+        id="fred_bloggs", name="Fred Bloggs", email="fred@bloggs.test"
+    )
     sub_1 = operations.put_submission(_make_submission(101, pk="fred_bloggs"))
     sub_2 = operations.put_submission(_make_submission(102, pk="fred_bloggs"))
     operations.put_submission(_make_submission(103, pk="alice_froggs"))

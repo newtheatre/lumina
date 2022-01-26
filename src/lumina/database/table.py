@@ -16,7 +16,7 @@ MEMBER_PARTITION_KEY = "pk"
 MEMBER_SORT_KEY = "sk"
 
 SK_PROFILE = "profile"
-SK_SUBMISSION = "submission"
+SK_SUBMISSION_PREFIX = "submission/"
 PK_ANONYMOUS = "ANONYMOUS"
 
 GSI_SK = "gsi_sk"
@@ -28,7 +28,7 @@ GSI_SUBMISSION_TARGET_SK = "target_id"
 
 def get_submission_sk(submission_id: int) -> str:
     """Get the sort key for a submission id, the id is a GitHub issue id"""
-    return f"{SK_SUBMISSION}/{submission_id}"
+    return f"{SK_SUBMISSION_PREFIX}{submission_id}"
 
 
 def create_tables():

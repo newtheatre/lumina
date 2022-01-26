@@ -15,6 +15,7 @@ from .table import (
     MEMBER_PARTITION_KEY,
     MEMBER_SORT_KEY,
     SK_PROFILE,
+    SK_SUBMISSION_PREFIX,
     get_submission_sk,
     get_table_name,
 )
@@ -90,7 +91,8 @@ def get_submissions_for_member(id: str) -> List[SubmissionModel]:
         get_dynamo_db()
         .Table(get_table_name())
         .query(
-            KeyConditionExpression=Key(MEMBER_PARTITION_KEY).eq(id),
+            KeyConditionExpression=Key(MEMBER_PARTITION_KEY).eq(id)
+            & Key(MEMBER_SORT_KEY).begins_with(SK_SUBMISSION_PREFIX),
         )
     )
     return [SubmissionModel(**item) for item in response["Items"]]
