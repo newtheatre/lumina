@@ -6,6 +6,12 @@ Experimental API service for New Theatre alumni sites, responsible for identifyi
 
 Data is stored in DynamoDB in a single table, `LuminaMember`. It stores member information and submissions by those members.
 
+| Partition Key    | Sort Key          | Data                 |
+| ---------------- | ----------------- | -------------------- |
+| `<Member ID>`    | `profile`         | Member profile       |
+| `<Member ID>`    | `<Submission ID>` | Member submission    |
+| `<Anonymous ID>` | `<Submission ID>` | Anonymous submission |
+
 ## MemberModel
 
 Stores information about a member when they register for the Alumni Network.

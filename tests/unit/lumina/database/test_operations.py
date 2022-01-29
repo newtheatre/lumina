@@ -1,4 +1,6 @@
 import datetime
+import time
+import uuid
 
 import freezegun
 import moto
@@ -8,6 +10,7 @@ from lumina.database import operations, table
 from lumina.database.models import (
     GitHubIssueModel,
     GitHubIssueState,
+    MemberModel,
     SubmissionModel,
     SubmitterModel,
 )
@@ -21,50 +24,44 @@ def create_tables():
         yield
 
 
-def test_create_member():
-    member = operations.create_member(
-        id="fred_bloggs", name="Fred Bloggs", email="fred@bloggs.test"
+@pytest.fixture()
+def fred_bloggs() -> MemberModel:
+    return operations.create_member(
+        id="fred_bloggs",
+        name="Fred Bloggs",
+        email="fred@bloggs.test",
+        anonymous_id=uuid.uuid4(),
     )
-    assert member.pk == "fred_bloggs"
-    assert member.sk == table.SK_PROFILE
-    assert member.email == "fred@bloggs.test"
-    assert member.phone is None
 
 
-def test_get_member_exists():
-    create_member = operations.create_member(
-        id="fred_bloggs", name="Fred Bloggs", email="fred@bloggs.test"
-    )
-    get_member = operations.get_member(id="fred_bloggs")
-    assert create_member == get_member
+def test_create_member(fred_bloggs):
+    assert fred_bloggs.pk == "fred_bloggs"
+    assert fred_bloggs.sk == table.SK_PROFILE
+    assert fred_bloggs.email == "fred@bloggs.test"
+    assert fred_bloggs.phone is None
 
 
-def test_get_member_doest_exists():
-    operations.create_member(
-        id="fred_bloggs", name="Fred Bloggs", email="fred@bloggs.test"
-    )
+def test_get_member_exists(fred_bloggs):
+    assert fred_bloggs == operations.get_member(id="fred_bloggs")
+
+
+def test_get_member_doest_exists(fred_bloggs):
     with pytest.raises(operations.ResultNotFound):
         operations.get_member(id="alice_froggs")
 
 
-def test_put_member():
-    create_member = operations.create_member(
-        id="fred_bloggs", name="Fred Bloggs", email="fred@bloggs.test"
-    )
-    create_member.email = "fred.bloggs@gmail.test"
-    operations.put_member(create_member)
+def test_put_member(fred_bloggs):
+    fred_bloggs.email = "fred.bloggs@gmail.test"
+    operations.put_member(fred_bloggs)
     get_member = operations.get_member(id="fred_bloggs")
     assert get_member.email == "fred.bloggs@gmail.test"
 
 
-def test_set_member_email_verified():
-    create_member = operations.create_member(
-        id="fred_bloggs", name="Fred Bloggs", email="fred@bloggs.test"
-    )
-    assert create_member.email_verified is False
+def test_set_member_email_verified(fred_bloggs):
+    assert fred_bloggs.email_verified is False
     with freezegun.freeze_time("2020-01-01 12:34:56"):
-        operations.set_member_email_verified(create_member.pk)
-    get_member = operations.get_member(create_member.pk)
+        operations.set_member_email_verified(fred_bloggs.pk)
+    get_member = operations.get_member(fred_bloggs.pk)
     print(get_member.dict())
     assert get_member.email_verified is True
     assert get_member.email_verified_at == datetime.datetime(
@@ -72,13 +69,10 @@ def test_set_member_email_verified():
     )
 
 
-def test_delete_member_exists():
-    create_member = operations.create_member(
-        id="fred_bloggs", name="Fred Bloggs", email="fred@bloggs.com"
-    )
-    operations.delete_member(id=create_member.pk)
+def test_delete_member_exists(fred_bloggs):
+    operations.delete_member(id=fred_bloggs.pk)
     with pytest.raises(operations.ResultNotFound):
-        operations.get_member(id=create_member.pk)
+        operations.get_member(id=fred_bloggs.pk)
 
 
 def _make_submission(id: int, **kwargs) -> SubmissionModel:
@@ -131,10 +125,7 @@ def test_put_anonymous_submission():
     assert create_submission.pk == table.PK_ANONYMOUS
 
 
-def test_get_submission():
-    operations.create_member(
-        id="fred_bloggs", name="Fred Bloggs", email="fred@bloggs.test"
-    )
+def test_get_submission(fred_bloggs):
     create_submission = operations.put_submission(_make_submission(101))
     get_submission = operations.get_submission(101)
     assert create_submission == get_submission
@@ -145,21 +136,18 @@ def test_get_submission_not_found():
         operations.get_submission(101)
 
 
-def test_get_submissions_for_member():
-    operations.create_member(
-        id="fred_bloggs", name="Fred Bloggs", email="fred@bloggs.test"
-    )
-    sub_1 = operations.put_submission(_make_submission(101, pk="fred_bloggs"))
-    sub_2 = operations.put_submission(_make_submission(102, pk="fred_bloggs"))
+def test_get_submissions_for_member(fred_bloggs):
+    sub_1 = operations.put_submission(_make_submission(101, pk=fred_bloggs.pk))
+    sub_2 = operations.put_submission(_make_submission(102, pk=fred_bloggs.pk))
     operations.put_submission(_make_submission(103, pk="alice_froggs"))
-    submissions = operations.get_submissions_for_member("fred_bloggs")
+    submissions = operations.get_submissions_for_member(fred_bloggs.pk)
     assert len(submissions) == 2
     assert sub_1 in submissions
     assert sub_2 in submissions
 
 
-def test_get_submissions_for_member_no_submissions():
-    submissions = operations.get_submissions_for_member("fred_bloggs")
+def test_get_submissions_for_member_no_submissions(fred_bloggs):
+    submissions = operations.get_submissions_for_member(fred_bloggs.pk)
     assert len(submissions) == 0
 
 
@@ -202,3 +190,37 @@ def test_update_submission_github_issue():
     assert updated_submission.github_issue.state == GitHubIssueState.CLOSED
     assert updated_submission.github_issue.closed_at == to_close_at
     assert updated_submission.github_issue.comments == 5
+
+
+def test_move_anonymous_submissions_to_member(fred_bloggs):
+    anonymous_id = uuid.uuid4()
+    operations.put_submission(
+        _make_submission(
+            99, pk=anonymous_id, target_type="show", target_id="00_01/romeo_and_juliet"
+        )
+    )
+    operations.put_submission(
+        _make_submission(
+            101, pk=anonymous_id, target_type="show", target_id="00_01/romeo_and_juliet"
+        )
+    )
+    operations.put_submission(
+        _make_submission(
+            102, pk="alice_froggs", target_type="show", target_id="02_03/east"
+        )
+    )
+
+    # There should be no submissions for fred_bloggs
+    assert len(operations.get_submissions_for_member(fred_bloggs.pk)) == 0
+    # There should be two anonymous submissions
+    assert len(operations.get_submissions_for_member(anonymous_id)) == 2
+    # Move these submissions to fred_bloggs
+    submissions = operations.move_anonymous_submissions_to_member(
+        member_id=fred_bloggs.pk, anonymous_id=anonymous_id
+    )
+    # Two submission returned
+    assert len(submissions) == 2
+    # There should be two submissions for fred_bloggs
+    assert len(operations.get_submissions_for_member(fred_bloggs.pk)) == 2
+    # There should be no anonymous submissions
+    assert len(operations.get_submissions_for_member(anonymous_id)) == 0

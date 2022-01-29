@@ -1,4 +1,5 @@
 import datetime
+import uuid
 from http import HTTPStatus
 from unittest import mock
 
@@ -36,9 +37,9 @@ class TestReadMember:
         mock_get_member.return_value = MemberModel(**auth_fred_bloggs.dict())
         mock_get_member.return_value.email_verified_at = "2021-01-01T00:00:00"
         response = client.get("/member/fred_bloggs")
+        assert response.status_code == HTTPStatus.OK, response.json()
         assert mock_set_member_email_verified.called
         assert mock_get_member.called
-        assert response.status_code == HTTPStatus.OK
         assert response.json() == {
             "email": "fred@bloggs.test",
             "emailVerified": True,
@@ -54,9 +55,28 @@ class TestReadMember:
     ):
         auth_fred_bloggs.email_verified_at = dates.now()
         response = client.get("/member/fred_bloggs")
+        assert response.status_code == HTTPStatus.OK, response.json()
         # We don't call set_member_email_verified as email is already verified
         assert not mock_set_member_email_verified.called
-        assert response.status_code == HTTPStatus.OK
+        assert response.json() == {
+            "email": "fred@bloggs.test",
+            "emailVerified": True,
+            "id": "fred_bloggs",
+        }
+
+    @mock.patch(
+        "lumina.database.operations.move_anonymous_submissions_to_member",
+        return_value=None,
+    )
+    def test_move_anonymous_submissions(
+        self, mock_move_anonymous_submissions_to_member, auth_fred_bloggs
+    ):
+        auth_fred_bloggs.email_verified_at = dates.now()
+        auth_fred_bloggs.anonymous_ids = [uuid.uuid4()]
+        response = client.get("/member/fred_bloggs")
+        # We don't call set_member_email_verified as email is already verified
+        assert response.status_code == HTTPStatus.OK, response.json()
+        assert mock_move_anonymous_submissions_to_member.called
         assert response.json() == {
             "email": "fred@bloggs.test",
             "emailVerified": True,
@@ -88,17 +108,25 @@ class TestRegisterMember:
     @mock.patch("lumina.database.operations.get_member", side_effect=ResultNotFound())
     @mock.patch("lumina.auth.get_auth_url", return_value=FAKE_TOKEN_URL)
     @mock.patch("lumina.emails.send.send_email", return_value="abc123")
-    def test_success(self, send_email, get_auth_url, get_member, create_member):
+    def test_success(
+        self,
+        send_email,
+        get_auth_url,
+        get_member,
+        create_member,
+    ):
         response = client.post(
             "/member/fred_bloggs",
             json={
                 "email": "test@example.com",
                 "fullName": "Fred Bloggs",
+                "anonymousId": str(uuid.uuid4()),
             },
         )
         assert response.status_code == HTTPStatus.OK
         assert get_member.called
         assert send_email.called
+        assert create_member.called
 
     @mock.patch(
         "lumina.database.operations.get_member",
@@ -114,6 +142,7 @@ class TestRegisterMember:
             json={
                 "email": "test@example.com",
                 "fullName": "Fred Bloggs",
+                "anonymousId": str(uuid.uuid4()),
             },
         )
         assert response.status_code == HTTPStatus.CONFLICT
@@ -126,6 +155,7 @@ class TestRegisterMember:
             json={
                 "email": "test@",
                 "fullName": "Test Member",
+                "anonymousId": str(uuid.uuid4()),
             },
         )
         assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY

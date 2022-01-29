@@ -39,6 +39,12 @@ def read_member(
         return MemberPrivateResponse.from_model(
             lumina.database.operations.get_member(member.id)
         )
+    if member.anonymous_ids:
+        for anonymous_id in member.anonymous_ids:
+            lumina.database.operations.move_anonymous_submissions_to_member(
+                member_id=member.id,
+                anonymous_id=anonymous_id,
+            )
     return MemberPrivateResponse.from_model(member)
 
 
@@ -69,7 +75,10 @@ def register_member(id: str, new_member: RegisterMemberRequest):
         pass
 
     lumina.database.operations.create_member(
-        id=id, name=new_member.full_name, email=new_member.email
+        id=id,
+        name=new_member.full_name,
+        email=new_member.email,
+        anonymous_id=new_member.anonymous_id,
     )
 
     lumina.emails.send.send_email(

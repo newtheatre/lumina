@@ -1,9 +1,10 @@
 import datetime
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
+from uuid import UUID
 
 from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, validator
 
 from lumina.util.types import BaseModelProtocol
 
@@ -38,6 +39,7 @@ class MemberModel(BaseDynamoModel, DynamoExportMixin):
     created_at: Optional[datetime.datetime]
     email_verified_at: Optional[datetime.datetime]
     consent: Optional[MemberConsent]
+    anonymous_ids: Optional[List[UUID]]
 
     @property
     def id(self) -> str:

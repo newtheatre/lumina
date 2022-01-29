@@ -1,4 +1,5 @@
-from typing import List
+from typing import List, Union
+from uuid import UUID
 
 from boto3.dynamodb.conditions import Key
 
@@ -28,8 +29,10 @@ class ResultNotFound(DbError):
     pass
 
 
-def create_member(id: str, name: str, email: str) -> MemberModel:
-    member_model = MemberModel(pk=id, name=name, email=email)
+def create_member(id: str, name: str, email: str, anonymous_id: UUID) -> MemberModel:
+    member_model = MemberModel(
+        pk=id, name=name, email=email, anonymous_ids=[anonymous_id]
+    )
     get_member_table().put_item(Item=member_model.ddict())
 
     return member_model
@@ -75,9 +78,9 @@ def get_submission(id: int) -> SubmissionModel:
     return SubmissionModel(**response["Items"][0])
 
 
-def get_submissions_for_member(id: str) -> List[SubmissionModel]:
+def get_submissions_for_member(id: Union[str, UUID]) -> List[SubmissionModel]:
     response = get_member_table().query(
-        KeyConditionExpression=Key(MEMBER_PARTITION_KEY).eq(id)
+        KeyConditionExpression=Key(MEMBER_PARTITION_KEY).eq(str(id))
         & Key(MEMBER_SORT_KEY).begins_with(SK_SUBMISSION_PREFIX),
     )
     return [SubmissionModel(**item) for item in response["Items"]]
@@ -110,3 +113,28 @@ def update_submission_github_issue(id: int, issue: GitHubIssueModel) -> Submissi
         ExpressionAttributeValues={":v": issue.ddict()},
     )
     return get_submission(id)
+
+
+def move_anonymous_submissions_to_member(
+    member_id: str, anonymous_id: UUID
+) -> List[SubmissionModel]:
+    """Delete all submissions for the anonymous member and create them as member
+    submissions."""
+    anonymous_submissions = get_submissions_for_member(anonymous_id)
+    new_member_submissions = []
+    for anonymous_submission in anonymous_submissions:
+        # Create a new submission using the member ID
+        new_member_submissions.append(
+            # Direct copy and change only the PK
+            put_submission(anonymous_submission.copy(update=dict(pk=member_id)))
+        )
+        # Delete the old submission
+        delete_response = get_member_table().delete_item(
+            Key={
+                MEMBER_PARTITION_KEY: anonymous_submission.pk,
+                MEMBER_SORT_KEY: anonymous_submission.sk,
+            },
+            ReturnValues="ALL_OLD",  # Needed for 'Attributes' in response
+        )
+        assert delete_response["Attributes"], "Original submission not deleted"
+    return new_member_submissions
