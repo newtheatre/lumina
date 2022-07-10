@@ -4,7 +4,7 @@ Description: lumina
 Globals:
   Function:
     Timeout: 60
-    MemorySize: 128
+    MemorySize: 256
     Environment:
       Variables:
         ENVIRONMENT: !Ref Environment
