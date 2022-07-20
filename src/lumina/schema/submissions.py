@@ -72,6 +72,9 @@ FIELD_TARGET_URL = Field(
     description="The URL this submission is being made from",
     example="https://history.newtheatre.org.uk/00_01/romeo_and_juliet",
 )
+FIELD_SUBJECT = Field(
+    description="The subject of the submission", example="The lighting"
+)
 FIELD_MESSAGE = Field(
     title="Message",
     description="The message to be submitted verbatim from the user",
@@ -84,9 +87,7 @@ class GenericSubmissionRequest(BaseSubmissionRequest):
     target_id: str = FIELD_TARGET_ID
     target_name: str = FIELD_TARGET_NAME
     target_url: str = FIELD_TARGET_URL
-    subject: Optional[str] = Field(
-        description="The subject of the submission", example="The lighting"
-    )
+    subject: Optional[str] = FIELD_SUBJECT
     message: str = FIELD_MESSAGE
 
     def to_model(
@@ -105,6 +106,7 @@ class GenericSubmissionRequest(BaseSubmissionRequest):
             target_type=self.target_type,
             target_name=self.target_name,
             created_at=dates.now(),
+            subject=self.subject,
             message=self.message,
             submitter=member.to_submitter() if member else self.submitter.to_model(),
             github_issue=lumina.github.submissions.make_issue_model(github_issue),
@@ -141,6 +143,7 @@ class SubmissionResponse(LuminaModel):
     target_id: str = FIELD_TARGET_ID
     target_name: str = FIELD_TARGET_NAME
     target_url: str = FIELD_TARGET_URL
+    subject: Optional[str] = FIELD_SUBJECT
     message: Optional[str] = FIELD_MESSAGE
     github_issue: GitHubIssueResponse = Field(
         title="GitHub Issue", description="Linked GitHub issue"
@@ -163,6 +166,7 @@ class SubmissionResponse(LuminaModel):
             target_name=submission.target_name,
             target_url=submission.url,
             message=submission.message,
+            subject=submission.subject,
             github_issue=GitHubIssueResponse(
                 number=submission.github_issue.number,
                 url=lumina.github.util.get_content_repo_issue_url(submission.issue_id),

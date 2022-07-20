@@ -88,6 +88,7 @@ class SubmissionModel(BaseDynamoModel, DynamoExportMixin):
     target_type: str
     target_name: str
     created_at: datetime.datetime
+    subject: Optional[str]
     message: Optional[str]
     submitter: SubmitterModel
     github_issue: GitHubIssueModel

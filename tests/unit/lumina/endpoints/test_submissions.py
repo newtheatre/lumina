@@ -61,6 +61,7 @@ class TestListMemberSubmissions:
         assert response.json() == [
             {
                 "id": 1,
+                "subject": None,
                 "message": "This is a message",
                 "submitter": {
                     "id": "fred_bloggs",
@@ -183,6 +184,7 @@ class TestCreateGenericSubmission:
                 target_id="test-page",
                 target_name="Test Page",
                 target_url="https://example.com/test-page",
+                subject="Hi there",
                 message="Hello World",
                 submitter=dict(
                     id="c0286cf1-15cc-4e43-93de-aaca592e447b",
@@ -213,6 +215,7 @@ class TestCreateGenericSubmission:
         assert response.status_code == HTTPStatus.OK
         assert response.json() == {
             "id": 123,
+            "subject": "Hi there",
             "message": "Hello World",
             "submitter": {
                 "id": "c0286cf1-15cc-4e43-93de-aaca592e447b",
@@ -248,6 +251,7 @@ class TestCreateGenericSubmission:
                 target_id="test-page",
                 target_name="Test Page",
                 target_url="https://example.com/test-page",
+                subject="Hi there",
                 message="Hello World",
             )
             mock_get_member.return_value = MEMBER_MODEL_FRED_BLOGGS
@@ -265,6 +269,7 @@ class TestCreateGenericSubmission:
         assert response.status_code == HTTPStatus.OK
         assert response.json() == {
             "id": 123,
+            "subject": "Hi there",
             "message": "Hello World",
             "submitter": {"id": "fred_bloggs", "verified": True, "name": "Fred Bloggs"},
             "targetId": "test-page",
