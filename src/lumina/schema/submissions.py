@@ -2,7 +2,7 @@ import datetime
 from typing import Optional, Union
 from uuid import UUID
 
-from github import Issue
+from github.Issue import Issue
 from pydantic import EmailStr, Field
 
 import lumina.github.submissions

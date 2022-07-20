@@ -1,6 +1,7 @@
 import functools
 
-from github import Github, Repository
+from github import Github
+from github.Repository import Repository
 
 from lumina import ssm
 from lumina.config import settings
