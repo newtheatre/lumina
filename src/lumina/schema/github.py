@@ -9,6 +9,7 @@ from lumina.database.models import GitHubIssueState
 class GitHubIssue(BaseModel):
     number: int
     state: GitHubIssueState
+    state_reason: Optional[str]
     title: str
     created_at: datetime.datetime
     updated_at: datetime.datetime

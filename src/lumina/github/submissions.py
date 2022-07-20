@@ -2,9 +2,13 @@ from typing import Optional
 
 from github import Issue
 
-from lumina.database.models import GitHubIssueModel, GitHubIssueState, MemberModel
+from lumina.database.models import GitHubIssueModel, MemberModel
 from lumina.github.connection import get_content_repo
-from lumina.github.util import get_content_repo_file_url, get_content_repo_path
+from lumina.github.util import (
+    get_content_repo_file_url,
+    get_content_repo_path,
+    get_state_from_issue,
+)
 from lumina.schema.submissions import GenericSubmissionRequest, SubmitterRequest
 
 
@@ -59,17 +63,10 @@ def create_generic_submission_issue(
     )
 
 
-def get_state_from_issue(issue: Issue) -> GitHubIssueState:
-    if issue.state == "closed" and issue.state_reason == "completed":
-        # Catch completed issues as our own 'COMPLETED' state
-        return GitHubIssueState.COMPLETED
-    return GitHubIssueState(issue.state)
-
-
 def make_issue_model(issue: Issue) -> GitHubIssueModel:
     return GitHubIssueModel(
         number=issue.number,
-        state=get_state_from_issue(issue),
+        state=issue.state,  # Does not handle completed state but only used for new issues
         title=issue.title,
         created_at=issue.created_at,
         updated_at=issue.updated_at,
