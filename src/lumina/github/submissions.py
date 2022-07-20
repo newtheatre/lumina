@@ -59,10 +59,17 @@ def create_generic_submission_issue(
     )
 
 
+def get_state_from_issue(issue: Issue) -> GitHubIssueState:
+    if issue.state == "closed" and issue.state_reason == "completed":
+        # Catch completed issues as our own 'COMPLETED' state
+        return GitHubIssueState.COMPLETED
+    return GitHubIssueState(issue.state)
+
+
 def make_issue_model(issue: Issue) -> GitHubIssueModel:
     return GitHubIssueModel(
         number=issue.number,
-        state=GitHubIssueState(issue.state),
+        state=get_state_from_issue(issue),
         title=issue.title,
         created_at=issue.created_at,
         updated_at=issue.updated_at,

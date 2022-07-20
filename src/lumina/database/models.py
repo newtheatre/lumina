@@ -70,6 +70,7 @@ class SubmitterModel(BaseModel, DynamoExportMixin):
 class GitHubIssueState(Enum):
     OPEN = "open"
     CLOSED = "closed"
+    COMPLETED = "completed"
 
 
 class GitHubIssueModel(BaseModel, DynamoExportMixin):
