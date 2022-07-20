@@ -26,7 +26,12 @@ def list_member_submissions(
 ):
     return [
         SubmissionResponse.from_model(submission)
-        for submission in lumina.database.operations.get_submissions_for_member(id)
+        for submission in reversed(
+            sorted(
+                lumina.database.operations.get_submissions_for_member(id),
+                key=lambda x: x.created_at,
+            )
+        )
     ]
 
 

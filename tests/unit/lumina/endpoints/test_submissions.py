@@ -17,12 +17,37 @@ client = TestClient(app)
 
 DUMMY_SUBMISSION = SubmissionModel(
     pk="fred_bloggs",
+    sk="submission/2",
+    url="https://github.com/newtheatre/history-project/issues/2",
+    target_id="00_01/a_show",
+    target_type="show",
+    target_name="A Show",
+    created_at="2020-01-01T00:00:00Z",
+    message="This is a message",
+    submitter=SubmitterModel(
+        id="fred_bloggs",
+        verified=True,
+        name="Fred Bloggs",
+    ),
+    github_issue=GitHubIssueModel(
+        number=1,
+        state=GitHubIssueState.OPEN,
+        title="A title",
+        created_at="2020-01-01T00:00:00Z",
+        updated_at="2020-01-01T00:00:00Z",
+        closed_at=None,
+        comments=1,
+    ),
+)
+
+DUMMY_SUBMISSION_OLDER = SubmissionModel(
+    pk="fred_bloggs",
     sk="submission/1",
     url="https://github.com/newtheatre/history-project/issues/1",
     target_id="00_01/a_show",
     target_type="show",
     target_name="A Show",
-    created_at="2020-01-01T00:00:00Z",
+    created_at="2019-01-01T00:00:00Z",
     message="This is a message",
     submitter=SubmitterModel(
         id="fred_bloggs",
@@ -60,7 +85,7 @@ class TestListMemberSubmissions:
         assert response.status_code == HTTPStatus.OK
         assert response.json() == [
             {
-                "id": 1,
+                "id": 2,
                 "subject": None,
                 "message": "This is a message",
                 "submitter": {
@@ -71,7 +96,7 @@ class TestListMemberSubmissions:
                 "targetId": "00_01/a_show",
                 "targetName": "A Show",
                 "targetType": "show",
-                "targetUrl": "https://github.com/newtheatre/history-project/issues/1",
+                "targetUrl": "https://github.com/newtheatre/history-project/issues/2",
                 "githubIssue": {
                     "closedAt": None,
                     "comments": 1,
@@ -80,10 +105,24 @@ class TestListMemberSubmissions:
                     "state": "open",
                     "title": "A title",
                     "updatedAt": "2020-01-01T00:00:00+00:00",
-                    "url": "https://github.com/newtheatre/lumina-test/issues/1",
+                    "url": "https://github.com/newtheatre/lumina-test/issues/2",
                 },
             }
         ]
+
+    def test_sort_order(self):
+        with mock.patch(
+            "lumina.database.operations.get_submissions_for_member"
+        ) as mock_get_submissions:
+            mock_get_submissions.return_value = [
+                DUMMY_SUBMISSION_OLDER,
+                DUMMY_SUBMISSION,
+            ]
+            response = client.get("/submissions/member/fred-bloggs")
+        assert response.status_code == HTTPStatus.OK
+        data = response.json()
+        assert data[0]["id"] == 2
+        assert data[1]["id"] == 1
 
 
 class TestReadMemberSubmissionStats:
