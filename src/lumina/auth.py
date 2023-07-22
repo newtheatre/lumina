@@ -13,7 +13,7 @@ from lumina.database.models import MemberModel
 
 JWT_ALGORITHM = "RS256"
 JWT_EXPIRATION_DELTA = timedelta(days=90)
-AUTH_URL = "https://nthp-web.netlify.app/auth"
+AUTH_URL = "https://nthp-web.pages.dev/auth"
 
 
 class AuthenticatedToken(BaseModel):
