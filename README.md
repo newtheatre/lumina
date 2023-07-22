@@ -31,3 +31,14 @@ When a member consents to a specific use of their data we store the date of cons
 ## SubmissionModel
 
 Stores submissions both from registered members and anonymous users. When a user is anonymous we store their name and optionally grad year and email in the `submitter` field.
+
+# AWS Account
+
+https://467847751304.signin.aws.amazon.com/console
+
+# Deployment
+
+To deploy locally you'll need [AWS SAM installed](https://pypi.org/project/aws-sam-cli/) and auth set up for the NTHP AWS account.
+It's recommended to use [aws-vault](https://github.com/99designs/aws-vault) for this.
+
+To deploy run `make deploy` and ensure the correct vault account is being used and the VCS_REV is correct.
