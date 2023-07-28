@@ -10,8 +10,8 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: ${{ env.python-version }}
       - uses: pre-commit/action@v2.0.3
@@ -19,37 +19,27 @@ jobs:
   pytest:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: ${{ env.python-version }}
-      - uses: abatilo/actions-poetry@v2.1.0
+      - uses: actions/checkout@v3
+      - uses: abatilo/actions-poetry@v2.3.0
         with:
           poetry-version: ${{ env.poetry-version }}
-      - uses: actions/cache@v1
+      - uses: actions/setup-python@v4
         with:
-          path: ~/.cache/pypoetry
-          key: ${{ runner.os }}-poetry-2-${{ hashFiles('src/poetry.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-poetry-2-
+          python-version: ${{ env.python-version }}
+          cache: "poetry"
       - run: poetry install --no-root
       - run: PYTHONPATH=src/.:tests/. poetry run pytest
 
   mypy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: ${{ env.python-version }}
-      - uses: abatilo/actions-poetry@v2.1.0
+      - uses: actions/checkout@v3
+      - uses: abatilo/actions-poetry@v2.3.0
         with:
           poetry-version: ${{ env.poetry-version }}
-      - uses: actions/cache@v1
+      - uses: actions/setup-python@v4
         with:
-          path: ~/.cache/pypoetry
-          key: ${{ runner.os }}-poetry-2-${{ hashFiles('src/poetry.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-poetry-2-
+          python-version: ${{ env.python-version }}
+          cache: "poetry"
       - run: poetry install --no-root
       - run: poetry run mypy
