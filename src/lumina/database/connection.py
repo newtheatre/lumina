@@ -1,9 +1,8 @@
 import functools
 
 import boto3
-from mypy_boto3_dynamodb import DynamoDBServiceResource
-
 from lumina.config import settings
+from mypy_boto3_dynamodb import DynamoDBServiceResource
 
 
 @functools.lru_cache(maxsize=1)

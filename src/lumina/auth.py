@@ -1,15 +1,13 @@
 from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
-from typing import Optional
 
 import jwt
+import lumina.database.operations
 from fastapi import Depends, HTTPException, Request
 from fastapi.security import HTTPBearer
-from pydantic import BaseModel
-
-import lumina.database.operations
 from lumina import ssm
 from lumina.database.models import MemberModel
+from pydantic import BaseModel
 
 JWT_ALGORITHM = "RS256"
 JWT_EXPIRATION_DELTA = timedelta(days=90)
@@ -50,18 +48,18 @@ def decode_jwt(token: str) -> AuthenticatedToken:
 class JWTBearer(HTTPBearer):
     def __init__(self, optional: bool = False):
         self.optional = optional
-        super(JWTBearer, self).__init__(auto_error=False)
+        super().__init__(auto_error=False)
 
-    async def __call__(self, request: Request) -> Optional[AuthenticatedToken]:
+    async def __call__(self, request: Request) -> AuthenticatedToken | None:  # type: ignore
         credentials = await super(JWTBearer, self).__call__(request)
         if credentials:
             try:
                 return decode_jwt(credentials.credentials)
-            except jwt.InvalidTokenError:
+            except jwt.InvalidTokenError as e:
                 raise HTTPException(
                     status_code=HTTPStatus.UNAUTHORIZED,
                     detail="Invalid or expired token",
-                )
+                ) from e
         elif self.optional:
             return None
         else:
@@ -71,21 +69,21 @@ class JWTBearer(HTTPBearer):
 
 
 def require_member(
-    authenticated_member=Depends(JWTBearer()),
+    authenticated_member=Depends(JWTBearer()),  # noqa B008
 ) -> MemberModel:
     """Get member if token is provided, otherwise raise exception."""
     try:
         return lumina.database.operations.get_member(authenticated_member.id)
-    except lumina.database.operations.ResultNotFound:
+    except lumina.database.operations.ResultNotFound as e:
         raise HTTPException(
             status_code=HTTPStatus.UNAUTHORIZED,
             detail="Member no longer exists",
-        )
+        ) from e
 
 
 def optional_member(
-    authenticated_member=Depends(JWTBearer(optional=True)),
-) -> Optional[MemberModel]:
+    authenticated_member=Depends(JWTBearer(optional=True)),  # noqa B008
+) -> MemberModel | None:
     """Get member if token is provided, otherwise return None."""
     if not authenticated_member:
         return None

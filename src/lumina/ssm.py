@@ -1,7 +1,6 @@
 import functools
 
 import boto3
-
 from lumina.config import settings
 
 

@@ -1,7 +1,6 @@
 import humps
 from fastapi import APIRouter, FastAPI
 from fastapi.routing import APIRoute
-
 from lumina.endpoints import auth, github, health, member, submissions
 
 router = APIRouter()

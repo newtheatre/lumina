@@ -1,15 +1,13 @@
 import datetime
-from typing import Optional
-
-from pydantic import Field
 
 from lumina.schema.base import LuminaModel
+from pydantic import Field
 
 
 class HealthCheckCondition(LuminaModel):
     ok: bool = Field(description="Whether the condition is ok")
     timestamp: datetime.datetime = Field(description="When the last check ran")
-    message: Optional[str] = Field(description="Details of fault if any")
+    message: str | None = Field(description="Details of fault if any")
 
 
 class HealthCheckResponse(LuminaModel):
@@ -17,4 +15,3 @@ class HealthCheckResponse(LuminaModel):
     check_ssm: HealthCheckCondition
     check_dynamodb: HealthCheckCondition
     check_github: HealthCheckCondition
-    # check_ses: HealthCheckCondition # TODO: implement ses health check

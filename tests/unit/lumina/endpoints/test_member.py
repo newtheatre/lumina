@@ -1,11 +1,9 @@
-import datetime
 import uuid
 from http import HTTPStatus
 from unittest import mock
 
 from fastapi.testclient import TestClient
 from fixtures.models import MEMBER_MODEL_FRED_BLOGGS
-
 from lumina.app import app
 from lumina.database.models import MemberModel
 from lumina.database.operations import ResultNotFound

@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import BaseSettings
 
 
@@ -12,10 +10,10 @@ class Settings(BaseSettings):
     github_owner: str = "newtheatre"
     github_repo: str = "lumina-test"
 
-    sentry_dsn: Optional[str] = None
+    sentry_dsn: str | None = None
 
     @property
-    def root_path(self) -> Optional[str]:
+    def root_path(self) -> str | None:
         if self.stage_name in {"", "dev", "Environment"}:
             return None
         if self.stage_name == "prod":

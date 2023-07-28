@@ -3,11 +3,10 @@ from unittest import mock
 import freezegun
 import pytest
 from fastapi.testclient import TestClient
-from unit.lumina.endpoints.conftest import MEMBER_FRED_BLOGGS
-
 from lumina import auth
 from lumina.app import app
 from lumina.database.operations import ResultNotFound
+from unit.lumina.endpoints.conftest import MEMBER_FRED_BLOGGS
 
 client = TestClient(app)
 

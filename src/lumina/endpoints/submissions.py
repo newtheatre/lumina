@@ -1,11 +1,9 @@
 from http import HTTPStatus
-from typing import List, Optional
-
-from fastapi import APIRouter, Depends, HTTPException
 
 import lumina.database.operations
 import lumina.github
 import lumina.github.submissions
+from fastapi import APIRouter, Depends, HTTPException
 from lumina import auth
 from lumina.database.models import MemberModel
 from lumina.schema.submissions import (
@@ -20,17 +18,16 @@ from lumina.schema.submissions import (
 router = APIRouter()
 
 
-@router.get("/member/{id}", response_model=List[SubmissionResponse])
+@router.get("/member/{id}", response_model=list[SubmissionResponse])
 def list_member_submissions(
     id: str,
 ):
     return [
         SubmissionResponse.from_model(submission)
-        for submission in reversed(
-            sorted(
-                lumina.database.operations.get_submissions_for_member(id),
-                key=lambda x: x.created_at,
-            )
+        for submission in sorted(
+            lumina.database.operations.get_submissions_for_member(id),
+            key=lambda x: x.created_at,
+            reverse=True,
         )
     ]
 
@@ -46,7 +43,7 @@ def read_member_submission_stats(
 
 
 def require_submitter_or_member(
-    submission: BaseSubmissionRequest, member: Optional[MemberModel]
+    submission: BaseSubmissionRequest, member: MemberModel | None
 ):
     if not (submission.submitter or member):
         raise HTTPException(
@@ -67,7 +64,7 @@ def require_submitter_or_member(
 )
 def create_generic_submission(
     submission: GenericSubmissionRequest,
-    member: Optional[MemberModel] = Depends(auth.optional_member),
+    member: MemberModel | None = Depends(auth.optional_member),
 ):
     require_submitter_or_member(submission, member)
     submitter_id = member.pk if member else submission.submitter.id
@@ -88,22 +85,20 @@ def create_generic_submission(
 @router.post("/show")
 def create_show_submission(
     submission: ShowSubmissionRequest,
-    member: Optional[MemberModel] = Depends(auth.optional_member),
+    member: MemberModel | None = Depends(auth.optional_member),
 ):
     require_submitter_or_member(submission, member)
     if member:
         return member.id
-    else:
-        return "not authenticated, but it's fine"
+    return "not authenticated, but it's fine"
 
 
 @router.post("/bio")
 def create_bio_submission(
     submission: BioSubmissionRequest,
-    member: Optional[MemberModel] = Depends(auth.optional_member),
+    member: MemberModel | None = Depends(auth.optional_member),
 ):
     require_submitter_or_member(submission, member)
     if member:
         return member.id
-    else:
-        return "not authenticated, but it's fine"
+    return "not authenticated, but it's fine"

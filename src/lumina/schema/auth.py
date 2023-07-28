@@ -1,5 +1,4 @@
 import datetime
-from typing import Optional
 
 from lumina.schema.base import LuminaModel
 
@@ -10,5 +9,5 @@ class AuthCheckRequiredResponse(LuminaModel):
 
 
 class AuthCheckOptionalResponse(LuminaModel):
-    id: Optional[str]
-    expires_at: Optional[datetime.datetime]
+    id: str | None
+    expires_at: datetime.datetime | None

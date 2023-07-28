@@ -1,7 +1,6 @@
 import sentry_sdk
-from sentry_sdk.integrations.aws_lambda import AwsLambdaIntegration
-
 from lumina.config import settings
+from sentry_sdk.integrations.aws_lambda import AwsLambdaIntegration
 
 
 def init_sentry():

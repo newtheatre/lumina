@@ -1,5 +1,4 @@
 import moto
-
 from lumina.database import connection, table
 
 

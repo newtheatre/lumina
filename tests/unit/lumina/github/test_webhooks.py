@@ -2,7 +2,6 @@ from unittest import mock
 
 import fixtures.github
 import pytest
-
 from lumina.database.models import GitHubIssueModel, GitHubIssueState
 from lumina.database.operations import ResultNotFound
 from lumina.github import webhooks

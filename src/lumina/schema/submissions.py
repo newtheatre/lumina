@@ -1,12 +1,9 @@
 import datetime
-from typing import Optional, Union
 from uuid import UUID
-
-from github.Issue import Issue
-from pydantic import EmailStr, Field
 
 import lumina.github.submissions
 import lumina.github.util
+from github.Issue import Issue
 from lumina.database.models import (
     GitHubIssueState,
     MemberModel,
@@ -16,6 +13,7 @@ from lumina.database.models import (
 from lumina.database.table import get_submission_sk
 from lumina.schema.base import LuminaModel
 from lumina.util import dates
+from pydantic import EmailStr, Field
 
 FIELD_SUBMITTER_ID = Field(description="The ID of the submitter", example="fred_bloggs")
 FIELD_SUBMITTER_NAME = Field(
@@ -26,8 +24,8 @@ FIELD_SUBMITTER_NAME = Field(
 class SubmitterRequest(LuminaModel):
     id: UUID = FIELD_SUBMITTER_ID
     name: str = FIELD_SUBMITTER_NAME
-    year_of_graduation: Optional[int] = Field(example=1999)
-    email: Optional[EmailStr] = Field(example="fred@bloggs.com")
+    year_of_graduation: int | None = Field(example=1999)
+    email: EmailStr | None = Field(example="fred@bloggs.com")
 
     def to_model(self) -> SubmitterModel:
         return SubmitterModel(
@@ -48,7 +46,7 @@ class SubmitterResponse(LuminaModel):
 
 
 class BaseSubmissionRequest(LuminaModel):
-    submitter: Optional[SubmitterRequest] = Field(
+    submitter: SubmitterRequest | None = Field(
         description="The submitter of the submission if, and only if, the submission "
         "is anonymous. If the user is logged in this field should be omitted.",
     )
@@ -87,15 +85,22 @@ class GenericSubmissionRequest(BaseSubmissionRequest):
     target_id: str = FIELD_TARGET_ID
     target_name: str = FIELD_TARGET_NAME
     target_url: str = FIELD_TARGET_URL
-    subject: Optional[str] = FIELD_SUBJECT
+    subject: str | None = FIELD_SUBJECT
     message: str = FIELD_MESSAGE
+
+    def get_submitter_model(self, member: MemberModel | None) -> SubmitterModel:
+        if member:
+            return member.to_submitter()
+        if self.submitter:
+            return self.submitter.to_model()
+        raise ValueError("You either need a submitter or a member to make a submission")
 
     def to_model(
         self,
         *,
         submission_id: int,
-        submitter_id: Union[str, UUID],
-        member: Optional[MemberModel],
+        submitter_id: str | UUID,
+        member: MemberModel | None,
         github_issue: Issue,
     ) -> SubmissionModel:
         return SubmissionModel(
@@ -108,18 +113,18 @@ class GenericSubmissionRequest(BaseSubmissionRequest):
             created_at=dates.now(),
             subject=self.subject,
             message=self.message,
-            submitter=member.to_submitter() if member else self.submitter.to_model(),
+            submitter=self.get_submitter_model(member),
             github_issue=lumina.github.submissions.make_issue_model(github_issue),
         )
 
 
 class ShowSubmissionRequest(BaseSubmissionRequest):
-    target_id: Optional[str] = FIELD_TARGET_ID
+    target_id: str | None = FIELD_TARGET_ID
     title: str
 
 
 class BioSubmissionRequest(BaseSubmissionRequest):
-    target_id: Optional[str] = FIELD_TARGET_ID
+    target_id: str | None = FIELD_TARGET_ID
     name: str
 
 
@@ -130,7 +135,7 @@ class GitHubIssueResponse(LuminaModel):
     title: str
     created_at: datetime.datetime
     updated_at: datetime.datetime
-    closed_at: Optional[datetime.datetime]
+    closed_at: datetime.datetime | None
     comments: int
 
 
@@ -143,8 +148,8 @@ class SubmissionResponse(LuminaModel):
     target_id: str = FIELD_TARGET_ID
     target_name: str = FIELD_TARGET_NAME
     target_url: str = FIELD_TARGET_URL
-    subject: Optional[str] = FIELD_SUBJECT
-    message: Optional[str] = FIELD_MESSAGE
+    subject: str | None = FIELD_SUBJECT
+    message: str | None = FIELD_MESSAGE
     github_issue: GitHubIssueResponse = Field(
         title="GitHub Issue", description="Linked GitHub issue"
     )

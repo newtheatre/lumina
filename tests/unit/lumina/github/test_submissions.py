@@ -1,5 +1,4 @@
 import pytest
-
 from lumina.database.models import GitHubIssueModel, GitHubIssueState, MemberModel
 from lumina.github import submissions
 from lumina.schema.submissions import GenericSubmissionRequest, SubmitterRequest

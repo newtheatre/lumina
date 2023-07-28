@@ -1,5 +1,4 @@
 import pytest
-
 from lumina.util import email
 
 
@@ -26,4 +25,4 @@ class TestMaskEmail:
     )
     def test_raises_value_error(self, input):
         with pytest.raises(ValueError):
-            print(email.mask_email(input))
+            email.mask_email(input)

@@ -1,7 +1,6 @@
 import datetime
 
 import fixtures.github
-
 from lumina.database.models import GitHubIssueState
 from lumina.schema.github import GitHubWebhook
 

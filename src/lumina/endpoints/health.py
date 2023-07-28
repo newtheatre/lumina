@@ -1,7 +1,6 @@
 from http import HTTPStatus
 
 from fastapi import APIRouter, Response
-
 from lumina import health
 from lumina.schema.health import HealthCheckResponse
 

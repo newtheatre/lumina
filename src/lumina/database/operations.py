@@ -1,8 +1,6 @@
-from typing import List, Union
 from uuid import UUID
 
 from boto3.dynamodb.conditions import Key
-
 from lumina.database.models import GitHubIssueModel, MemberModel
 from lumina.util import dates
 
@@ -78,7 +76,7 @@ def get_submission(id: int) -> SubmissionModel:
     return SubmissionModel(**response["Items"][0])
 
 
-def get_submissions_for_member(id: Union[str, UUID]) -> List[SubmissionModel]:
+def get_submissions_for_member(id: str | UUID) -> list[SubmissionModel]:
     response = get_member_table().query(
         KeyConditionExpression=Key(MEMBER_PARTITION_KEY).eq(str(id))
         & Key(MEMBER_SORT_KEY).begins_with(SK_SUBMISSION_PREFIX),
@@ -88,7 +86,7 @@ def get_submissions_for_member(id: Union[str, UUID]) -> List[SubmissionModel]:
 
 def get_submissions_for_target(
     target_type: str, target_id: str
-) -> List[SubmissionModel]:
+) -> list[SubmissionModel]:
     response = get_member_table().query(
         IndexName=GSI_SUBMISSION_TARGET,
         KeyConditionExpression=Key(GSI_SUBMISSION_TARGET_PK).eq(target_type)
@@ -117,7 +115,7 @@ def update_submission_github_issue(id: int, issue: GitHubIssueModel) -> Submissi
 
 def move_anonymous_submissions_to_member(
     member_id: str, anonymous_id: UUID
-) -> List[SubmissionModel]:
+) -> list[SubmissionModel]:
     """Delete all submissions for the anonymous member and create them as member
     submissions."""
     anonymous_submissions = get_submissions_for_member(anonymous_id)
@@ -126,7 +124,7 @@ def move_anonymous_submissions_to_member(
         # Create a new submission using the member ID
         new_member_submissions.append(
             # Direct copy and change only the PK
-            put_submission(anonymous_submission.copy(update=dict(pk=member_id)))
+            put_submission(anonymous_submission.copy(update={"pk": member_id}))
         )
         # Delete the old submission
         delete_response = get_member_table().delete_item(

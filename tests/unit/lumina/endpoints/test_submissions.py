@@ -3,7 +3,6 @@ from unittest import mock
 
 from fastapi.testclient import TestClient
 from fixtures.models import GITHUB_ISSUE, MEMBER_MODEL_FRED_BLOGGS
-
 from lumina.app import app
 from lumina.database.models import (
     GitHubIssueModel,
@@ -149,13 +148,13 @@ class TestCreateGenericSubmission:
     def test_require_submitter_if_not_authed(self):
         response = client.post(
             "/submissions/message",
-            json=dict(
-                target_type="test",
-                target_id="test-page",
-                target_name="Test Page",
-                target_url="https://example.com/test-page",
-                message="Hello World",
-            ),
+            json={
+                "target_type": "test",
+                "target_id": "test-page",
+                "target_name": "Test Page",
+                "target_url": "https://example.com/test-page",
+                "message": "Hello World",
+            },
         )
         assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
         assert response.json() == {
@@ -165,19 +164,19 @@ class TestCreateGenericSubmission:
     def test_require_uuid_submitter_id_if_not_authed(self):
         response = client.post(
             "/submissions/message",
-            json=dict(
-                target_type="test",
-                target_id="test-page",
-                target_name="Test Page",
-                target_url="https://example.com/test-page",
-                message="Hello World",
-                submitter=dict(
-                    id="fred_bloggs",
-                    name="Fred Bloggs",
-                    year_of_graduation=2020,
-                    email="fred@bloggs.test",
-                ),
-            ),
+            json={
+                "target_type": "test",
+                "target_id": "test-page",
+                "target_name": "Test Page",
+                "target_url": "https://example.com/test-page",
+                "message": "Hello World",
+                "submitter": {
+                    "id": "fred_bloggs",
+                    "name": "Fred Bloggs",
+                    "year_of_graduation": 2020,
+                    "email": "fred@bloggs.test",
+                },
+            },
         )
         assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
         assert response.json() == {
@@ -193,19 +192,19 @@ class TestCreateGenericSubmission:
     def test_disallow_submitter_if_authed(self, auth_fred_bloggs):
         response = client.post(
             "/submissions/message",
-            json=dict(
-                target_type="test",
-                target_id="test-page",
-                target_name="Test Page",
-                target_url="https://example.com/test-page",
-                message="Hello World",
-                submitter=dict(
-                    id="c0286cf1-15cc-4e43-93de-aaca592e447b",
-                    name="Fred Bloggs",
-                    year_of_graduation=2020,
-                    email="fred@bloggs.test",
-                ),
-            ),
+            json={
+                "target_type": "test",
+                "target_id": "test-page",
+                "target_name": "Test Page",
+                "target_url": "https://example.com/test-page",
+                "message": "Hello World",
+                "submitter": {
+                    "id": "c0286cf1-15cc-4e43-93de-aaca592e447b",
+                    "name": "Fred Bloggs",
+                    "year_of_graduation": 2020,
+                    "email": "fred@bloggs.test",
+                },
+            },
         )
         assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
         assert response.json() == {
@@ -225,12 +224,12 @@ class TestCreateGenericSubmission:
                 target_url="https://example.com/test-page",
                 subject="Hi there",
                 message="Hello World",
-                submitter=dict(
-                    id="c0286cf1-15cc-4e43-93de-aaca592e447b",
-                    name="Fred Bloggs",
-                    year_of_graduation=2020,
-                    email="fred@bloggs.test",
-                ),
+                submitter={
+                    "id": "c0286cf1-15cc-4e43-93de-aaca592e447b",
+                    "name": "Fred Bloggs",
+                    "year_of_graduation": 2020,
+                    "email": "fred@bloggs.test",
+                },
             )
             mock_create_generic_submission_issue.return_value = GITHUB_ISSUE
             mock_put_submission.return_value = submission_request.to_model(

@@ -7,9 +7,10 @@ from lumina.schema.github import GitHubIssue
 log = logging.getLogger(__name__)
 
 
-def get_content_repo_path(target_type: str, target_id: str) -> str:
+def get_content_repo_path(target_type: str, target_id: str) -> str | None:
     if target_type == "show":
         return f"_shows/{target_id}.md"
+    return None
 
 
 def get_content_repo_file_url(path: str, branch: str = "master") -> str:

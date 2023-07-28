@@ -1,6 +1,5 @@
 import html2text
 from jinja2 import Environment, PackageLoader
-
 from lumina.emails.send import EmailBody
 
 env = Environment(loader=PackageLoader("lumina.emails", "templates"))
