@@ -6,7 +6,7 @@ authors = ["Will Pimblett <will@wjdp.uk>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 fastapi = "^0.71.0"
 mangum = "^0.12.3"
 pydantic = {extras = ["email"], version = "^1.9.0"}

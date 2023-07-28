@@ -33,10 +33,10 @@ Resources:
       Description: Dependencies for Lumina
       ContentUri: dependencies/
       CompatibleRuntimes:
-        - python3.9
+        - python3.10
       RetentionPolicy: Delete
     Metadata:
-      BuildMethod: python3.9
+      BuildMethod: python3.10
 
   LuminaMember:
     Type: AWS::DynamoDB::Table
@@ -81,7 +81,7 @@ Resources:
       FunctionName: !Join ["", ["lumina-", !Ref Environment]]
       CodeUri: src/
       Handler: handler.handler
-      Runtime: python3.9
+      Runtime: python3.10
       Layers:
         - !Ref PythonDependencyLayer
       Policies:
