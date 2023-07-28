@@ -22,22 +22,22 @@ class BaseDynamoModel(BaseModel):
 
 
 class MemberConsent(BaseModel, DynamoExportMixin):
-    consent_news: datetime.datetime | None
-    consent_network: datetime.datetime | None
-    consent_members: datetime.datetime | None
-    consent_students: datetime.datetime | None
+    consent_news: datetime.datetime | None = None
+    consent_network: datetime.datetime | None = None
+    consent_members: datetime.datetime | None = None
+    consent_students: datetime.datetime | None = None
 
 
 class MemberModel(BaseDynamoModel, DynamoExportMixin):
-    sk = table.SK_PROFILE
+    sk: str = table.SK_PROFILE
     name: str
     email: EmailStr
-    phone: str | None
-    year_of_graduation: int | None
-    created_at: datetime.datetime | None
-    email_verified_at: datetime.datetime | None
-    consent: MemberConsent | None
-    anonymous_ids: list[UUID] | None
+    phone: str | None = None
+    year_of_graduation: int | None = None
+    created_at: datetime.datetime | None = None
+    email_verified_at: datetime.datetime | None = None
+    consent: MemberConsent | None = None
+    anonymous_ids: list[UUID] | None = None
 
     @property
     def id(self) -> str:
@@ -61,8 +61,8 @@ class SubmitterModel(BaseModel, DynamoExportMixin):
     id: str
     verified: bool
     name: str
-    year_of_graduation: int | None
-    email: EmailStr | None
+    year_of_graduation: int | None = None
+    email: EmailStr | None = None
 
 
 class GitHubIssueState(Enum):
@@ -77,7 +77,7 @@ class GitHubIssueModel(BaseModel, DynamoExportMixin):
     title: str
     created_at: datetime.datetime
     updated_at: datetime.datetime
-    closed_at: datetime.datetime | None
+    closed_at: datetime.datetime | None = None
     comments: int
 
 
@@ -87,8 +87,8 @@ class SubmissionModel(BaseDynamoModel, DynamoExportMixin):
     target_type: str
     target_name: str
     created_at: datetime.datetime
-    subject: str | None
-    message: str | None
+    subject: str | None = None
+    message: str | None = None
     submitter: SubmitterModel
     github_issue: GitHubIssueModel
 

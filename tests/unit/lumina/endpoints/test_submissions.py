@@ -99,11 +99,11 @@ class TestListMemberSubmissions:
                 "githubIssue": {
                     "closedAt": None,
                     "comments": 1,
-                    "createdAt": "2020-01-01T00:00:00+00:00",
+                    "createdAt": "2020-01-01T00:00:00Z",
                     "number": 1,
                     "state": "open",
                     "title": "A title",
-                    "updatedAt": "2020-01-01T00:00:00+00:00",
+                    "updatedAt": "2020-01-01T00:00:00Z",
                     "url": "https://github.com/newtheatre/lumina-test/issues/2",
                 },
             }
@@ -174,7 +174,7 @@ class TestCreateGenericSubmission:
                     "id": "fred_bloggs",
                     "name": "Fred Bloggs",
                     "year_of_graduation": 2020,
-                    "email": "fred@bloggs.test",
+                    "email": "fred@bloggs.com",
                 },
             },
         )
@@ -182,9 +182,18 @@ class TestCreateGenericSubmission:
         assert response.json() == {
             "detail": [
                 {
+                    "ctx": {
+                        "error": "invalid character: expected an optional prefix "
+                        "of `urn:uuid:` followed by [0-9a-fA-F-], found "
+                        "`r` at 2"
+                    },
+                    "input": "fred_bloggs",
                     "loc": ["body", "submitter", "id"],
-                    "msg": "value is not a valid uuid",
-                    "type": "type_error.uuid",
+                    "msg": "Input should be a valid UUID, invalid character: expected "
+                    "an optional prefix of `urn:uuid:` followed by "
+                    "[0-9a-fA-F-], found `r` at 2",
+                    "type": "uuid_parsing",
+                    "url": "https://errors.pydantic.dev/2.1/v/uuid_parsing",
                 }
             ]
         }
@@ -202,7 +211,7 @@ class TestCreateGenericSubmission:
                     "id": "c0286cf1-15cc-4e43-93de-aaca592e447b",
                     "name": "Fred Bloggs",
                     "year_of_graduation": 2020,
-                    "email": "fred@bloggs.test",
+                    "email": "fred@bloggs.com",
                 },
             },
         )
@@ -228,7 +237,7 @@ class TestCreateGenericSubmission:
                     "id": "c0286cf1-15cc-4e43-93de-aaca592e447b",
                     "name": "Fred Bloggs",
                     "year_of_graduation": 2020,
-                    "email": "fred@bloggs.test",
+                    "email": "fred@bloggs.com",
                 },
             )
             mock_create_generic_submission_issue.return_value = GITHUB_ISSUE
@@ -267,11 +276,11 @@ class TestCreateGenericSubmission:
             "githubIssue": {
                 "closedAt": None,
                 "comments": 0,
-                "createdAt": "2020-01-01T00:00:00+00:00",
+                "createdAt": "2020-01-01T00:00:00Z",
                 "number": 123,
                 "state": "open",
                 "title": "Test issue",
-                "updatedAt": "2020-01-01T00:00:00+00:00",
+                "updatedAt": "2020-01-01T00:00:00Z",
                 "url": "https://github.com/newtheatre/lumina-test/issues/123",
             },
         }
@@ -317,11 +326,11 @@ class TestCreateGenericSubmission:
             "githubIssue": {
                 "closedAt": None,
                 "comments": 0,
-                "createdAt": "2020-01-01T00:00:00+00:00",
+                "createdAt": "2020-01-01T00:00:00Z",
                 "number": 123,
                 "state": "open",
                 "title": "Test issue",
-                "updatedAt": "2020-01-01T00:00:00+00:00",
+                "updatedAt": "2020-01-01T00:00:00Z",
                 "url": "https://github.com/newtheatre/lumina-test/issues/123",
             },
         }

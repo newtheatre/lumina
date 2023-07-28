@@ -73,7 +73,7 @@ def get_submission(id: int) -> SubmissionModel:
         raise ResultNotFound(f"Submission with id {id} not found")
     if response["Count"] > 1:
         raise DbError(f"Multiple submissions with id {id} found")
-    return SubmissionModel(**response["Items"][0])
+    return SubmissionModel(**response["Items"][0])  # type: ignore
 
 
 def get_submissions_for_member(id: str | UUID) -> list[SubmissionModel]:
@@ -81,7 +81,7 @@ def get_submissions_for_member(id: str | UUID) -> list[SubmissionModel]:
         KeyConditionExpression=Key(MEMBER_PARTITION_KEY).eq(str(id))
         & Key(MEMBER_SORT_KEY).begins_with(SK_SUBMISSION_PREFIX),
     )
-    return [SubmissionModel(**item) for item in response["Items"]]
+    return [SubmissionModel(**item) for item in response["Items"]]  # type: ignore
 
 
 def get_submissions_for_target(
@@ -92,7 +92,7 @@ def get_submissions_for_target(
         KeyConditionExpression=Key(GSI_SUBMISSION_TARGET_PK).eq(target_type)
         & Key(GSI_SUBMISSION_TARGET_SK).eq(target_id),
     )
-    return [SubmissionModel(**item) for item in response["Items"]]
+    return [SubmissionModel(**item) for item in response["Items"]]  # type: ignore
 
 
 def put_submission(model: SubmissionModel) -> SubmissionModel:

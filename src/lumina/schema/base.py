@@ -1,5 +1,5 @@
 import humps
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 def to_camel(string):
@@ -7,6 +7,4 @@ def to_camel(string):
 
 
 class LuminaModel(BaseModel):
-    class Config:
-        alias_generator = to_camel
-        allow_population_by_field_name = True
+    model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)

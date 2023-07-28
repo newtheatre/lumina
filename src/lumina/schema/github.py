@@ -7,11 +7,11 @@ from pydantic import BaseModel
 class GitHubIssue(BaseModel):
     number: int
     state: GitHubIssueState
-    state_reason: str | None
+    state_reason: str | None = None
     title: str
     created_at: datetime.datetime
     updated_at: datetime.datetime
-    closed_at: datetime.datetime | None
+    closed_at: datetime.datetime | None = None
     comments: int
 
 
@@ -26,5 +26,5 @@ class GitHubRepository(BaseModel):
 
 class GitHubWebhook(BaseModel):
     action: str
-    issue: GitHubIssue | None
+    issue: GitHubIssue | None = None
     repository: GitHubRepository

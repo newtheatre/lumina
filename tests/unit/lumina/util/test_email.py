@@ -6,8 +6,8 @@ class TestMaskEmail:
     @pytest.mark.parametrize(
         "input,expected",
         [
-            ("fred@bloggs.test", "fr***@bl***.test"),
-            ("fred-bloggington.email+1@subdomain.bloggs.test.net", "fr***@su***.net"),
+            ("fred@bloggs.com", "fr***@bl***.com"),
+            ("fred-bloggington.email+1@subdomain.bloggs.com.net", "fr***@su***.net"),
             ("alice.bloggs@gmail.co.uk", "al***@gm***.uk"),
         ],
     )
@@ -17,7 +17,7 @@ class TestMaskEmail:
     @pytest.mark.parametrize(
         "input",
         [
-            ("fred@bloggs.test@gmail.com"),
+            ("fred@bloggs.com@gmail.com"),
             ("@"),
             (""),
             ("fred@tld"),
