@@ -2,9 +2,9 @@ import functools
 
 from lumina.config import settings
 from lumina.database.connection import get_dynamo_db
+from mypy_boto3_dynamodb.service_resource import Table
 
 MEMBER_TABLE_NAME_PREFIX = "LuminaMember"
-from mypy_boto3_dynamodb.service_resource import Table
 
 
 def get_table_name() -> str:

@@ -90,8 +90,7 @@ def create_show_submission(
     require_submitter_or_member(submission, member)
     if member:
         return member.id
-    else:
-        return "not authenticated, but it's fine"
+    return "not authenticated, but it's fine"
 
 
 @router.post("/bio")
@@ -102,5 +101,4 @@ def create_bio_submission(
     require_submitter_or_member(submission, member)
     if member:
         return member.id
-    else:
-        return "not authenticated, but it's fine"
+    return "not authenticated, but it's fine"

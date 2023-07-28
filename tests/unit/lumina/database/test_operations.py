@@ -60,7 +60,6 @@ def test_set_member_email_verified(fred_bloggs):
     with freezegun.freeze_time("2020-01-01 12:34:56"):
         operations.set_member_email_verified(fred_bloggs.pk)
     get_member = operations.get_member(fred_bloggs.pk)
-    print(get_member.dict())
     assert get_member.email_verified is True
     assert get_member.email_verified_at == datetime.datetime(
         2020, 1, 1, 12, 34, 56, tzinfo=datetime.timezone.utc

@@ -33,5 +33,4 @@ def check_auth_optional(
 ):
     if member:
         return AuthCheckOptionalResponse(id=member.id, expires_at=token.expires_at)
-    else:
-        return AuthCheckOptionalResponse()
+    return AuthCheckOptionalResponse()

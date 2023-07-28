@@ -61,7 +61,7 @@ def send_email(
     # Display an error if something goes wrong.
     except ClientError as e:
         error_message = e.response.get("Error", {}).get("Message", "")
-        log.error("Failed to send email: %s", error_message)
+        log.exception("Failed to send email")
         if "Email address not verified" in error_message:
             raise EmailAddressUnverified from e
         raise EmailError from e

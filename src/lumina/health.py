@@ -1,3 +1,4 @@
+import contextlib
 import logging
 from http import HTTPStatus
 
@@ -28,15 +29,15 @@ def check_ssm() -> HealthCheckCondition:
             timestamp=dates.now(),
             message="Parameter not found",
         )
-    except botocore.exceptions.ClientError as e:
-        log.error(e)
+    except botocore.exceptions.ClientError:
+        log.exception("Could not get parameter from SSM")
         return HealthCheckCondition(
             ok=False,
             timestamp=dates.now(),
             message="ClientError",
         )
-    except Exception as e:
-        log.error(e)
+    except Exception:
+        log.exception("Unknown error getting parameter from SSM")
         return HealthCheckCondition(
             ok=False,
             timestamp=dates.now(),
@@ -47,24 +48,21 @@ def check_ssm() -> HealthCheckCondition:
 def check_dynamodb() -> HealthCheckCondition:
     try:
         # Check if dynamodb is available by attempting fetch of a member
-        try:
+        with contextlib.suppress(ResultNotFound):
             operations.get_member("fred_bloggs")
-        except ResultNotFound:
-            # We don't expect member to exist
-            pass
         return HealthCheckCondition(
             ok=True,
             timestamp=dates.now(),
         )
-    except botocore.exceptions.ClientError as e:
-        log.error(e)
+    except botocore.exceptions.ClientError:
+        log.exception("Could not get member from DynamoDB")
         return HealthCheckCondition(
             ok=False,
             timestamp=dates.now(),
             message="ClientError",
         )
-    except Exception as e:
-        log.error(e)
+    except Exception:
+        log.exception("Unknown error getting member from DynamoDB")
         return HealthCheckCondition(
             ok=False,
             timestamp=dates.now(),
@@ -86,15 +84,15 @@ def check_github() -> HealthCheckCondition:
             timestamp=dates.now(),
             message="Bad credentials",
         )
-    except botocore.exceptions.ClientError as e:
-        log.error(e)
+    except botocore.exceptions.ClientError:
+        log.exception("Could not get credentials from SSM")
         return HealthCheckCondition(
             ok=False,
             timestamp=dates.now(),
             message="Cannot get credentials",
         )
-    except Exception as e:
-        log.error(e)
+    except Exception:
+        log.exception("Unknown error getting content repo from GitHub")
         return HealthCheckCondition(
             ok=False,
             timestamp=dates.now(),

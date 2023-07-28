@@ -56,8 +56,10 @@ def check_member(id: str):
     try:
         member = lumina.database.operations.get_member(id)
         return MemberPublicResponse(id=member.pk, masked_email=mask_email(member.email))
-    except lumina.database.operations.ResultNotFound:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Member not found")
+    except lumina.database.operations.ResultNotFound as e:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="Member not found"
+        ) from e
 
 
 @router.post(
@@ -146,7 +148,9 @@ def send_token_link_for_member(id: str):
                 auth_url=auth.get_auth_url(id),
             ),
         )
-    except lumina.database.operations.ResultNotFound:
-        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="Member not found")
+    except lumina.database.operations.ResultNotFound as e:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND, detail="Member not found"
+        ) from e
 
     return "OK"

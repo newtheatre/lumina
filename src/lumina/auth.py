@@ -55,11 +55,11 @@ class JWTBearer(HTTPBearer):
         if credentials:
             try:
                 return decode_jwt(credentials.credentials)
-            except jwt.InvalidTokenError:
+            except jwt.InvalidTokenError as e:
                 raise HTTPException(
                     status_code=HTTPStatus.UNAUTHORIZED,
                     detail="Invalid or expired token",
-                )
+                ) from e
         elif self.optional:
             return None
         else:
@@ -69,20 +69,20 @@ class JWTBearer(HTTPBearer):
 
 
 def require_member(
-    authenticated_member=Depends(JWTBearer()),
+    authenticated_member=Depends(JWTBearer()),  # noqa B008
 ) -> MemberModel:
     """Get member if token is provided, otherwise raise exception."""
     try:
         return lumina.database.operations.get_member(authenticated_member.id)
-    except lumina.database.operations.ResultNotFound:
+    except lumina.database.operations.ResultNotFound as e:
         raise HTTPException(
             status_code=HTTPStatus.UNAUTHORIZED,
             detail="Member no longer exists",
-        )
+        ) from e
 
 
 def optional_member(
-    authenticated_member=Depends(JWTBearer(optional=True)),
+    authenticated_member=Depends(JWTBearer(optional=True)),  # noqa B008
 ) -> MemberModel | None:
     """Get member if token is provided, otherwise return None."""
     if not authenticated_member:

@@ -5,7 +5,7 @@ if TYPE_CHECKING:
 
 
 class BaseModelProtocol(Protocol):
-    def dict(
+    def dict(  # noqa: PLR0913
         self,
         *,
         include: Union["AbstractSetIntStr", "MappingIntStrAny"] = None,
