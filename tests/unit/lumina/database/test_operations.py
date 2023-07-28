@@ -27,7 +27,7 @@ def fred_bloggs() -> MemberModel:
     return operations.create_member(
         id="fred_bloggs",
         name="Fred Bloggs",
-        email="fred@bloggs.test",
+        email="fred@bloggs.com",
         anonymous_id=uuid.uuid4(),
     )
 
@@ -35,7 +35,7 @@ def fred_bloggs() -> MemberModel:
 def test_create_member(fred_bloggs):
     assert fred_bloggs.pk == "fred_bloggs"
     assert fred_bloggs.sk == table.SK_PROFILE
-    assert fred_bloggs.email == "fred@bloggs.test"
+    assert fred_bloggs.email == "fred@bloggs.com"
     assert fred_bloggs.phone is None
 
 
@@ -49,10 +49,10 @@ def test_get_member_doest_exists(fred_bloggs):
 
 
 def test_put_member(fred_bloggs):
-    fred_bloggs.email = "fred.bloggs@gmail.test"
+    fred_bloggs.email = "fred.bloggs@bloggs.com"
     operations.put_member(fred_bloggs)
     get_member = operations.get_member(id="fred_bloggs")
-    assert get_member.email == "fred.bloggs@gmail.test"
+    assert get_member.email == "fred.bloggs@bloggs.com"
 
 
 def test_set_member_email_verified(fred_bloggs):
@@ -115,7 +115,7 @@ def test_put_anonymous_submission():
                 id="c0286cf1-15cc-4e43-93de-aaca592e447b",
                 verified=False,
                 name="Charlie Bloggs",
-                email="charlie@bloggs.test",
+                email="charlie@bloggs.com",
             ),
         )
     )

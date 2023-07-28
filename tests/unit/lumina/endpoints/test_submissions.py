@@ -174,7 +174,7 @@ class TestCreateGenericSubmission:
                     "id": "fred_bloggs",
                     "name": "Fred Bloggs",
                     "year_of_graduation": 2020,
-                    "email": "fred@bloggs.test",
+                    "email": "fred@bloggs.com",
                 },
             },
         )
@@ -202,7 +202,7 @@ class TestCreateGenericSubmission:
                     "id": "c0286cf1-15cc-4e43-93de-aaca592e447b",
                     "name": "Fred Bloggs",
                     "year_of_graduation": 2020,
-                    "email": "fred@bloggs.test",
+                    "email": "fred@bloggs.com",
                 },
             },
         )
@@ -228,7 +228,7 @@ class TestCreateGenericSubmission:
                     "id": "c0286cf1-15cc-4e43-93de-aaca592e447b",
                     "name": "Fred Bloggs",
                     "year_of_graduation": 2020,
-                    "email": "fred@bloggs.test",
+                    "email": "fred@bloggs.com",
                 },
             )
             mock_create_generic_submission_issue.return_value = GITHUB_ISSUE

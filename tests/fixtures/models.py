@@ -5,7 +5,7 @@ from lumina.database.models import MemberModel
 MEMBER_MODEL_FRED_BLOGGS = MemberModel(
     pk="fred_bloggs",
     name="Fred Bloggs",
-    email="fred@bloggs.test",
+    email="fred@bloggs.com",
 )
 
 GITHUB_ISSUE = MagicMock(

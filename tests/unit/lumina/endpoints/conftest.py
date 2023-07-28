@@ -6,7 +6,7 @@ from lumina.database.models import MemberModel
 MEMBER_FRED_BLOGGS = MemberModel(
     pk="fred_bloggs",
     name="Fred Bloggs",
-    email="fred@bloggs.test",
+    email="fred@bloggs.com",
 )
 
 

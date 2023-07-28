@@ -39,7 +39,7 @@ class TestReadMember:
         assert mock_set_member_email_verified.called
         assert mock_get_member.called
         assert response.json() == {
-            "email": "fred@bloggs.test",
+            "email": "fred@bloggs.com",
             "emailVerified": True,
             "id": "fred_bloggs",
         }
@@ -57,7 +57,7 @@ class TestReadMember:
         # We don't call set_member_email_verified as email is already verified
         assert not mock_set_member_email_verified.called
         assert response.json() == {
-            "email": "fred@bloggs.test",
+            "email": "fred@bloggs.com",
             "emailVerified": True,
             "id": "fred_bloggs",
         }
@@ -76,7 +76,7 @@ class TestReadMember:
         assert response.status_code == HTTPStatus.OK, response.json()
         assert mock_move_anonymous_submissions_to_member.called
         assert response.json() == {
-            "email": "fred@bloggs.test",
+            "email": "fred@bloggs.com",
             "emailVerified": True,
             "id": "fred_bloggs",
         }
@@ -92,7 +92,7 @@ class TestCheckMember:
         assert response.status_code == HTTPStatus.OK
         assert response.json() == {
             "id": "fred_bloggs",
-            "maskedEmail": "fr***@bl***.test",
+            "maskedEmail": "fr***@bl***.com",
         }
 
     @mock.patch("lumina.database.operations.get_member", side_effect=ResultNotFound())

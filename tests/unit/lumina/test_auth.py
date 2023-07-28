@@ -17,11 +17,13 @@ def test_invalid_token(mock_keys):
 
 
 def test_expired_token(mock_keys):
-    with freezegun.freeze_time("2020-01-01"):
+    with freezegun.freeze_time("2020-01-01 00:00"):
         token = auth.encode_jwt("fred_bloggs")
-    with freezegun.freeze_time("2020-03-31"):
+    with freezegun.freeze_time("2020-03-30 23:59"):
         # Valid now
         auth.decode_jwt(token)
-    with freezegun.freeze_time("2020-04-01"), pytest.raises(jwt.ExpiredSignatureError):
+    with freezegun.freeze_time("2020-03-31 00:00"), pytest.raises(
+        jwt.ExpiredSignatureError
+    ):
         # Expired now
         auth.decode_jwt(token)
