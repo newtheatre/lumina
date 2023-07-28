@@ -10,10 +10,7 @@ app = FastAPI(title="Lumina", version=settings.vcs_rev, root_path=settings.root_
 app.add_middleware(SentryAsgiMiddleware)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "https://nthp-web.pages.dev"
-    ],
+    allow_origins=["http://localhost:3000", "https://nthp-web.pages.dev"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
