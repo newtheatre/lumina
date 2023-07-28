@@ -1,19 +1,17 @@
 import datetime
-from typing import Optional
-
-from pydantic import BaseModel
 
 from lumina.database.models import GitHubIssueState
+from pydantic import BaseModel
 
 
 class GitHubIssue(BaseModel):
     number: int
     state: GitHubIssueState
-    state_reason: Optional[str]
+    state_reason: str | None
     title: str
     created_at: datetime.datetime
     updated_at: datetime.datetime
-    closed_at: Optional[datetime.datetime]
+    closed_at: datetime.datetime | None
     comments: int
 
 
@@ -28,5 +26,5 @@ class GitHubRepository(BaseModel):
 
 class GitHubWebhook(BaseModel):
     action: str
-    issue: Optional[GitHubIssue]
+    issue: GitHubIssue | None
     repository: GitHubRepository

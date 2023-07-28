@@ -1,9 +1,8 @@
 from uuid import UUID
 
-from pydantic import EmailStr, Field
-
 from lumina.database.models import MemberModel
 from lumina.schema.base import LuminaModel
+from pydantic import EmailStr, Field
 
 
 class MemberPublicResponse(LuminaModel):

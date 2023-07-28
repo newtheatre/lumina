@@ -1,8 +1,6 @@
 from http import HTTPStatus
-from typing import Optional
 
 from fastapi import APIRouter, Depends
-
 from lumina import auth
 from lumina.database.models import MemberModel
 from lumina.schema.auth import AuthCheckOptionalResponse, AuthCheckRequiredResponse
@@ -31,7 +29,7 @@ def check_auth(
 )
 def check_auth_optional(
     token: auth.AuthenticatedToken = Depends(auth.JWTBearer(optional=True)),
-    member: Optional[MemberModel] = Depends(auth.optional_member),
+    member: MemberModel | None = Depends(auth.optional_member),
 ):
     if member:
         return AuthCheckOptionalResponse(id=member.id, expires_at=token.expires_at)

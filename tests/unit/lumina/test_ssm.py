@@ -1,9 +1,8 @@
 import boto3
 import pytest
-from moto import mock_ssm
-
 from lumina import ssm
 from lumina.config import settings
+from moto import mock_ssm
 
 
 class TestGetSsmParameter:

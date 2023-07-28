@@ -1,12 +1,11 @@
 import email.utils
 import logging
-from typing import List, NamedTuple, Optional, Tuple
+from typing import NamedTuple
 
 import boto3
 from botocore.exceptions import ClientError
-from mypy_boto3_ses.type_defs import BodyTypeDef, ContentTypeDef, MessageTypeDef
-
 from lumina.config import settings
+from mypy_boto3_ses.type_defs import BodyTypeDef, ContentTypeDef, MessageTypeDef
 
 log = logging.getLogger(__name__)
 
@@ -28,7 +27,7 @@ class EmailBody(NamedTuple):
 
 
 def send_email(
-    to_addresses: List[Tuple[Optional[str], str]],
+    to_addresses: list[tuple[str | None, str]],
     subject: str,
     body: EmailBody,
 ) -> str:
@@ -64,8 +63,8 @@ def send_email(
         error_message = e.response.get("Error", {}).get("Message", "")
         log.error("Failed to send email: %s", error_message)
         if "Email address not verified" in error_message:
-            raise EmailAddressUnverified() from e
-        raise EmailError() from e
+            raise EmailAddressUnverified from e
+        raise EmailError from e
     else:
         log.info("Email sent, message ID %s", response["MessageId"])
         return response["MessageId"]

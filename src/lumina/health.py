@@ -1,11 +1,9 @@
 import logging
 from http import HTTPStatus
-from typing import Dict, Tuple
 
 import botocore.exceptions
-from github import BadCredentialsException
-
 import lumina.github.connection
+from github import BadCredentialsException
 from lumina import ssm
 from lumina.config import settings
 from lumina.database import operations
@@ -104,13 +102,13 @@ def check_github() -> HealthCheckCondition:
         )
 
 
-def get_health_check_response() -> Tuple[int, HealthCheckResponse]:
+def get_health_check_response() -> tuple[int, HealthCheckResponse]:
     # To add a new check, add here and to HealthCheckResponse
-    results: Dict[str, HealthCheckCondition] = dict(
-        check_ssm=check_ssm(),
-        check_dynamodb=check_dynamodb(),
-        check_github=check_github(),
-    )
+    results: dict[str, HealthCheckCondition] = {
+        "check_ssm": check_ssm(),
+        "check_dynamodb": check_dynamodb(),
+        "check_github": check_github(),
+    }
     body = HealthCheckResponse(version=settings.vcs_rev, **results)
     any_failed = any(condition.ok is False for condition in results.values())
     return (HTTPStatus.INTERNAL_SERVER_ERROR if any_failed else HTTPStatus.OK, body)

@@ -1,5 +1,4 @@
 import pytest
-
 from lumina.github import connection
 
 

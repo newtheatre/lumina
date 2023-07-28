@@ -15,7 +15,7 @@ def get_table_name() -> str:
     return f"{MEMBER_TABLE_NAME_PREFIX}-{settings.environment}"
 
 
-@functools.lru_cache()
+@functools.lru_cache
 def get_member_table() -> Table:
     return get_dynamo_db().Table(get_table_name())
 
@@ -44,7 +44,7 @@ def create_tables():
     Create the tables for the database, this is used in testing and locally.
     On AWS, this is done by the SAM template where the **definitions are duplicated**.
     """
-    table = get_dynamo_db().create_table(
+    return get_dynamo_db().create_table(
         TableName=get_table_name(),
         KeySchema=[
             {"AttributeName": MEMBER_PARTITION_KEY, "KeyType": "HASH"},
@@ -76,4 +76,3 @@ def create_tables():
             },
         ],
     )
-    return table

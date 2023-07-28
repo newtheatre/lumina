@@ -1,5 +1,4 @@
 import pytest
-
 from lumina.util import email
 
 

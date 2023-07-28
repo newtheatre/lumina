@@ -1,7 +1,6 @@
 import freezegun
 import jwt
 import pytest
-
 from lumina import auth
 
 

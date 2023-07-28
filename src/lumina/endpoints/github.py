@@ -1,12 +1,8 @@
 from http import HTTPStatus
-from typing import Optional
 
-from fastapi import APIRouter, Header, HTTPException, Request, Response
-
-from lumina import health
+from fastapi import APIRouter, Header, HTTPException, Request
 from lumina.github import webhooks
 from lumina.schema.github import GitHubWebhook
-from lumina.schema.health import HealthCheckResponse
 
 router = APIRouter()
 
@@ -21,7 +17,7 @@ router = APIRouter()
 async def handle_webhook(
     request: Request,
     webhook: GitHubWebhook,
-    X_Hub_Signature_256: Optional[str] = Header(None),
+    X_Hub_Signature_256: str | None = Header(None),
 ):
     if not X_Hub_Signature_256:
         raise HTTPException(

@@ -1,7 +1,4 @@
-from typing import Optional
-
 from github.Issue import Issue
-
 from lumina.database.models import GitHubIssueModel, GitHubIssueState, MemberModel
 from lumina.github.connection import get_content_repo
 from lumina.github.util import get_content_repo_file_url, get_content_repo_path
@@ -16,8 +13,8 @@ def get_body_for_submission(
     target_type: str,
     target_id: str,
     message: str,
-    submitter: Optional[SubmitterRequest],
-    member: Optional[MemberModel],
+    submitter: SubmitterRequest | None,
+    member: MemberModel | None,
 ):
     assert not (submitter and member), "Cannot have both submitter and member"
 
@@ -44,7 +41,7 @@ def get_body_for_submission(
 
 
 def create_generic_submission_issue(
-    submission_request: GenericSubmissionRequest, member: Optional[MemberModel]
+    submission_request: GenericSubmissionRequest, member: MemberModel | None
 ) -> Issue:
     return get_content_repo().create_issue(
         title=submission_request.subject

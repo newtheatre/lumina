@@ -1,11 +1,9 @@
 import datetime
-import time
 import uuid
 
 import freezegun
 import moto
 import pytest
-
 from lumina.database import operations, table
 from lumina.database.models import (
     GitHubIssueModel,
@@ -181,9 +179,11 @@ def test_update_submission_github_issue():
     operations.update_submission_github_issue(
         101,
         new_submission.github_issue.copy(
-            update=dict(
-                state=GitHubIssueState.CLOSED, comments=5, closed_at=to_close_at
-            )
+            update={
+                "state": GitHubIssueState.CLOSED,
+                "comments": 5,
+                "closed_at": to_close_at,
+            }
         ),
     )
     updated_submission = operations.get_submission(101)

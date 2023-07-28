@@ -1,7 +1,6 @@
 import boto3
 import moto
 import pytest
-
 from lumina.emails.send import (
     FROM_ADDRESS,
     EmailAddressUnverified,

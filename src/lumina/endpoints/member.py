@@ -1,10 +1,9 @@
 from http import HTTPStatus
 
-from fastapi import APIRouter, Depends, HTTPException
-
 import lumina.database.operations
 import lumina.emails.render
 import lumina.emails.send
+from fastapi import APIRouter, Depends, HTTPException
 from lumina import auth
 from lumina.database.models import MemberModel
 from lumina.schema.member import (

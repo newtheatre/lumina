@@ -1,12 +1,10 @@
 import datetime
 from enum import Enum
-from typing import List, Optional
 from uuid import UUID
 
 from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel, EmailStr, validator
-
 from lumina.util.types import BaseModelProtocol
+from pydantic import BaseModel, EmailStr
 
 from . import table
 
@@ -24,22 +22,22 @@ class BaseDynamoModel(BaseModel):
 
 
 class MemberConsent(BaseModel, DynamoExportMixin):
-    consent_news: Optional[datetime.datetime]
-    consent_network: Optional[datetime.datetime]
-    consent_members: Optional[datetime.datetime]
-    consent_students: Optional[datetime.datetime]
+    consent_news: datetime.datetime | None
+    consent_network: datetime.datetime | None
+    consent_members: datetime.datetime | None
+    consent_students: datetime.datetime | None
 
 
 class MemberModel(BaseDynamoModel, DynamoExportMixin):
     sk = table.SK_PROFILE
     name: str
     email: EmailStr
-    phone: Optional[str]
-    year_of_graduation: Optional[int]
-    created_at: Optional[datetime.datetime]
-    email_verified_at: Optional[datetime.datetime]
-    consent: Optional[MemberConsent]
-    anonymous_ids: Optional[List[UUID]]
+    phone: str | None
+    year_of_graduation: int | None
+    created_at: datetime.datetime | None
+    email_verified_at: datetime.datetime | None
+    consent: MemberConsent | None
+    anonymous_ids: list[UUID] | None
 
     @property
     def id(self) -> str:
@@ -63,8 +61,8 @@ class SubmitterModel(BaseModel, DynamoExportMixin):
     id: str
     verified: bool
     name: str
-    year_of_graduation: Optional[int]
-    email: Optional[EmailStr]
+    year_of_graduation: int | None
+    email: EmailStr | None
 
 
 class GitHubIssueState(Enum):
@@ -79,7 +77,7 @@ class GitHubIssueModel(BaseModel, DynamoExportMixin):
     title: str
     created_at: datetime.datetime
     updated_at: datetime.datetime
-    closed_at: Optional[datetime.datetime]
+    closed_at: datetime.datetime | None
     comments: int
 
 
@@ -89,13 +87,12 @@ class SubmissionModel(BaseDynamoModel, DynamoExportMixin):
     target_type: str
     target_name: str
     created_at: datetime.datetime
-    subject: Optional[str]
-    message: Optional[str]
+    subject: str | None
+    message: str | None
     submitter: SubmitterModel
     github_issue: GitHubIssueModel
 
     @property
     def issue_id(self) -> int:
         # TODO: Use this when we have Python 3.9
-        # return int(self.target_id.removeprefix(f"{table.SK_SUBMISSION}/"))
         return int(self.sk.split("/")[-1])

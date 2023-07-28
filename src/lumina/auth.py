@@ -1,15 +1,13 @@
 from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
-from typing import Optional
 
 import jwt
+import lumina.database.operations
 from fastapi import Depends, HTTPException, Request
 from fastapi.security import HTTPBearer
-from pydantic import BaseModel
-
-import lumina.database.operations
 from lumina import ssm
 from lumina.database.models import MemberModel
+from pydantic import BaseModel
 
 JWT_ALGORITHM = "RS256"
 JWT_EXPIRATION_DELTA = timedelta(days=90)
@@ -50,9 +48,9 @@ def decode_jwt(token: str) -> AuthenticatedToken:
 class JWTBearer(HTTPBearer):
     def __init__(self, optional: bool = False):
         self.optional = optional
-        super(JWTBearer, self).__init__(auto_error=False)
+        super().__init__(auto_error=False)
 
-    async def __call__(self, request: Request) -> Optional[AuthenticatedToken]:
+    async def __call__(self, request: Request) -> AuthenticatedToken | None:
         credentials = await super(JWTBearer, self).__call__(request)
         if credentials:
             try:
@@ -85,7 +83,7 @@ def require_member(
 
 def optional_member(
     authenticated_member=Depends(JWTBearer(optional=True)),
-) -> Optional[MemberModel]:
+) -> MemberModel | None:
     """Get member if token is provided, otherwise return None."""
     if not authenticated_member:
         return None
