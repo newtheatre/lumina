@@ -75,4 +75,5 @@ def create_tables():
                 "Projection": {"ProjectionType": "ALL"},
             },
         ],
+        BillingMode="PAY_PER_REQUEST",
     )

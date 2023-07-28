@@ -17,7 +17,7 @@ from lumina.util import dates
 
 @pytest.fixture(scope="function", autouse=True)
 def create_tables():
-    with moto.mock_dynamodb2():
+    with moto.mock_dynamodb():
         table.create_tables()
         yield
 

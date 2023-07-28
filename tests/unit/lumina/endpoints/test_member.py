@@ -160,9 +160,12 @@ class TestRegisterMember:
         assert response.json() == {
             "detail": [
                 {
+                    "ctx": {"reason": "There must be something after the @-sign."},
+                    "input": "test@",
                     "loc": ["body", "email"],
-                    "msg": "value is not a valid email address",
-                    "type": "value_error.email",
+                    "msg": "value is not a valid email address: There must be "
+                    "something after the @-sign.",
+                    "type": "value_error",
                 }
             ]
         }

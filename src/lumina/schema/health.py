@@ -7,7 +7,7 @@ from pydantic import Field
 class HealthCheckCondition(LuminaModel):
     ok: bool = Field(description="Whether the condition is ok")
     timestamp: datetime.datetime = Field(description="When the last check ran")
-    message: str | None = Field(description="Details of fault if any")
+    message: str | None = Field(description="Details of fault if any", default=None)
 
 
 class HealthCheckResponse(LuminaModel):

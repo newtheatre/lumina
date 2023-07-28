@@ -9,5 +9,5 @@ class AuthCheckRequiredResponse(LuminaModel):
 
 
 class AuthCheckOptionalResponse(LuminaModel):
-    id: str | None
-    expires_at: datetime.datetime | None
+    id: str | None = None
+    expires_at: datetime.datetime | None = None

@@ -24,8 +24,8 @@ FIELD_SUBMITTER_NAME = Field(
 class SubmitterRequest(LuminaModel):
     id: UUID = FIELD_SUBMITTER_ID
     name: str = FIELD_SUBMITTER_NAME
-    year_of_graduation: int | None = Field(example=1999)
-    email: EmailStr | None = Field(example="fred@bloggs.com")
+    year_of_graduation: int | None = Field(example=1999, default=None)
+    email: EmailStr | None = Field(example="fred@bloggs.com", default=None)
 
     def to_model(self) -> SubmitterModel:
         return SubmitterModel(
@@ -49,6 +49,7 @@ class BaseSubmissionRequest(LuminaModel):
     submitter: SubmitterRequest | None = Field(
         description="The submitter of the submission if, and only if, the submission "
         "is anonymous. If the user is logged in this field should be omitted.",
+        default=None,
     )
 
 
@@ -59,6 +60,7 @@ FIELD_TARGET_ID = Field(
     title="Target ID",
     description="The ID of the target",
     example="00_01/romeo_and_juliet",
+    default=None,
 )
 FIELD_TARGET_NAME = Field(
     title="Target Name",
@@ -71,7 +73,7 @@ FIELD_TARGET_URL = Field(
     example="https://history.newtheatre.org.uk/00_01/romeo_and_juliet",
 )
 FIELD_SUBJECT = Field(
-    description="The subject of the submission", example="The lighting"
+    description="The subject of the submission", example="The lighting", default=None
 )
 FIELD_MESSAGE = Field(
     title="Message",
@@ -135,7 +137,7 @@ class GitHubIssueResponse(LuminaModel):
     title: str
     created_at: datetime.datetime
     updated_at: datetime.datetime
-    closed_at: datetime.datetime | None
+    closed_at: datetime.datetime | None = None
     comments: int
 
 
