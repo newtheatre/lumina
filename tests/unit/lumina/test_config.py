@@ -7,7 +7,7 @@ def test_root_path_none_when_no_stage():
 
 def test_root_path_proxied_when_prod():
     settings = Settings(stage_name="prod")
-    assert settings.root_path == "/api/lumina"
+    assert settings.root_path == "https://lumina.nthp.wjdp.uk"
 
 
 def test_root_path_is_stage_otherwise():

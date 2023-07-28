@@ -19,7 +19,7 @@ class Settings(BaseSettings):
         if self.stage_name in {"", "dev", "Environment"}:
             return None
         if self.stage_name == "prod":
-            return "/api/lumina"
+            return "https://lumina.nthp.wjdp.uk"
         return f"/{self.stage_name}"
 
 
