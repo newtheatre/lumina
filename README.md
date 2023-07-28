@@ -2,6 +2,8 @@
 
 Experimental API service for New Theatre alumni sites, responsible for identifying members and processing messages and submissions of data.
 
+Production is currently hosted at https://lumina.nthp.wjdp.uk, you can view the API docs at https://lumina.nthp.wjdp.uk/docs.
+
 # Data Model
 
 Data is stored in DynamoDB in a single table, `LuminaMember`. It stores member information and submissions by those members.
