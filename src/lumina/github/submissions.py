@@ -18,13 +18,16 @@ def get_body_for_submission(
 ):
     assert not (submitter and member), "Cannot have both submitter and member"
 
-    repo_file_path = get_content_repo_path(target_type, target_id)
-    repo_file_url = get_content_repo_file_url(repo_file_path)
+    if member:
+        submitter = f"[{member.name}]({get_submitter_public_link(member.pk)})"
+    elif submitter:
+        submitter = submitter.name
+    else:
+        raise ValueError("Must have submitter or member")
 
-    submitter = (
-        f"[{member.name}]({get_submitter_public_link(member.pk)})"
-        if member
-        else submitter.name
+    repo_file_path = get_content_repo_path(target_type, target_id)
+    repo_file_url = (
+        get_content_repo_file_url(repo_file_path) if repo_file_path else None
     )
 
     return f"""

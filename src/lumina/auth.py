@@ -50,7 +50,7 @@ class JWTBearer(HTTPBearer):
         self.optional = optional
         super().__init__(auto_error=False)
 
-    async def __call__(self, request: Request) -> AuthenticatedToken | None:
+    async def __call__(self, request: Request) -> AuthenticatedToken | None:  # type: ignore
         credentials = await super(JWTBearer, self).__call__(request)
         if credentials:
             try:

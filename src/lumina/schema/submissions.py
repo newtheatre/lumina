@@ -88,6 +88,13 @@ class GenericSubmissionRequest(BaseSubmissionRequest):
     subject: str | None = FIELD_SUBJECT
     message: str = FIELD_MESSAGE
 
+    def get_submitter_model(self, member: MemberModel | None) -> SubmitterModel:
+        if member:
+            return member.to_submitter()
+        if self.submitter:
+            return self.submitter.to_model()
+        raise ValueError("You either need a submitter or a member to make a submission")
+
     def to_model(
         self,
         *,
@@ -106,7 +113,7 @@ class GenericSubmissionRequest(BaseSubmissionRequest):
             created_at=dates.now(),
             subject=self.subject,
             message=self.message,
-            submitter=member.to_submitter() if member else self.submitter.to_model(),
+            submitter=self.get_submitter_model(member),
             github_issue=lumina.github.submissions.make_issue_model(github_issue),
         )
 
