@@ -31,7 +31,7 @@ def list_members(
     """
     Read all members details. Restricted to Alumni Network managers.
     """
-    all_members = lumina.database.operations.scan_members()
+    all_members = lumina.database.operations.get_members()
     return [MemberPrivateResponse.from_model(m) for m in all_members]
 
 

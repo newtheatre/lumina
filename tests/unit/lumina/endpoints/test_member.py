@@ -46,13 +46,13 @@ class TestListMembers:
 
     def test_success(self, auth_admin_bloggs, snapshot):
         with mock.patch(
-            "lumina.database.operations.scan_members",
+            "lumina.database.operations.get_members",
             return_value=[FRED_BLOGGS, ALICE_BLOGGS],
-        ) as mock_scan_members:
+        ) as mock_get_members:
             response = client.get("/member")
         assert response.status_code == HTTPStatus.OK
         assert response.json() == snapshot
-        assert mock_scan_members.called
+        assert mock_get_members.called
 
 
 class TestReadMember:

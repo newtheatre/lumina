@@ -41,12 +41,14 @@ def test_create_member(fred_bloggs):
     assert fred_bloggs.phone is None
 
 
-def test_scan_members_empty():
-    assert operations.scan_members() == []
+def test_get_members_empty():
+    assert operations.get_members() == []
 
 
-def test_scan_members(fred_bloggs):
-    assert operations.scan_members() == [fred_bloggs]
+def test_get_members_one(fred_bloggs):
+    # Put a submission to ensure we don't get it back
+    operations.put_submission(_make_submission(101))
+    assert operations.get_members() == [fred_bloggs]
 
 
 def test_get_member_exists(fred_bloggs):

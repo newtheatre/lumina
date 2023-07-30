@@ -27,12 +27,17 @@ class ResultNotFound(DbError):
     pass
 
 
-def scan_members() -> list[MemberModel]:
-    response = get_member_table().scan()
+def get_members() -> list[MemberModel]:
+    options = {
+        "IndexName": GSI_SK,
+        "KeyConditionExpression": Key(MEMBER_SORT_KEY).eq(SK_PROFILE),
+    }
+    response = get_member_table().query(**options) # type: ignore
     data = response["Items"]
     while response.get("LastEvaluatedKey"):
         response = get_member_table().scan(
-            ExclusiveStartKey=response["LastEvaluatedKey"]
+            ExclusiveStartKey=response["LastEvaluatedKey"],
+            **options, # type: ignore
         )
         data.extend(response["Items"])
     return [MemberModel(**item) for item in data]
