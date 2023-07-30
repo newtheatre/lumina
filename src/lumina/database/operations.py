@@ -27,12 +27,6 @@ class ResultNotFound(DbError):
     pass
 
 
-def create_member(member_model: MemberModel) -> MemberModel:
-    get_member_table().put_item(Item=member_model.ddict())
-
-    return member_model
-
-
 def get_member(id: str) -> MemberModel:
     response = get_member_table().get_item(
         Key={MEMBER_PARTITION_KEY: id, MEMBER_SORT_KEY: SK_PROFILE}

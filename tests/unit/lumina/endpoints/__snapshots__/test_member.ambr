@@ -38,3 +38,12 @@
     'id': 'fred_bloggs',
   })
 # ---
+# name: TestUpdateMember.test_success
+  _Call(
+    tuple(
+      MemberModel(pk='fred_bloggs', sk='profile', name='Fred Bloggs', email='fred@bloggs.com', phone=None, year_of_graduation=None, created_at=None, email_verified_at=None, consent=MemberConsentModel(consent_news=FakeDatetime(2021, 1, 1, 0, 0, tzinfo=datetime.timezone.utc), consent_network=FakeDatetime(2021, 1, 1, 0, 0, tzinfo=datetime.timezone.utc), consent_members=FakeDatetime(2021, 1, 1, 0, 0, tzinfo=datetime.timezone.utc), consent_students=FakeDatetime(2021, 1, 1, 0, 0, tzinfo=datetime.timezone.utc)), anonymous_ids=None),
+    ),
+    dict({
+    }),
+  )
+# ---

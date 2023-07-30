@@ -2,6 +2,7 @@ import uuid
 from http import HTTPStatus
 from unittest import mock
 
+import freezegun
 from fastapi.testclient import TestClient
 from fixtures.models import MEMBER_MODEL_FRED_BLOGGS
 from lumina.app import app
@@ -12,6 +13,14 @@ from lumina.util import dates
 client = TestClient(app)
 
 FAKE_TOKEN_URL = "https://nthp.test/auth?token=123"
+
+FRED_BLOGGS = MemberModel(
+    pk="fred_bloggs",
+    sk="profile",
+    name="Fred Bloggs",
+    email="fred@bloggs.com",
+    anonymous_id=uuid.uuid4(),
+)
 
 
 class TestReadMember:
@@ -108,7 +117,7 @@ VALID_REGISTER_MEMBER_PAYLOAD = {
 
 
 class TestRegisterMember:
-    @mock.patch("lumina.database.operations.create_member", return_value=None)
+    @mock.patch("lumina.database.operations.put_member", return_value=None)
     @mock.patch("lumina.database.operations.get_member", side_effect=ResultNotFound())
     @mock.patch("lumina.auth.get_auth_url", return_value=FAKE_TOKEN_URL)
     @mock.patch("lumina.emails.send.send_email", return_value="abc123")
@@ -166,6 +175,43 @@ class TestRegisterMember:
                 }
             ]
         }
+
+
+UPDATE_MEMBER_PAYLOAD = {
+    "consent": {
+        "consentMembers": True,
+        "consentNews": True,
+        "consentNetwork": True,
+        "consentStudents": True,
+    },
+}
+
+
+class TestUpdateMember:
+    def test_no_auth(self):
+        response = client.put("/member/fred_bloggs", json=UPDATE_MEMBER_PAYLOAD)
+        assert response.status_code == HTTPStatus.UNAUTHORIZED
+
+    def test_cannot_update_others(self, auth_fred_bloggs):
+        response = client.put("/member/alice_bloggs", json=UPDATE_MEMBER_PAYLOAD)
+        assert response.status_code == HTTPStatus.FORBIDDEN
+        assert response.json() == {"detail": "You cannot update another member"}
+
+    def test_success(self, auth_fred_bloggs, snapshot):
+        with (
+            mock.patch(
+                "lumina.database.operations.get_member", return_value=FRED_BLOGGS
+            ) as mock_get_member,
+            mock.patch(
+                "lumina.database.operations.put_member", return_value=FRED_BLOGGS
+            ) as mock_put_member,
+            freezegun.freeze_time("2021-01-01"),
+        ):
+            response = client.put("/member/fred_bloggs", json=UPDATE_MEMBER_PAYLOAD)
+        assert response.status_code == HTTPStatus.OK, response.text
+        assert mock_get_member.called
+        assert mock_put_member.called
+        assert mock_put_member.call_args == snapshot
 
 
 class TestDeleteMember:

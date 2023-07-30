@@ -99,3 +99,10 @@ class RegisterMemberRequest(LuminaModel):
             year_of_graduation=self.year_of_graduation,
             consent=self.consent.to_model(),
         )
+
+
+class UpdateMemberRequest(LuminaModel):
+    consent: MemberConsent = Field(
+        title="Consent",
+        description="Changes to consent options for the member.",
+    )

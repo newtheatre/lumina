@@ -24,7 +24,7 @@ def create_tables():
 
 @pytest.fixture()
 def fred_bloggs() -> MemberModel:
-    return operations.create_member(
+    return operations.put_member(
         MemberModel(
             pk="fred_bloggs",
             name="Fred Bloggs",
