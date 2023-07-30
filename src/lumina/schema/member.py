@@ -47,19 +47,29 @@ class MemberConsent(LuminaModel):
 
 class MemberPrivateResponse(LuminaModel):
     id: str
+    created_at: datetime | None
     email: EmailStr
     email_verified: bool
+    email_verified_at: datetime | None
+    phone: str | None
+    year_of_graduation: int | None
     consent: MemberConsent
+    anonymous_ids: list[UUID] | None
 
     @classmethod
     def from_model(cls, model: MemberModel):
         return cls(
             id=model.pk,
+            created_at=model.created_at,
             email=model.email,
             email_verified=model.email_verified,
+            email_verified_at=model.email_verified_at,
+            phone=model.phone,
+            year_of_graduation=model.year_of_graduation,
             consent=MemberConsent.from_model(model.consent)
             if model.consent
             else MemberConsent.get_no_consent(),
+            anonymous_ids=model.anonymous_ids,
         )
 
 

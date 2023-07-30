@@ -1,41 +1,58 @@
 # serializer version: 1
 # name: TestReadMember.test_do_not_verify_if_already_verified
   dict({
+    'anonymousIds': None,
     'consent': dict({
       'consentMembers': False,
       'consentNetwork': False,
       'consentNews': False,
       'consentStudents': False,
     }),
+    'createdAt': None,
     'email': 'fred@bloggs.com',
     'emailVerified': True,
+    'emailVerifiedAt': '2023-07-30T01:43:06.82141Z',
     'id': 'fred_bloggs',
+    'phone': None,
+    'yearOfGraduation': None,
   })
 # ---
 # name: TestReadMember.test_move_anonymous_submissions
   dict({
+    'anonymousIds': list([
+      '1dda621f-341f-4feb-8ca5-9c3bb7c9157a',
+    ]),
     'consent': dict({
       'consentMembers': False,
       'consentNetwork': False,
       'consentNews': False,
       'consentStudents': False,
     }),
+    'createdAt': None,
     'email': 'fred@bloggs.com',
     'emailVerified': True,
+    'emailVerifiedAt': '2023-07-30T01:43:06.824437Z',
     'id': 'fred_bloggs',
+    'phone': None,
+    'yearOfGraduation': None,
   })
 # ---
 # name: TestReadMember.test_success_self_first_call
   dict({
+    'anonymousIds': None,
     'consent': dict({
       'consentMembers': False,
       'consentNetwork': False,
       'consentNews': False,
       'consentStudents': False,
     }),
+    'createdAt': None,
     'email': 'fred@bloggs.com',
     'emailVerified': True,
+    'emailVerifiedAt': '2021-01-01T00:00:00',
     'id': 'fred_bloggs',
+    'phone': None,
+    'yearOfGraduation': None,
   })
 # ---
 # name: TestUpdateMember.test_success
