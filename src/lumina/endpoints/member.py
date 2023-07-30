@@ -75,12 +75,7 @@ def register_member(id: str, new_member: RegisterMemberRequest):
     except lumina.database.operations.ResultNotFound:
         pass
 
-    lumina.database.operations.create_member(
-        id=id,
-        name=new_member.full_name,
-        email=new_member.email,
-        anonymous_id=new_member.anonymous_id,
-    )
+    lumina.database.operations.create_member(new_member.to_model(id))
 
     lumina.emails.send.send_email(
         to_addresses=[(new_member.full_name, new_member.email)],

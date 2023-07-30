@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from uuid import UUID
 
 from lumina.database.models import MemberConsentModel, MemberModel
@@ -19,10 +20,10 @@ class MemberConsent(LuminaModel):
     @classmethod
     def from_model(cls, model: MemberConsentModel):
         return cls(
-            consent_news=model.consent_news,
-            consent_network=model.consent_network,
-            consent_members=model.consent_members,
-            consent_students=model.consent_students,
+            consent_news=model.consent_news is not None,
+            consent_network=model.consent_network is not None,
+            consent_members=model.consent_members is not None,
+            consent_students=model.consent_students is not None,
         )
 
     @classmethod
@@ -32,6 +33,15 @@ class MemberConsent(LuminaModel):
             consent_network=False,
             consent_members=False,
             consent_students=False,
+        )
+
+    def to_model(self):
+        consent = lambda x: datetime.now(tz=timezone.utc) if x else None  # noqa: E731
+        return MemberConsentModel(
+            consent_news=consent(self.consent_news),
+            consent_network=consent(self.consent_network),
+            consent_members=consent(self.consent_members),
+            consent_students=consent(self.consent_students),
         )
 
 
@@ -69,3 +79,23 @@ class RegisterMemberRequest(LuminaModel):
         description="Email address of the prospective member.",
         example="fred@bloggs.com",
     )
+    year_of_graduation: int | None = Field(
+        title="Year of Graduation",
+        description="Year of graduation of the prospective member, "
+        "leave blank if unknown.",
+        example=2021,
+    )
+    consent: MemberConsent = Field(
+        title="Consent",
+        description="Consent of the prospective member for use of their data.",
+    )
+
+    def to_model(self, id: str) -> MemberModel:
+        return MemberModel(
+            pk=id,
+            name=self.full_name,
+            email=self.email,
+            anonymous_ids=[self.anonymous_id],
+            year_of_graduation=self.year_of_graduation,
+            consent=self.consent.to_model(),
+        )

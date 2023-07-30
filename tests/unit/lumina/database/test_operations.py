@@ -25,10 +25,12 @@ def create_tables():
 @pytest.fixture()
 def fred_bloggs() -> MemberModel:
     return operations.create_member(
-        id="fred_bloggs",
-        name="Fred Bloggs",
-        email="fred@bloggs.com",
-        anonymous_id=uuid.uuid4(),
+        MemberModel(
+            pk="fred_bloggs",
+            name="Fred Bloggs",
+            email="fred@bloggs.com",
+            anonymous_id=uuid.uuid4(),
+        )
     )
 
 

@@ -1,4 +1,5 @@
 import functools
+from typing import Literal
 
 from lumina.config import settings
 from lumina.database.connection import get_dynamo_db
@@ -23,7 +24,7 @@ def get_member_table() -> Table:
 MEMBER_PARTITION_KEY = "pk"
 MEMBER_SORT_KEY = "sk"
 
-SK_PROFILE = "profile"
+SK_PROFILE: Literal["profile"] = "profile"
 SK_SUBMISSION_PREFIX = "submission/"
 PK_ANONYMOUS = "ANONYMOUS"
 

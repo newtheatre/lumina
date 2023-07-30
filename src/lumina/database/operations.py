@@ -27,10 +27,7 @@ class ResultNotFound(DbError):
     pass
 
 
-def create_member(id: str, name: str, email: str, anonymous_id: UUID) -> MemberModel:
-    member_model = MemberModel(
-        pk=id, name=name, email=email, anonymous_ids=[anonymous_id]
-    )
+def create_member(member_model: MemberModel) -> MemberModel:
     get_member_table().put_item(Item=member_model.ddict())
 
     return member_model

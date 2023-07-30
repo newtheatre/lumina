@@ -1,5 +1,6 @@
 import datetime
 from enum import Enum
+from typing import Literal
 from uuid import UUID
 
 from fastapi.encoders import jsonable_encoder
@@ -29,7 +30,7 @@ class MemberConsentModel(BaseModel, DynamoExportMixin):
 
 
 class MemberModel(BaseDynamoModel, DynamoExportMixin):
-    sk: str = table.SK_PROFILE
+    sk: Literal["profile"] = table.SK_PROFILE
     name: str
     email: EmailStr
     phone: str | None = None

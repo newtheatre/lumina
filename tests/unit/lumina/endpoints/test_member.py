@@ -93,6 +93,20 @@ class TestCheckMember:
         assert response.status_code == HTTPStatus.NOT_FOUND
 
 
+VALID_REGISTER_MEMBER_PAYLOAD = {
+    "email": "test@example.com",
+    "fullName": "Fred Bloggs",
+    "anonymousId": str(uuid.uuid4()),
+    "yearOfGraduation": "1980",
+    "consent": {
+        "consentNews": True,
+        "consentNetwork": True,
+        "consentMembers": True,
+        "consentStudents": False,
+    },
+}
+
+
 class TestRegisterMember:
     @mock.patch("lumina.database.operations.create_member", return_value=None)
     @mock.patch("lumina.database.operations.get_member", side_effect=ResultNotFound())
@@ -107,13 +121,9 @@ class TestRegisterMember:
     ):
         response = client.post(
             "/member/fred_bloggs",
-            json={
-                "email": "test@example.com",
-                "fullName": "Fred Bloggs",
-                "anonymousId": str(uuid.uuid4()),
-            },
+            json=VALID_REGISTER_MEMBER_PAYLOAD,
         )
-        assert response.status_code == HTTPStatus.OK
+        assert response.status_code == HTTPStatus.OK, response.json()
         assert get_member.called
         assert send_email.called
         assert create_member.called
@@ -129,13 +139,9 @@ class TestRegisterMember:
     def test_conflict_member_already_exists(self, send_email, get_auth_url, get_member):
         response = client.post(
             "/member/test_id",
-            json={
-                "email": "test@example.com",
-                "fullName": "Fred Bloggs",
-                "anonymousId": str(uuid.uuid4()),
-            },
+            json=VALID_REGISTER_MEMBER_PAYLOAD,
         )
-        assert response.status_code == HTTPStatus.CONFLICT
+        assert response.status_code == HTTPStatus.CONFLICT, response.json()
         assert get_member.called
         assert not send_email.called
 
@@ -143,12 +149,11 @@ class TestRegisterMember:
         response = client.post(
             "/member/test_id",
             json={
+                **VALID_REGISTER_MEMBER_PAYLOAD,
                 "email": "test@",
-                "fullName": "Test Member",
-                "anonymousId": str(uuid.uuid4()),
             },
         )
-        assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
+        assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY, response.json()
         assert response.json() == {
             "detail": [
                 {
