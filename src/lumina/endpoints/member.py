@@ -18,6 +18,24 @@ router = APIRouter()
 
 
 @router.get(
+    "/",
+    response_model=list[MemberPrivateResponse],
+    responses={
+        int(HTTPStatus.UNAUTHORIZED): {"description": "Unauthorized"},
+        int(HTTPStatus.FORBIDDEN): {"description": "Forbidden"},
+    },
+)
+def list_members(
+    member_model: MemberModel = Depends(auth.require_admin),
+):
+    """
+    Read all members details. Restricted to Alumni Network managers.
+    """
+    all_members = lumina.database.operations.scan_members()
+    return [MemberPrivateResponse.from_model(m) for m in all_members]
+
+
+@router.get(
     "/{id}",
     response_model=MemberPrivateResponse,
     responses={

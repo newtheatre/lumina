@@ -39,6 +39,7 @@ class MemberModel(BaseDynamoModel, DynamoExportMixin):
     email_verified_at: datetime.datetime | None = None
     consent: MemberConsentModel | None = None
     anonymous_ids: list[UUID] | None = None
+    is_admin: bool = False
 
     @property
     def id(self) -> str:

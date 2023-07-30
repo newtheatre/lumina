@@ -27,6 +27,17 @@ class ResultNotFound(DbError):
     pass
 
 
+def scan_members() -> list[MemberModel]:
+    response = get_member_table().scan()
+    data = response["Items"]
+    while response.get("LastEvaluatedKey"):
+        response = get_member_table().scan(
+            ExclusiveStartKey=response["LastEvaluatedKey"]
+        )
+        data.extend(response["Items"])
+    return [MemberModel(**item) for item in data]
+
+
 def get_member(id: str) -> MemberModel:
     response = get_member_table().get_item(
         Key={MEMBER_PARTITION_KEY: id, MEMBER_SORT_KEY: SK_PROFILE}

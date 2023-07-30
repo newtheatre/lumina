@@ -23,6 +23,37 @@ FRED_BLOGGS = MemberModel(
     anonymous_id=[FRED_ANON_ID],
 )
 
+ALICE_BLOGGS = MemberModel(
+    pk="alice_bloggs",
+    sk="profile",
+    name="Alice Bloggs",
+    email="alice@bloggs.com",
+    anonymous_id=[],
+)
+
+
+class TestListMembers:
+    def test_unauthorised(self):
+        response = client.get("/member")
+        assert response.status_code == HTTPStatus.UNAUTHORIZED
+
+    def test_forbidden(self, auth_fred_bloggs):
+        response = client.get("/member")
+        assert response.status_code == HTTPStatus.FORBIDDEN
+        assert response.json() == {
+            "detail": "You do not have permission to perform this action"
+        }
+
+    def test_success(self, auth_admin_bloggs, snapshot):
+        with mock.patch(
+            "lumina.database.operations.scan_members",
+            return_value=[FRED_BLOGGS, ALICE_BLOGGS],
+        ) as mock_scan_members:
+            response = client.get("/member")
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == snapshot
+        assert mock_scan_members.called
+
 
 class TestReadMember:
     def test_unauthorised(self):

@@ -1,4 +1,40 @@
 # serializer version: 1
+# name: TestListMembers.test_success
+  list([
+    dict({
+      'anonymousIds': None,
+      'consent': dict({
+        'consentMembers': False,
+        'consentNetwork': False,
+        'consentNews': False,
+        'consentStudents': False,
+      }),
+      'createdAt': None,
+      'email': 'fred@bloggs.com',
+      'emailVerified': False,
+      'emailVerifiedAt': None,
+      'id': 'fred_bloggs',
+      'phone': None,
+      'yearOfGraduation': None,
+    }),
+    dict({
+      'anonymousIds': None,
+      'consent': dict({
+        'consentMembers': False,
+        'consentNetwork': False,
+        'consentNews': False,
+        'consentStudents': False,
+      }),
+      'createdAt': None,
+      'email': 'alice@bloggs.com',
+      'emailVerified': False,
+      'emailVerifiedAt': None,
+      'id': 'alice_bloggs',
+      'phone': None,
+      'yearOfGraduation': None,
+    }),
+  ])
+# ---
 # name: TestReadMember.test_do_not_verify_if_already_verified
   dict({
     'anonymousIds': None,
@@ -58,7 +94,7 @@
 # name: TestUpdateMember.test_success
   _Call(
     tuple(
-      MemberModel(pk='fred_bloggs', sk='profile', name='Fred Bloggs', email='fred@bloggs.com', phone='01234567890', year_of_graduation=None, created_at=None, email_verified_at=None, consent=MemberConsentModel(consent_news=FakeDatetime(2021, 1, 1, 0, 0, tzinfo=datetime.timezone.utc), consent_network=FakeDatetime(2021, 1, 1, 0, 0, tzinfo=datetime.timezone.utc), consent_members=FakeDatetime(2021, 1, 1, 0, 0, tzinfo=datetime.timezone.utc), consent_students=FakeDatetime(2021, 1, 1, 0, 0, tzinfo=datetime.timezone.utc)), anonymous_ids=None),
+      MemberModel(pk='fred_bloggs', sk='profile', name='Fred Bloggs', email='fred@bloggs.com', phone='01234567890', year_of_graduation=None, created_at=None, email_verified_at=None, consent=MemberConsentModel(consent_news=FakeDatetime(2021, 1, 1, 0, 0, tzinfo=datetime.timezone.utc), consent_network=FakeDatetime(2021, 1, 1, 0, 0, tzinfo=datetime.timezone.utc), consent_members=FakeDatetime(2021, 1, 1, 0, 0, tzinfo=datetime.timezone.utc), consent_students=FakeDatetime(2021, 1, 1, 0, 0, tzinfo=datetime.timezone.utc)), anonymous_ids=None, is_admin=False),
     ),
     dict({
     }),

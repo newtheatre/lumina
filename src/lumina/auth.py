@@ -90,5 +90,17 @@ def optional_member(
     return require_member(authenticated_member)
 
 
+def require_admin(
+    member_model: MemberModel = Depends(require_member),
+) -> MemberModel:
+    """Ensure member is an admin, otherwise raise exception."""
+    if not member_model.is_admin:
+        raise HTTPException(
+            status_code=HTTPStatus.FORBIDDEN,
+            detail="You do not have permission to perform this action",
+        )
+    return member_model
+
+
 def get_auth_url(sub: str) -> str:
     return f"{AUTH_URL}?token={encode_jwt(sub)}"
