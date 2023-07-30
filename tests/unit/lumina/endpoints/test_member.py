@@ -8,18 +8,19 @@ from fixtures.models import MEMBER_MODEL_FRED_BLOGGS
 from lumina.app import app
 from lumina.database.models import MemberModel
 from lumina.database.operations import ResultNotFound
-from lumina.util import dates
 
 client = TestClient(app)
 
 FAKE_TOKEN_URL = "https://nthp.test/auth?token=123"
+
+FRED_ANON_ID = "5f72853b-1cab-4e1c-98e2-bbff6b0cec5b"
 
 FRED_BLOGGS = MemberModel(
     pk="fred_bloggs",
     sk="profile",
     name="Fred Bloggs",
     email="fred@bloggs.com",
-    anonymous_id=uuid.uuid4(),
+    anonymous_id=[FRED_ANON_ID],
 )
 
 
@@ -60,7 +61,7 @@ class TestReadMember:
     def test_do_not_verify_if_already_verified(
         self, mock_set_member_email_verified, auth_fred_bloggs, snapshot
     ):
-        auth_fred_bloggs.email_verified_at = dates.now()
+        auth_fred_bloggs.email_verified_at = "2021-01-01T00:00:00"
         response = client.get("/member/fred_bloggs")
         assert response.status_code == HTTPStatus.OK, response.json()
         # We don't call set_member_email_verified as email is already verified
@@ -74,12 +75,14 @@ class TestReadMember:
     def test_move_anonymous_submissions(
         self, mock_move_anonymous_submissions_to_member, auth_fred_bloggs, snapshot
     ):
-        auth_fred_bloggs.email_verified_at = dates.now()
-        auth_fred_bloggs.anonymous_ids = [uuid.uuid4()]
+        auth_fred_bloggs.email_verified_at = "2021-01-01T00:00:00"
+        auth_fred_bloggs.anonymous_ids = [FRED_ANON_ID]
         response = client.get("/member/fred_bloggs")
         # We don't call set_member_email_verified as email is already verified
         assert response.status_code == HTTPStatus.OK, response.json()
-        assert mock_move_anonymous_submissions_to_member.called
+        mock_move_anonymous_submissions_to_member.assert_called_with(
+            member_id="fred_bloggs", anonymous_id=FRED_ANON_ID
+        )
         assert response.json() == snapshot
 
 
@@ -178,6 +181,7 @@ class TestRegisterMember:
 
 
 UPDATE_MEMBER_PAYLOAD = {
+    "phone": "01234567890",
     "consent": {
         "consentMembers": True,
         "consentNews": True,

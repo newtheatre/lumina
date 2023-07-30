@@ -127,6 +127,7 @@ def update_member(
             status_code=HTTPStatus.NOT_FOUND, detail="Member not found"
         ) from e
 
+    existing_member.phone = member_update.phone
     existing_member.consent = member_update.consent.to_model()
 
     updated_member = lumina.database.operations.put_member(existing_member)

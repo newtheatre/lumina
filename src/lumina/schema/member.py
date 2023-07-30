@@ -1,8 +1,9 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from uuid import UUID
 
 from lumina.database.models import MemberConsentModel, MemberModel
 from lumina.schema.base import LuminaModel
+from lumina.util import dates
 from pydantic import EmailStr, Field
 
 
@@ -36,7 +37,7 @@ class MemberConsent(LuminaModel):
         )
 
     def to_model(self):
-        consent = lambda x: datetime.now(tz=timezone.utc) if x else None  # noqa: E731
+        consent = lambda x: dates.now() if x else None  # noqa: E731
         return MemberConsentModel(
             consent_news=consent(self.consent_news),
             consent_network=consent(self.consent_network),
@@ -112,6 +113,7 @@ class RegisterMemberRequest(LuminaModel):
 
 
 class UpdateMemberRequest(LuminaModel):
+    phone: str | None
     consent: MemberConsent = Field(
         title="Consent",
         description="Changes to consent options for the member.",
