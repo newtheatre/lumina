@@ -109,7 +109,7 @@ def _make_submission(id: int, **kwargs) -> SubmissionModel:
             closed_at=None,
             comments=0,
         ),
-    ).copy(update=kwargs)
+    ).model_copy(update=kwargs)
 
 
 def test_put_member_submission():
@@ -189,7 +189,7 @@ def test_update_submission_github_issue():
     to_close_at = dates.now()
     operations.update_submission_github_issue(
         101,
-        new_submission.github_issue.copy(
+        new_submission.github_issue.model_copy(
             update={
                 "state": GitHubIssueState.CLOSED,
                 "comments": 5,

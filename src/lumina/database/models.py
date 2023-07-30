@@ -14,7 +14,7 @@ class DynamoExportMixin:
     def ddict(self: BaseModelProtocol, **kwargs):
         """dict() export for DynamoDB, removes any Python-only fields, essentially
         JSON but still in dict form"""
-        return jsonable_encoder(self.dict(**kwargs))
+        return jsonable_encoder(self.model_dump(**kwargs))
 
 
 class BaseDynamoModel(BaseModel):
@@ -96,5 +96,7 @@ class SubmissionModel(BaseDynamoModel, DynamoExportMixin):
 
     @property
     def issue_id(self) -> int:
-        # TODO: Use this when we have Python 3.9
-        return int(self.sk.split("/")[-1])
+        try:
+            return int(self.sk.removeprefix(table.SK_SUBMISSION_PREFIX))
+        except ValueError as e:
+            raise ValueError(f"Invalid target_id: {self.sk}, cannot parse int") from e

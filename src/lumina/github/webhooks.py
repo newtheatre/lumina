@@ -46,7 +46,7 @@ def verify_webhook(signature: str, body: bytes) -> bool:
 
 
 def update_issue_from_webhook(webhook: GitHubWebhook) -> None:
-    github_issue = GitHubIssueModel(**webhook.issue.dict())
+    github_issue = GitHubIssueModel(**webhook.issue.model_dump())
     github_issue.state = get_state_from_issue(webhook.issue)
     if not webhook.issue:
         raise ValueError("Webhook does not contain an issue")

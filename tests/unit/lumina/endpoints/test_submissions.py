@@ -252,9 +252,9 @@ class TestCreateGenericSubmission:
                 # This mess needed as pydantic doesn't serialise UUID by default
                 # See https://github.com/samuelcolvin/pydantic/issues/1157
                 json={
-                    **submission_request.dict(),
+                    **submission_request.model_dump(),
                     "submitter": {
-                        **submission_request.submitter.dict(),
+                        **submission_request.submitter.model_dump(),
                         "id": str(submission_request.submitter.id),
                     },
                 },
@@ -311,7 +311,7 @@ class TestCreateGenericSubmission:
             )
             response = client.post(
                 "/submissions/message",
-                json=submission_request.dict(),
+                json=submission_request.model_dump(),
             )
         assert response.status_code == HTTPStatus.OK
         assert response.json() == {

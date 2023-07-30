@@ -77,7 +77,7 @@ class TestReadMember:
         auth_fred_bloggs,
         snapshot,
     ):
-        mock_get_member.return_value = MemberModel(**auth_fred_bloggs.dict())
+        mock_get_member.return_value = MemberModel(**auth_fred_bloggs.model_dump())
         mock_get_member.return_value.email_verified_at = "2021-01-01T00:00:00"
         response = client.get("/member/fred_bloggs")
         assert response.status_code == HTTPStatus.OK, response.json()

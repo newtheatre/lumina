@@ -131,7 +131,7 @@ def move_anonymous_submissions_to_member(
         # Create a new submission using the member ID
         new_member_submissions.append(
             # Direct copy and change only the PK
-            put_submission(anonymous_submission.copy(update={"pk": member_id}))
+            put_submission(anonymous_submission.model_copy(update={"pk": member_id}))
         )
         # Delete the old submission
         delete_response = get_member_table().delete_item(

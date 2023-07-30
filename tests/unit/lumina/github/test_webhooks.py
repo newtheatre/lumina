@@ -87,7 +87,7 @@ class TestHandleWebhook:
             webhooks.handle_webhook(ISSUE_CLOSED_HOOK)
         assert mock_update_issue.call_count == 1
         assert mock_update_issue.call_args[0][1] == GitHubIssueModel(
-            **ISSUE_CLOSED_HOOK.issue.dict()
+            **ISSUE_CLOSED_HOOK.issue.model_dump()
         )
 
     def test_issue_completed(self):
