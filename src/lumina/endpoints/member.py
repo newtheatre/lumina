@@ -75,6 +75,8 @@ def check_member(id: str):
 def register_member(id: str, new_member: RegisterMemberRequest):
     """
     Register a new member.
+    This endpoint should only be used for members that already exist in the history
+    project, meaning they have an ID already assigned.
     After success the member will be emailed a link to complete registration.
     """
     try:
