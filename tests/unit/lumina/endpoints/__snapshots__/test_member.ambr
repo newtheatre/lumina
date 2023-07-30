@@ -14,6 +14,7 @@
       'emailVerified': False,
       'emailVerifiedAt': None,
       'id': 'fred_bloggs',
+      'isAdmin': False,
       'phone': None,
       'yearOfGraduation': None,
     }),
@@ -30,6 +31,7 @@
       'emailVerified': False,
       'emailVerifiedAt': None,
       'id': 'alice_bloggs',
+      'isAdmin': False,
       'phone': None,
       'yearOfGraduation': None,
     }),
@@ -49,6 +51,7 @@
     'emailVerified': True,
     'emailVerifiedAt': '2021-01-01T00:00:00',
     'id': 'fred_bloggs',
+    'isAdmin': False,
     'phone': None,
     'yearOfGraduation': None,
   })
@@ -69,6 +72,7 @@
     'emailVerified': True,
     'emailVerifiedAt': '2021-01-01T00:00:00',
     'id': 'fred_bloggs',
+    'isAdmin': False,
     'phone': None,
     'yearOfGraduation': None,
   })
@@ -87,6 +91,7 @@
     'emailVerified': True,
     'emailVerifiedAt': '2021-01-01T00:00:00',
     'id': 'fred_bloggs',
+    'isAdmin': False,
     'phone': None,
     'yearOfGraduation': None,
   })

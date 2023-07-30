@@ -56,6 +56,7 @@ class MemberPrivateResponse(LuminaModel):
     year_of_graduation: int | None
     consent: MemberConsent
     anonymous_ids: list[UUID] | None
+    is_admin: bool = False
 
     @classmethod
     def from_model(cls, model: MemberModel):
@@ -71,6 +72,7 @@ class MemberPrivateResponse(LuminaModel):
             if model.consent
             else MemberConsent.get_no_consent(),
             anonymous_ids=model.anonymous_ids,
+            is_admin=model.is_admin,
         )
 
 
