@@ -30,7 +30,11 @@ class TestReadMember:
     )
     @mock.patch("lumina.database.operations.get_member")
     def test_success_self_first_call(
-        self, mock_get_member, mock_set_member_email_verified, auth_fred_bloggs
+        self,
+        mock_get_member,
+        mock_set_member_email_verified,
+        auth_fred_bloggs,
+        snapshot,
     ):
         mock_get_member.return_value = MemberModel(**auth_fred_bloggs.dict())
         mock_get_member.return_value.email_verified_at = "2021-01-01T00:00:00"
@@ -38,36 +42,28 @@ class TestReadMember:
         assert response.status_code == HTTPStatus.OK, response.json()
         assert mock_set_member_email_verified.called
         assert mock_get_member.called
-        assert response.json() == {
-            "email": "fred@bloggs.com",
-            "emailVerified": True,
-            "id": "fred_bloggs",
-        }
+        assert response.json() == snapshot
 
     @mock.patch(
         "lumina.database.operations.set_member_email_verified",
         return_value=None,
     )
     def test_do_not_verify_if_already_verified(
-        self, mock_set_member_email_verified, auth_fred_bloggs
+        self, mock_set_member_email_verified, auth_fred_bloggs, snapshot
     ):
         auth_fred_bloggs.email_verified_at = dates.now()
         response = client.get("/member/fred_bloggs")
         assert response.status_code == HTTPStatus.OK, response.json()
         # We don't call set_member_email_verified as email is already verified
         assert not mock_set_member_email_verified.called
-        assert response.json() == {
-            "email": "fred@bloggs.com",
-            "emailVerified": True,
-            "id": "fred_bloggs",
-        }
+        assert response.json() == snapshot
 
     @mock.patch(
         "lumina.database.operations.move_anonymous_submissions_to_member",
         return_value=None,
     )
     def test_move_anonymous_submissions(
-        self, mock_move_anonymous_submissions_to_member, auth_fred_bloggs
+        self, mock_move_anonymous_submissions_to_member, auth_fred_bloggs, snapshot
     ):
         auth_fred_bloggs.email_verified_at = dates.now()
         auth_fred_bloggs.anonymous_ids = [uuid.uuid4()]
@@ -75,11 +71,7 @@ class TestReadMember:
         # We don't call set_member_email_verified as email is already verified
         assert response.status_code == HTTPStatus.OK, response.json()
         assert mock_move_anonymous_submissions_to_member.called
-        assert response.json() == {
-            "email": "fred@bloggs.com",
-            "emailVerified": True,
-            "id": "fred_bloggs",
-        }
+        assert response.json() == snapshot
 
 
 class TestCheckMember:

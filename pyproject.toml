@@ -31,6 +31,7 @@ freezegun = "^1.1.0"
 moto = {extras = ["ses"], version = "^4.1.13"}
 PyYAML = "^6.0"
 pytest-vcr = "^1.0.2"
+syrupy = "^4.0.8"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

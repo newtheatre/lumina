@@ -21,7 +21,7 @@ class BaseDynamoModel(BaseModel):
     sk: str
 
 
-class MemberConsent(BaseModel, DynamoExportMixin):
+class MemberConsentModel(BaseModel, DynamoExportMixin):
     consent_news: datetime.datetime | None = None
     consent_network: datetime.datetime | None = None
     consent_members: datetime.datetime | None = None
@@ -36,7 +36,7 @@ class MemberModel(BaseDynamoModel, DynamoExportMixin):
     year_of_graduation: int | None = None
     created_at: datetime.datetime | None = None
     email_verified_at: datetime.datetime | None = None
-    consent: MemberConsent | None = None
+    consent: MemberConsentModel | None = None
     anonymous_ids: list[UUID] | None = None
 
     @property

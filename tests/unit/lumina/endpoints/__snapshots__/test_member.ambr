@@ -1,0 +1,40 @@
+# serializer version: 1
+# name: TestReadMember.test_do_not_verify_if_already_verified
+  dict({
+    'consent': dict({
+      'consentMembers': False,
+      'consentNetwork': False,
+      'consentNews': False,
+      'consentStudents': False,
+    }),
+    'email': 'fred@bloggs.com',
+    'emailVerified': True,
+    'id': 'fred_bloggs',
+  })
+# ---
+# name: TestReadMember.test_move_anonymous_submissions
+  dict({
+    'consent': dict({
+      'consentMembers': False,
+      'consentNetwork': False,
+      'consentNews': False,
+      'consentStudents': False,
+    }),
+    'email': 'fred@bloggs.com',
+    'emailVerified': True,
+    'id': 'fred_bloggs',
+  })
+# ---
+# name: TestReadMember.test_success_self_first_call
+  dict({
+    'consent': dict({
+      'consentMembers': False,
+      'consentNetwork': False,
+      'consentNews': False,
+      'consentStudents': False,
+    }),
+    'email': 'fred@bloggs.com',
+    'emailVerified': True,
+    'id': 'fred_bloggs',
+  })
+# ---
