@@ -32,12 +32,12 @@ def get_members() -> list[MemberModel]:
         "IndexName": GSI_SK,
         "KeyConditionExpression": Key(MEMBER_SORT_KEY).eq(SK_PROFILE),
     }
-    response = get_member_table().query(**options) # type: ignore
+    response = get_member_table().query(**options)  # type: ignore
     data = response["Items"]
     while response.get("LastEvaluatedKey"):
         response = get_member_table().scan(
             ExclusiveStartKey=response["LastEvaluatedKey"],
-            **options, # type: ignore
+            **options,  # type: ignore
         )
         data.extend(response["Items"])
     return [MemberModel(**item) for item in data]
